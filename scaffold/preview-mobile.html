@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZoonoseApp — Preview Telas Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  :root {
+    --verde: #006B3F;
+    --verde-light: #00894f;
+    --verde-bg: #ecfdf5;
+    --verde-border: #a7f3d0;
+    --amarelo-bg: #fef3c7;
+    --amarelo-text: #92400e;
+    --laranja: #f97316;
+    --vermelho: #ef4444;
+    --cinza-50: #f9fafb;
+    --cinza-100: #f3f4f6;
+    --cinza-200: #e5e7eb;
+    --cinza-400: #9ca3af;
+    --cinza-500: #6b7280;
+    --cinza-700: #374151;
+    --cinza-900: #111827;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --shadow-card: 0 1px 3px rgba(0,0,0,.04), 0 2px 8px rgba(0,0,0,.03);
+    --shadow-phone: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1.5px rgba(255,255,255,.08);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0f0f1a;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(0,107,63,.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(59,130,246,.06) 0%, transparent 50%);
+    color: #fff;
+    min-height: 100vh;
+    padding: 48px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .page-header { text-align: center; margin-bottom: 48px; }
+  .page-header .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--verde), var(--verde-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: 32px; font-weight: 900; letter-spacing: -1px;
+  }
+  .page-header .logo::before {
+    content: ''; display: block; width: 36px; height: 36px;
+    background: var(--verde); border-radius: 10px; flex-shrink: 0;
+    -webkit-text-fill-color: initial;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: center; background-size: 22px;
+  }
+  .page-header .tagline {
+    color: #6b7280; font-size: 14px; margin-top: 6px; font-weight: 400;
+    letter-spacing: .3px;
+  }
+  .page-header .badge-row { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+  .page-header .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px; padding: 5px 12px; font-size: 11px; color: #aaa; font-weight: 500;
+  }
+  .page-header .badge .bdot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* Grid */
+  .grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 44px;
+    max-width: 1400px; margin: 0 auto;
+  }
+  @media(max-width:1200px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:780px){.grid{grid-template-columns:1fr;max-width:420px}}
+
+  /* Phone wrapper */
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; }
+  .phone-label {
+    font-size: 11px; font-weight: 600; color: rgba(255,255,255,.4);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px;
+  }
+
+  /* Phone frame */
+  .phone {
+    width: 375px; height: 700px;
+    background: var(--cinza-50);
+    border-radius: 44px;
+    overflow: hidden;
+    box-shadow: var(--shadow-phone);
+    position: relative;
+    display: flex; flex-direction: column;
+    color: var(--cinza-900); font-size: 14px;
+  }
+  /* Notch / dynamic island */
+  .phone::before {
+    content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 28px; background: #000; border-radius: 20px; z-index: 10;
+  }
+
+  /* Status bar */
+  .statusbar {
+    height: 54px; background: #fff;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 28px 6px; font-size: 12px; font-weight: 600; flex-shrink: 0; z-index: 2;
+  }
+  .statusbar .time { font-weight: 700; font-size: 14px; }
+  .statusbar .icons { display: flex; gap: 4px; font-size: 12px; color: var(--cinza-900); }
+  .statusbar .icons svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* Tab bar */
+  .tabbar {
+    height: 64px; background: #fff;
+    border-top: 1px solid var(--cinza-200);
+    display: flex; align-items: center; justify-content: space-around;
+    flex-shrink: 0; z-index: 2;
+    padding-bottom: 8px;
+  }
+  .tabbar .tab {
+    display: flex; flex-direction: column; align-items: center;
+    font-size: 10px; font-weight: 500; color: var(--cinza-400); gap: 3px;
+  }
+  .tabbar .tab.active { color: var(--verde); font-weight: 700; }
+  .tabbar .tab .ico { font-size: 22px; line-height: 1; }
+  .tabbar .tab.active .ico { position: relative; }
+  .tabbar .tab.active .ico::after {
+    content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%; background: var(--verde);
+  }
+
+  /* Screen scroll area */
+  .screen { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; }
+  .screen::-webkit-scrollbar { width: 0; }
+
+  /* ============= SHARED COMPONENTS ============= */
+  .pad { padding: 16px; }
+  .card {
+    background: #fff; border-radius: var(--radius-md);
+    padding: 13px 14px; margin-bottom: 8px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(0,0,0,.03);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--verde) 0%, var(--verde-light) 100%);
+    color: #fff; border: none; border-radius: var(--radius-md);
+    padding: 15px; width: 100%;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700;
+    cursor: pointer; text-align: center;
+    box-shadow: 0 4px 12px rgba(0,107,63,.25);
+    transition: transform .1s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-outline {
+    background: #fff; border: 1.5px solid var(--cinza-200);
+    border-radius: var(--radius-md); padding: 12px; width: 100%;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--cinza-700); cursor: pointer; text-align: center;
+  }
+  .chip {
+    display: inline-block; padding: 7px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: .2px;
+    border: 1.5px solid var(--cinza-200); background: #fff; color: var(--cinza-500);
+    margin-right: 6px; margin-bottom: 6px;
+  }
+  .chip.active { background: var(--verde); color: #fff; border-color: var(--verde); }
+  .section-title { font-size: 14px; font-weight: 700; color: var(--cinza-900); margin: 16px 0 10px; letter-spacing: -.2px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 10px; flex-shrink: 0; }
+  .green-dot { background: #22c55e; }
+  .orange-dot { background: var(--laranja); }
+  .red-dot { background: var(--vermelho); }
+  .label-field { font-size: 12px; font-weight: 700; color: var(--cinza-700); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* QR screen overrides */
+  .qr-screen .screen { background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .qr-screen .statusbar { background: #000; color: #fff; }
+  .qr-screen .tabbar { background: rgba(0,0,0,.92); border-color: #222; backdrop-filter: blur(12px); }
+  .qr-screen .tabbar .tab { color: #555; }
+  .qr-screen .tabbar .tab.active { color: #22c55e; }
+  .qr-screen::before { background: #000; }
+
+  /* Detail hero */
+  .hero-green {
+    background: linear-gradient(135deg, #005a34 0%, var(--verde) 40%, var(--verde-light) 100%);
+    color: #fff; padding: 22px 18px 18px; position: relative; overflow: hidden;
+  }
+  .hero-green::after {
+    content: ''; position: absolute; top: -30px; right: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(255,255,255,.06);
+  }
+
+  /* Footer */
+  .page-footer {
+    text-align: center; color: #444; font-size: 11px;
+    margin-top: 48px; padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+
+  /* Animations */
+  @keyframes scanline {
+    0% { transform: translateY(-110px); opacity: .3; }
+    100% { transform: translateY(110px); opacity: .9; }
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="logo">ZoonoseApp</div>
+  <div class="tagline">Sistema de Vigilância Epidemiológica — Preview Mobile</div>
+  <div class="badge-row">
+    <span class="badge"><span class="bdot" style="background:#22c55e"></span> Expo SDK 52</span>
+    <span class="badge"><span class="bdot" style="background:#3b82f6"></span> React Native</span>
+    <span class="badge"><span class="bdot" style="background:#8b5cf6"></span> Supabase</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- ==================== 1. TELA INICIO ==================== -->
+<div class="phone-wrap">
+  <div class="phone-label">Inicio</div>
+  <div class="phone">
+    <div class="statusbar"><span class="time">14:43</span><span class="icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </span></div>
+    <div class="screen">
+      <div class="pad">
+        <!-- Offline banner com borda pulsante -->
+        <div style="background:var(--amarelo-bg);border-left:3px solid #f59e0b;border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--amarelo-text);margin-bottom:14px;font-weight:500;display:flex;align-items:center;gap:8px">
+          <span style="animation:pulse 2s infinite">&#9888;</span> Offline — 2 visita(s) aguardando sync
+        </div>
+        <!-- Greeting -->
+        <div style="margin-bottom:20px">
+          <div style="font-size:13px;color:var(--cinza-500);font-weight:500;text-transform:capitalize">ter, 24 de marco</div>
+          <div style="font-size:24px;font-weight:800;color:var(--cinza-900);letter-spacing:-.5px;margin-top:2px">Ola, Carlos</div>
+        </div>
+        <!-- Stat cards com borda sutil -->
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <div style="flex:1;background:#fff;border-radius:var(--radius-md);padding:16px 8px;text-align:center;box-shadow:var(--shadow-card);border-left:3px solid var(--verde)">
+            <div style="font-size:28px;font-weight:900;color:var(--verde);letter-spacing:-1px">12</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Hoje</div>
+          </div>
+          <div style="flex:1;background:#fff;border-radius:var(--radius-md);padding:16px 8px;text-align:center;box-shadow:var(--shadow-card);border-left:3px solid #3b82f6">
+            <div style="font-size:28px;font-weight:900;color:#1d4ed8;letter-spacing:-1px">87</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Total</div>
+          </div>
+          <div style="flex:1;background:var(--amarelo-bg);border-radius:var(--radius-md);padding:16px 8px;text-align:center;border-left:3px solid #f59e0b">
+            <div style="font-size:28px;font-weight:900;color:var(--amarelo-text);letter-spacing:-1px">2</div>
+            <div style="font-size:10px;color:var(--amarelo-text);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Pendentes</div>
+          </div>
+        </div>
+        <!-- CTA -->
+        <button class="btn-primary" style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px">
+          <span style="font-size:18px;font-weight:300">+</span> Registrar Nova Visita
+        </button>
+        <!-- Quick actions com icone circular -->
+        <div style="display:flex;gap:8px;margin-bottom:20px">
+          <div style="flex:1;background:var(--verde-bg);border:1px solid var(--verde-border);border-radius:var(--radius-md);padding:14px 8px;text-align:center">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--verde);margin:0 auto 6px;display:flex;align-items:center;justify-content:center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+            </div>
+            <div style="font-size:11px;font-weight:700;color:#065f46">Mapa</div>
+          </div>
+          <div style="flex:1;background:var(--verde-bg);border:1px solid var(--verde-border);border-radius:var(--radius-md);padding:14px 8px;text-align:center">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--verde);margin:0 auto 6px;display:flex;align-items:center;justify-content:center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+            </div>
+            <div style="font-size:11px;font-weight:700;color:#065f46">Historico</div>
+          </div>
+          <div style="flex:1;background:var(--verde-bg);border:1px solid var(--verde-border);border-radius:var(--radius-md);padding:14px 8px;text-align:center">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--verde);margin:0 auto 6px;display:flex;align-items:center;justify-content:center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+            </div>
+            <div style="font-size:11px;font-weight:700;color:#065f46">Imoveis</div>
+          </div>
+        </div>
+        <!-- Visitas Recentes -->
+        <div class="section-title">Visitas Recentes</div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <span class="dot green-dot"></span>
+          <div style="flex:1"><div style="font-weight:600;font-size:13px">Rua das Flores, 123</div><div style="font-size:11px;color:var(--cinza-500)">Sem foco &middot; Rotina</div></div>
+          <div style="font-size:10px;color:var(--cinza-400);font-weight:500">09:12</div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <span class="dot orange-dot"></span>
+          <div style="flex:1"><div style="font-weight:600;font-size:13px">Av. Brasil, 456</div><div style="font-size:11px;color:var(--cinza-500)">Com achado &middot; Retorno</div></div>
+          <div style="font-size:10px;color:var(--cinza-400);font-weight:500">08:45</div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <span class="dot red-dot"></span>
+          <div style="flex:1"><div style="font-weight:600;font-size:13px">Rua Bauru, 789</div><div style="font-size:11px;color:var(--cinza-500)">Recusado &middot; Denuncia</div></div>
+          <div style="font-size:10px;color:var(--cinza-400);font-weight:500">08:20</div>
+        </div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab active"><span class="ico">&#x1F3E0;</span>Inicio</div>
+      <div class="tab"><span class="ico">&#x1F5FA;</span>Rota</div>
+      <div class="tab"><span class="ico">&#x1F4F7;</span>Escanear</div>
+      <div class="tab"><span class="ico">&#x1F4DD;</span>Visitar</div>
+      <div class="tab"><span class="ico">&#x1F464;</span>Perfil</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 2. TELA ROTA DO DIA ==================== -->
+<div class="phone-wrap">
+  <div class="phone-label">Rota do Dia</div>
+  <div class="phone">
+    <div class="statusbar"><span class="time">14:43</span><span class="icons">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </span></div>
+    <div class="screen">
+      <div class="pad">
+        <!-- Header com progresso -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div>
+            <div style="font-size:22px;font-weight:800;color:var(--cinza-900);letter-spacing:-.5px">Minha Rota</div>
+            <div style="font-size:12px;color:var(--cinza-500);margin-top:2px">8 de 15 imoveis visitados</div>
+          </div>
+          <div style="width:56px;height:56px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center">
+            <svg width="56" height="56" style="position:absolute;top:0;left:0;transform:rotate(-90deg)">
+              <circle cx="28" cy="28" r="24" fill="none" stroke="var(--cinza-200)" stroke-width="4"/>
+              <circle cx="28" cy="28" r="24" fill="none" stroke="var(--verde)" stroke-width="4" stroke-dasharray="151" stroke-dashoffset="71" stroke-linecap="round"/>
+            </svg>
+            <span style="font-size:14px;font-weight:900;color:var(--verde)">53%</span>
+          </div>
+        </div>
+        <!-- Progress bar segmentado -->
+        <div style="display:flex;gap:2px;margin-bottom:14px">
+          <div style="flex:8;height:6px;background:var(--verde);border-radius:3px 0 0 3px"></div>
+          <div style="flex:7;height:6px;background:var(--cinza-200);border-radius:0 3px 3px 0"></div>
+        </div>
+        <!-- Info banner -->
+        <div style="background:#dbeafe;border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:#1e40af;margin-bottom:14px;font-weight:500;display:flex;align-items:center;gap:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1e40af"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          Priorizar quadra 12 — area de risco
+        </div>
+        <!-- Property list - completos -->
+        <div class="card" style="display:flex;align-items:center;gap:10px;opacity:.55">
+          <div style="width:28px;height:28px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">&#10003;</div>
+          <div style="flex:1;text-decoration:line-through;color:var(--cinza-400);font-size:13px"><b>1.</b> Rua das Flores, 123</div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px;opacity:.55">
+          <div style="width:28px;height:28px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">&#10003;</div>
+          <div style="flex:1;text-decoration:line-through;color:var(--cinza-400);font-size:13px"><b>2.</b> Av. Brasil, 456</div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px;opacity:.55">
+          <div style="width:28px;height:28px;border-radius:50%;background:#22c55e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">&#10003;</div>
+          <div style="flex:1;text-decoration:line-through;color:var(--cinza-400);font-size:13px"><b>3.</b> Rua Bauru, 789</div>
+        </div>
+        <!-- Pendentes -->
+        <div class="card" style="display:flex;align-items:center;gap:10px;border-left:3px solid var(--verde)">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">4</div>
+          <div style="flex:1;font-size:13px;font-weight:600">Rua Parana, 55</div>
+          <div style="background:var(--verde);color:#fff;border-radius:var(--radius-sm);padding:6px 12px;font-size:11px;font-weight:700">Visitar</div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--cinza-200);color:var(--cinza-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">5</div>
+          <div style="flex:1;font-size:13px;font-weight:500">Av. Nacoes, 302</div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--cinza-200);color:var(--cinza-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">6</div>
+          <div style="flex:1;font-size:13px;font-weight:500">Rua Tiradentes, 88</div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><span class="ico">&#x1F3E0;</span>Inicio</div>
+      <div class="tab active"><span class="ico">&#x1F5FA;</span>Rota</div>
+      <div class="tab"><span class="ico">&#x1F4F7;</span>Escanear</div>
+      <div class="tab"><span class="ico">&#x1F4DD;</span>Visitar</div>
+      <div class="tab"><span class="ico">&#x1F464;</span>Perfil</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 3. TELA SCANNER QR ==================== -->
+<div class="phone-wrap">
+  <div class="phone-label">Scanner QR</div>
+  <div class="phone qr-screen">
+    <div class="statusbar"><span class="time" style="color:#fff">14:43</span><span class="icons" style="color:#fff">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </span></div>
+    <div class="screen">
+      <!-- Noise texture overlay -->
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.7) 100%);z-index:1;pointer-events:none"></div>
+      <!-- Viewfinder -->
+      <div style="position:relative;width:240px;height:240px;z-index:2">
+        <div style="position:absolute;top:0;left:0;width:36px;height:36px;border-top:3px solid #22c55e;border-left:3px solid #22c55e;border-radius:6px 0 0 0"></div>
+        <div style="position:absolute;top:0;right:0;width:36px;height:36px;border-top:3px solid #22c55e;border-right:3px solid #22c55e;border-radius:0 6px 0 0"></div>
+        <div style="position:absolute;bottom:0;left:0;width:36px;height:36px;border-bottom:3px solid #22c55e;border-left:3px solid #22c55e;border-radius:0 0 0 6px"></div>
+        <div style="position:absolute;bottom:0;right:0;width:36px;height:36px;border-bottom:3px solid #22c55e;border-right:3px solid #22c55e;border-radius:0 0 6px 0"></div>
+        <!-- Animated scan line -->
+        <div style="position:absolute;top:50%;left:8%;width:84%;height:2px;background:linear-gradient(90deg,transparent,#22c55e 30%,#22c55e 70%,transparent);animation:scanline 2.5s ease-in-out infinite alternate;box-shadow:0 0 12px rgba(34,197,94,.5)"></div>
+      </div>
+      <div style="color:rgba(255,255,255,.85);text-align:center;margin-top:28px;font-size:14px;padding:0 40px;z-index:2;font-weight:500;letter-spacing:.2px">
+        Aponte a camera para o<br>QR code do imovel
+      </div>
+      <!-- Flash toggle -->
+      <div style="z-index:2;margin-top:20px;display:flex;gap:16px">
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        </div>
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><span class="ico">&#x1F3E0;</span>Inicio</div>
+      <div class="tab"><span class="ico">&#x1F5FA;</span>Rota</div>
+      <div class="tab active"><span class="ico">&#x1F4F7;</span>Escanear</div>
+      <div class="tab"><span class="ico">&#x1F4DD;</span>Visitar</div>
+      <div class="tab"><span class="ico">&#x1F464;</span>Perfil</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 4. TELA NOVA VISITA ==================== -->
+<div class="phone-wrap">
+  <div class="phone-label">Nova Visita</div>
+  <div class="phone">
+    <div class="statusbar"><span class="time">14:43</span><span class="icons">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </span></div>
+    <div class="screen">
+      <div class="pad">
+        <!-- Nav header -->
+        <div style="font-size:18px;font-weight:800;color:var(--cinza-900);margin-bottom:16px;letter-spacing:-.3px">Nova Visita</div>
+
+        <!-- Buscar Imovel -->
+        <div class="label-field">Imovel</div>
+        <div style="background:var(--verde-bg);border:2px solid var(--verde);border-radius:var(--radius-md);padding:11px 14px;font-size:13px;color:#065f46;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--verde)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          Rua das Flores, 123
+          <span style="margin-left:auto;color:var(--cinza-400);font-size:16px;cursor:pointer">&times;</span>
+        </div>
+        <div style="font-size:11px;color:var(--verde);font-weight:600;margin-bottom:16px;cursor:pointer">Ver lista completa &rarr;</div>
+
+        <!-- Tipo de Visita -->
+        <div class="label-field">Tipo de Visita</div>
+        <div style="margin-bottom:14px">
+          <span class="chip active">Rotina</span>
+          <span class="chip">Retorno</span>
+          <span class="chip">Denuncia</span>
+        </div>
+
+        <!-- Status -->
+        <div class="label-field">Status</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+          <div style="background:var(--verde);color:#fff;border-radius:var(--radius-sm);padding:12px 10px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            Sem Foco
+          </div>
+          <div style="background:#fff;border:1.5px solid var(--cinza-200);border-radius:var(--radius-sm);padding:12px 10px;font-size:12px;color:var(--cinza-700);display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+            Com Achado
+          </div>
+          <div style="background:#fff;border:1.5px solid var(--cinza-200);border-radius:var(--radius-sm);padding:12px 10px;font-size:12px;color:var(--cinza-700);display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            Fechado
+          </div>
+          <div style="background:#fff;border:1.5px solid var(--cinza-200);border-radius:var(--radius-sm);padding:12px 10px;font-size:12px;color:var(--cinza-700);display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/></svg>
+            Recusado
+          </div>
+        </div>
+
+        <!-- Observacoes -->
+        <div class="label-field">Observacoes</div>
+        <div style="background:#fff;border:1.5px solid var(--cinza-200);border-radius:var(--radius-md);padding:12px;font-size:12px;color:var(--cinza-400);height:52px;margin-bottom:14px">Descreva a situacao encontrada...</div>
+
+        <!-- Fotos -->
+        <div class="label-field">Evidencias (2)</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <div style="width:68px;height:68px;background:linear-gradient(135deg,#d1d5db,#e5e7eb);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;position:relative">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            <div style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--vermelho);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center">&times;</div>
+          </div>
+          <div style="width:68px;height:68px;background:linear-gradient(135deg,#d1d5db,#e5e7eb);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;position:relative">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            <div style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--vermelho);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center">&times;</div>
+          </div>
+          <div style="width:68px;height:68px;border:2px dashed var(--cinza-200);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M12 12m-3.2 0a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0-6.4 0M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/></svg>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="btn-primary" style="margin-top:8px">Registrar Visita</button>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><span class="ico">&#x1F3E0;</span>Inicio</div>
+      <div class="tab"><span class="ico">&#x1F5FA;</span>Rota</div>
+      <div class="tab"><span class="ico">&#x1F4F7;</span>Escanear</div>
+      <div class="tab active"><span class="ico">&#x1F4DD;</span>Visitar</div>
+      <div class="tab"><span class="ico">&#x1F464;</span>Perfil</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 5. TELA DETALHE DO IMOVEL ==================== -->
+<div class="phone-wrap">
+  <div class="phone-label">Detalhe do Imovel</div>
+  <div class="phone">
+    <div class="statusbar" style="background:linear-gradient(135deg,#005a34,var(--verde));color:#fff"><span class="time">14:43</span><span class="icons">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </span></div>
+    <div class="screen">
+      <!-- Hero -->
+      <div class="hero-green">
+        <div style="font-size:11px;opacity:.7;margin-bottom:6px;display:flex;align-items:center;gap:4px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          Detalhes do Imovel
+        </div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-.3px">Rua das Flores, 123</div>
+        <div style="font-size:13px;opacity:.85;display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,.8)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          Maria da Silva
+        </div>
+        <div style="font-size:13px;opacity:.85;display:flex;align-items:center;gap:6px;margin-top:2px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,.8)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          (14) 99876-5432
+        </div>
+      </div>
+      <div class="pad">
+        <!-- Warning badge -->
+        <div style="background:var(--amarelo-bg);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;color:var(--amarelo-text);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;border:1px solid #fde68a">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#d97706"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          Foco recorrente &mdash; 3 ocorrencias
+        </div>
+        <!-- Stats -->
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <div style="flex:1;background:#fff;border-radius:var(--radius-md);padding:14px 8px;text-align:center;box-shadow:var(--shadow-card)">
+            <div style="font-size:24px;font-weight:900;color:var(--verde);letter-spacing:-1px">5</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Total</div>
+          </div>
+          <div style="flex:1;background:#fff;border-radius:var(--radius-md);padding:14px 8px;text-align:center;box-shadow:var(--shadow-card)">
+            <div style="font-size:24px;font-weight:900;color:var(--laranja);letter-spacing:-1px">3</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Achados</div>
+          </div>
+          <div style="flex:1;background:#fff;border-radius:var(--radius-md);padding:14px 8px;text-align:center;box-shadow:var(--shadow-card)">
+            <div style="font-size:16px;font-weight:900;color:var(--cinza-900)">15/03</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Ultima</div>
+          </div>
+        </div>
+        <!-- CTA -->
+        <button style="background:#1f2937;color:#fff;border:none;border-radius:var(--radius-md);padding:15px;width:100%;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 12px rgba(0,0,0,.15)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Registrar visita neste imovel
+        </button>
+        <!-- Ultimas visitas -->
+        <div class="section-title">Ultimas Visitas</div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <span class="dot green-dot"></span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:13px;color:var(--cinza-900)">Sem foco</div>
+            <div style="font-size:11px;color:var(--cinza-500)">Carlos Ferreira &middot; 15/03</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <span class="dot orange-dot"></span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:13px;color:var(--cinza-900)">Com achado</div>
+            <div style="font-size:11px;color:var(--cinza-500)">Carlos Ferreira &middot; 02/03</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px">
+          <span class="dot red-dot"></span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:13px;color:var(--cinza-900)">Recusado</div>
+            <div style="font-size:11px;color:var(--cinza-500)">Ana Souza &middot; 18/02</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
+        <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--verde);font-weight:700">+ 2 visitas anteriores</div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><span class="ico">&#x1F3E0;</span>Inicio</div>
+      <div class="tab"><span class="ico">&#x1F5FA;</span>Rota</div>
+      <div class="tab"><span class="ico">&#x1F4F7;</span>Escanear</div>
+      <div class="tab"><span class="ico">&#x1F4DD;</span>Visitar</div>
+      <div class="tab"><span class="ico">&#x1F464;</span>Perfil</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 6. TELA PERFIL ==================== -->
+<div class="phone-wrap">
+  <div class="phone-label">Perfil</div>
+  <div class="phone">
+    <div class="statusbar"><span class="time">14:43</span><span class="icons">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </span></div>
+    <div class="screen">
+      <div style="padding:24px 16px;display:flex;flex-direction:column;align-items:center">
+        <!-- Avatar com borda gradiente -->
+        <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--verde),var(--verde-light));padding:3px;margin-bottom:14px">
+          <div style="width:100%;height:100%;border-radius:50%;background:var(--cinza-50);display:flex;align-items:center;justify-content:center">
+            <span style="font-size:30px;font-weight:900;color:var(--verde);letter-spacing:-1px">CF</span>
+          </div>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--cinza-900);letter-spacing:-.3px">Carlos Ferreira</div>
+        <div style="font-size:13px;color:var(--cinza-500);margin-top:2px">Agente de Campo</div>
+        <div style="display:inline-flex;align-items:center;gap:4px;background:var(--verde-bg);border:1px solid var(--verde-border);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;color:#065f46;margin-top:6px">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#065f46"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Setor Norte
+        </div>
+        <!-- Stats horizontal -->
+        <div style="display:flex;gap:0;margin-top:20px;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-card);overflow:hidden;width:100%">
+          <div style="flex:1;padding:16px 8px;text-align:center;border-right:1px solid var(--cinza-200)">
+            <div style="font-size:22px;font-weight:900;color:var(--verde)">87</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.3px">Visitas</div>
+          </div>
+          <div style="flex:1;padding:16px 8px;text-align:center;border-right:1px solid var(--cinza-200)">
+            <div style="font-size:22px;font-weight:900;color:#1d4ed8">12</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.3px">Hoje</div>
+          </div>
+          <div style="flex:1;padding:16px 8px;text-align:center">
+            <div style="font-size:22px;font-weight:900;color:var(--verde)">95%</div>
+            <div style="font-size:10px;color:var(--cinza-500);font-weight:600;text-transform:uppercase;letter-spacing:.3px">Taxa</div>
+          </div>
+        </div>
+        <!-- Menu items -->
+        <div style="width:100%;margin-top:20px">
+          <div class="card" style="display:flex;align-items:center;gap:12px;padding:14px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#f0fdf4;display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--verde)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            </div>
+            <span style="font-size:14px;font-weight:600;color:var(--cinza-900);flex:1">Editar Perfil</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:12px;padding:14px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#dbeafe;display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#2563eb"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+            </div>
+            <span style="font-size:14px;font-weight:600;color:var(--cinza-900);flex:1">Sincronizar Dados</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--cinza-400)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:12px;padding:14px;margin-top:12px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#fef2f2;display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--vermelho)"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+            </div>
+            <span style="font-size:14px;font-weight:600;color:var(--vermelho);flex:1">Sair</span>
+          </div>
+        </div>
+        <!-- Version -->
+        <div style="margin-top:auto;padding-top:24px;font-size:11px;color:var(--cinza-400);font-weight:500">ZoonoseApp v1.0.0 &middot; Baurufer</div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><span class="ico">&#x1F3E0;</span>Inicio</div>
+      <div class="tab"><span class="ico">&#x1F5FA;</span>Rota</div>
+      <div class="tab"><span class="ico">&#x1F4F7;</span>Escanear</div>
+      <div class="tab"><span class="ico">&#x1F4DD;</span>Visitar</div>
+      <div class="tab active"><span class="ico">&#x1F464;</span>Perfil</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /grid -->
+
+<div class="page-footer">
+  ZoonoseApp &middot; Baurufer &middot; Vigilancia Epidemiologica &middot; 2026
+</div>
+
+</body>
+</html>

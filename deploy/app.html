@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZoonoseApp — Protótipo App Mobile</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #1a1a2e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 30px 20px;
+  }
+  h1 {
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 20px;
+  }
+
+  /* PHONE FRAME */
+  .phone {
+    width: 375px;
+    height: 812px;
+    background: #fff;
+    border-radius: 50px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), inset 0 0 0 2px #333;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-notch {
+    width: 130px;
+    height: 28px;
+    background: #111;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+  }
+  .status-bar {
+    height: 44px;
+    background: #fff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 24px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #111;
+    flex-shrink: 0;
+  }
+  .screen {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* TELAS */
+  .tela {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #f5f7fa;
+    overflow-y: auto;
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+    display: none;
+  }
+  .tela.ativa { display: block; }
+  .tela.t-sucesso.ativa { display: flex; }
+  .tela.saindo { animation: slideOut 0.3s forwards; }
+  .tela.entrando { animation: slideIn 0.3s forwards; }
+  @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  @keyframes slideOut { from { transform: translateX(0); } to { transform: translateX(-30%); opacity: 0.5; } }
+
+  /* HEADER */
+  .header {
+    padding: 16px 20px 12px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header .back {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    border: none;
+    flex-shrink: 0;
+  }
+  .header h2 { font-size: 17px; font-weight: 700; color: #111; flex: 1; }
+  .header .badge-status {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .badge-online { background: #e8f8f0; color: #27ae60; }
+  .badge-offline { background: #fdecea; color: #e74c3c; }
+
+  /* TELA 1 — LOGIN */
+  .t-login { background: linear-gradient(160deg, #1a5276 0%, #117a65 100%); }
+  .t-login .logo-area {
+    padding: 80px 32px 40px;
+    text-align: center;
+    color: white;
+  }
+  .t-login .app-icon {
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 16px;
+  }
+  .t-login h2 { font-size: 28px; font-weight: 800; }
+  .t-login p { opacity: 0.75; margin-top: 4px; font-size: 15px; }
+  .t-login .form-area {
+    background: white;
+    border-radius: 32px 32px 0 0;
+    padding: 36px 28px 40px;
+    flex: 1;
+  }
+  .input-group { margin-bottom: 16px; }
+  .input-group label { font-size: 13px; font-weight: 600; color: #777; display: block; margin-bottom: 6px; }
+  .input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #e0e0e0;
+    font-size: 16px;
+    outline: none;
+    background: #fafafa;
+    transition: border-color 0.2s;
+  }
+  .input-group input:focus { border-color: #1a5276; background: #fff; }
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #1a5276, #117a65);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary:active { opacity: 0.85; }
+
+  /* TELA 2 — HOME */
+  .t-home .header { background: #1a5276; border: none; }
+  .t-home .header h2 { color: white; }
+  .t-home .header .agente-info { font-size: 12px; color: rgba(255,255,255,0.7); }
+  .t-home .home-banner {
+    background: linear-gradient(135deg, #1a5276, #117a65);
+    padding: 0 20px 24px;
+    color: white;
+  }
+  .t-home .home-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    padding: 20px;
+    margin-top: -1px;
+  }
+  .stat-mini {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .stat-mini .val { font-size: 22px; font-weight: 800; color: #1a5276; }
+  .stat-mini .lbl { font-size: 11px; color: #888; margin-top: 2px; line-height: 1.3; }
+  .section-title {
+    padding: 4px 20px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #999;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 20px 20px;
+  }
+  .menu-card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: none;
+    text-align: left;
+  }
+  .menu-card:active { transform: scale(0.97); box-shadow: none; }
+  .menu-card .mc-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .menu-card h3 { font-size: 15px; font-weight: 700; color: #222; }
+  .menu-card p { font-size: 12px; color: #999; margin-top: 3px; }
+  .menu-card.destaque { background: linear-gradient(135deg, #1a5276, #117a65); }
+  .menu-card.destaque h3 { color: white; }
+  .menu-card.destaque p { color: rgba(255,255,255,0.7); }
+  .alerta-card {
+    background: #fff3cd;
+    border-left: 4px solid #f39c12;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 0 20px 20px;
+    font-size: 13px;
+    color: #7d6608;
+  }
+  .alerta-card strong { display: block; font-size: 14px; margin-bottom: 3px; }
+
+  /* TELA 3 — SCAN QR */
+  .t-scan { background: #000; }
+  .scan-viewfinder {
+    width: 100%;
+    height: 320px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.7) 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .scan-overlay {
+    width: 200px; height: 200px;
+    border: 3px solid #52d9aa;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 0 0 4000px rgba(0,0,0,0.5);
+  }
+  .scan-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #52d9aa;
+    top: 50%;
+    animation: scanAnim 2s infinite;
+    box-shadow: 0 0 8px #52d9aa;
+  }
+  @keyframes scanAnim { 0%,100% { top: 10%; } 50% { top: 90%; } }
+  .scan-corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: #52d9aa;
+    border-style: solid;
+  }
+  .scan-corner.tl { top: -3px; left: -3px; border-width: 4px 0 0 4px; border-radius: 4px 0 0 0; }
+  .scan-corner.tr { top: -3px; right: -3px; border-width: 4px 4px 0 0; border-radius: 0 4px 0 0; }
+  .scan-corner.bl { bottom: -3px; left: -3px; border-width: 0 0 4px 4px; border-radius: 0 0 0 4px; }
+  .scan-corner.br { bottom: -3px; right: -3px; border-width: 0 4px 4px 0; border-radius: 0 0 4px 0; }
+  .scan-info {
+    background: white;
+    border-radius: 24px 24px 0 0;
+    padding: 28px 24px;
+    margin-top: auto;
+  }
+  .scan-info h3 { font-size: 18px; font-weight: 700; color: #222; margin-bottom: 8px; }
+  .scan-info p { font-size: 14px; color: #888; line-height: 1.5; margin-bottom: 20px; }
+  .btn-manual {
+    width: 100%;
+    padding: 14px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+    margin-bottom: 12px;
+  }
+
+  /* TELA 4 — IMOVEL */
+  .imovel-header {
+    background: linear-gradient(135deg, #1a5276, #117a65);
+    padding: 20px 20px 28px;
+    color: white;
+  }
+  .imovel-header .endereco { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .imovel-header .bairro { font-size: 14px; opacity: 0.8; }
+  .imovel-header .tags { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .tag {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 100px;
+  }
+  .tag-verde { background: rgba(255,255,255,0.2); color: white; }
+  .tag-alerta { background: #f39c12; color: white; }
+  .tag-risco { background: #e74c3c; color: white; }
+  .hist-section { padding: 16px 20px 0; }
+  .hist-title { font-size: 13px; font-weight: 700; color: #aaa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .hist-item {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .hist-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .dot-verde { background: #27ae60; }
+  .dot-laranja { background: #f39c12; }
+  .dot-vermelho { background: #e74c3c; }
+  .hist-item .data { font-size: 12px; color: #aaa; }
+  .hist-item .descricao { font-size: 14px; color: #333; font-weight: 500; margin-top: 2px; }
+  .hist-item .agente { font-size: 12px; color: #888; margin-top: 2px; }
+  .btn-nova-visita {
+    margin: 16px 20px 28px;
+    width: calc(100% - 40px);
+    padding: 16px;
+    background: linear-gradient(135deg, #1a5276, #117a65);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* TELA 5 — FORMULARIO */
+  .t-form .form-body { padding: 16px 20px 100px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .radio-opt {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    transition: all 0.15s;
+    background: white;
+  }
+  .radio-opt.sel { border-color: #1a5276; background: #e8f0f7; color: #1a5276; }
+  .radio-opt.sel-red { border-color: #e74c3c; background: #fdecea; color: #e74c3c; }
+  .radio-opt.sel-green { border-color: #27ae60; background: #e8f8f0; color: #27ae60; }
+  .radio-opt.sel-orange { border-color: #f39c12; background: #fef9e7; color: #f39c12; }
+  .foto-area {
+    border: 2px dashed #ccc;
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    color: #aaa;
+    cursor: pointer;
+    background: #fafafa;
+    font-size: 14px;
+  }
+  .foto-area .foto-icon { font-size: 32px; margin-bottom: 8px; }
+  .foto-area.foto-ok {
+    border-color: #27ae60;
+    background: #e8f8f0;
+    color: #27ae60;
+  }
+  .obs-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: none;
+    background: #fafafa;
+    outline: none;
+    height: 80px;
+  }
+  .form-footer {
+    position: fixed;
+    bottom: 0;
+    width: 375px;
+    background: white;
+    padding: 16px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+  }
+  .btn-cancel {
+    flex: 1;
+    padding: 14px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+  }
+  .btn-salvar {
+    flex: 2;
+    padding: 14px;
+    background: linear-gradient(135deg, #1a5276, #117a65);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* TELA 6 — SUCESSO */
+  .t-sucesso {
+    background: linear-gradient(160deg, #117a65, #27ae60);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    color: white;
+  }
+  .sucesso-icon {
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 52px;
+    margin-bottom: 24px;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .t-sucesso h2 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+  .t-sucesso p { font-size: 16px; opacity: 0.85; line-height: 1.6; margin-bottom: 32px; }
+  .sucesso-details {
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 20px 24px;
+    width: 100%;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+  .sucesso-details .det-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+  }
+  .sucesso-details .det-row:last-child { border: none; }
+  .sucesso-details .det-label { opacity: 0.75; }
+  .sucesso-details .det-val { font-weight: 700; }
+  .btn-nova-home {
+    width: 100%;
+    padding: 16px;
+    background: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #117a65;
+    cursor: pointer;
+    margin-bottom: 12px;
+  }
+  .btn-outra {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+  }
+
+  /* TELA 7 — ROTA */
+  .t-rota .rota-item {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    margin: 0 16px 10px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    cursor: pointer;
+    border: none;
+    width: calc(100% - 32px);
+    text-align: left;
+  }
+  .rota-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    flex-shrink: 0;
+    color: white;
+  }
+  .rn-verde { background: #27ae60; }
+  .rn-laranja { background: #f39c12; }
+  .rn-vermelho { background: #e74c3c; }
+  .rn-cinza { background: #bbb; }
+  .rota-info { flex: 1; }
+  .rota-info .rota-end { font-size: 15px; font-weight: 700; color: #222; }
+  .rota-info .rota-bairro { font-size: 12px; color: #888; margin-top: 2px; }
+  .rota-info .rota-tag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 100px; display: inline-block; margin-top: 4px; }
+  .rt-pendente { background: #fef9e7; color: #f39c12; }
+  .rt-foco { background: #fdecea; color: #e74c3c; }
+  .rt-ok { background: #e8f8f0; color: #27ae60; }
+  .rt-ausente { background: #f0f0f0; color: #888; }
+  .rota-seta { font-size: 18px; color: #ccc; }
+
+  /* BOTTOMNAV */
+  .bottom-nav {
+    display: flex;
+    background: white;
+    border-top: 1px solid #eee;
+    height: 70px;
+    flex-shrink: 0;
+  }
+  .bn-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+  .bn-item .bn-icon { font-size: 22px; }
+  .bn-item .bn-label { font-size: 10px; font-weight: 600; color: #aaa; }
+  .bn-item.bn-ativo .bn-label { color: #1a5276; }
+  .bn-item .bn-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    background: #e74c3c;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    width: 17px; height: 17px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bn-icon-wrap { position: relative; display: inline-block; }
+
+  .pt-8 { padding-top: 8px; }
+  .px-20 { padding: 0 20px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-10 { margin-bottom: 10px; }
+
+  /* TELA 8 — ROTEIRIZAÇÃO */
+  .regiao-card {
+    background: white;
+    border-radius: 16px;
+    margin: 0 16px 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    cursor: pointer;
+    border: none;
+    width: calc(100% - 32px);
+    text-align: left;
+  }
+  .regiao-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .regiao-cor {
+    width: 12px; height: 40px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .regiao-info { flex: 1; }
+  .regiao-info .reg-nome { font-size: 15px; font-weight: 700; color: #222; }
+  .regiao-info .reg-bairros { font-size: 12px; color: #888; margin-top: 2px; }
+  .regiao-stats {
+    display: flex;
+    gap: 16px;
+    padding: 0 16px 14px 40px;
+    border-top: 1px solid #f5f5f5;
+    padding-top: 10px;
+  }
+  .reg-stat { text-align: center; }
+  .reg-stat .rs-val { font-size: 18px; font-weight: 800; }
+  .reg-stat .rs-lbl { font-size: 10px; color: #aaa; margin-top: 1px; }
+  .regiao-progress {
+    height: 4px;
+    background: #f0f0f0;
+    margin: 0 16px 14px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .regiao-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+  .bairro-lista {
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    display: none;
+  }
+  .bairro-lista.aberta { display: block; }
+  .bairro-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .bairro-item:last-child { border: none; }
+  .bairro-item .bi-nome { flex: 1; font-size: 14px; color: #333; font-weight: 500; }
+  .bairro-item .bi-imoveis { font-size: 12px; color: #aaa; }
+  .bairro-item .bi-focos { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 100px; }
+  .bi-focos-red { background: #fdecea; color: #e74c3c; }
+  .bi-focos-orange { background: #fef9e7; color: #f39c12; }
+  .bi-focos-green { background: #e8f8f0; color: #27ae60; }
+  .rota-ia-box {
+    background: linear-gradient(135deg, #1a5276, #117a65);
+    margin: 0 16px 16px;
+    border-radius: 14px;
+    padding: 16px;
+    color: white;
+  }
+  .rota-ia-box .ia-titulo { font-size: 13px; font-weight: 700; opacity: 0.8; margin-bottom: 6px; }
+  .rota-ia-box .ia-texto { font-size: 14px; line-height: 1.5; }
+  .rota-ia-box .ia-acao {
+    margin-top: 12px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<h1>ZoonoseApp — Protótipo Mobile</h1>
+
+<div class="phone">
+  <div class="phone-notch"></div>
+  <div class="status-bar">
+    <span>18:30</span>
+    <span>📶 🔋</span>
+  </div>
+
+  <div class="screen">
+
+    <!-- TELA 1: LOGIN -->
+    <div class="tela t-login ativa" id="t1">
+      <div class="logo-area">
+        <div class="app-icon">🦟</div>
+        <h2>ZoonoseApp</h2>
+        <p>Sistema de Controle de Endemias</p>
+      </div>
+      <div class="form-area">
+        <div class="input-group">
+          <label>CPF DO AGENTE</label>
+          <input type="text" placeholder="000.000.000-00" value="123.456.789-00">
+        </div>
+        <div class="input-group">
+          <label>SENHA</label>
+          <input type="password" placeholder="••••••" value="••••••">
+        </div>
+        <button class="btn-primary" onclick="ir('t2')">Entrar →</button>
+        <p style="text-align:center;margin-top:16px;font-size:13px;color:#aaa;">Versão 1.0 · Prefeitura de Uberlândia</p>
+      </div>
+    </div>
+
+    <!-- TELA 2: HOME -->
+    <div class="tela t-home" id="t2">
+      <div class="header">
+        <div style="flex:1">
+          <h2 style="color:white">Bom dia, Carlos! 👋</h2>
+          <div class="agente-info">Setor Norte · 18 visitas hoje</div>
+        </div>
+        <span class="badge-status badge-online">● Online</span>
+      </div>
+      <div class="home-banner" style="padding-top:16px">
+        <div style="font-size:13px;opacity:0.75;margin-bottom:4px">HOJE — 13 MAR 2026</div>
+        <div style="font-size:15px;font-weight:600">Rota do dia: 32 imóveis pendentes</div>
+      </div>
+      <div class="home-stats">
+        <div class="stat-mini">
+          <div class="val">18</div>
+          <div class="lbl">Visitados hoje</div>
+        </div>
+        <div class="stat-mini">
+          <div class="val" style="color:#e74c3c">3</div>
+          <div class="lbl">Focos encontrados</div>
+        </div>
+        <div class="stat-mini">
+          <div class="val" style="color:#f39c12">14</div>
+          <div class="lbl">Pendentes</div>
+        </div>
+      </div>
+      <div class="alerta-card">
+        <strong>⚠️ Alerta da coordenação</strong>
+        Rua das Oliveiras, 100–200: cluster de focos. Priorizar hoje.
+      </div>
+      <div class="section-title">O QUE FAZER</div>
+      <div class="menu-grid">
+        <button class="menu-card destaque" onclick="ir('t3')">
+          <div class="mc-icon">📷</div>
+          <h3>Escanear QR</h3>
+          <p>Nova visita</p>
+        </button>
+        <button class="menu-card" onclick="ir('t7')">
+          <div class="mc-icon">🗺️</div>
+          <h3>Minha Rota</h3>
+          <p>32 pendentes</p>
+        </button>
+        <button class="menu-card" onclick="ir('t8')">
+          <div class="mc-icon">🏘️</div>
+          <h3>Roteirização</h3>
+          <p>Por bairro/região</p>
+        </button>
+        <button class="menu-card">
+          <div class="mc-icon">📊</div>
+          <h3>Meu Resumo</h3>
+          <p>Semana atual</p>
+        </button>
+      </div>
+      <div class="bottom-nav">
+        <button class="bn-item bn-ativo">
+          <span class="bn-icon">🏠</span>
+          <span class="bn-label">Início</span>
+        </button>
+        <button class="bn-item" onclick="ir('t7')">
+          <span class="bn-icon-wrap">
+            <span class="bn-icon">🗺️</span>
+            <span class="bn-badge">14</span>
+          </span>
+          <span class="bn-label">Rota</span>
+        </button>
+        <button class="bn-item" onclick="ir('t3')">
+          <span class="bn-icon">📷</span>
+          <span class="bn-label">Scan QR</span>
+        </button>
+        <button class="bn-item">
+          <span class="bn-icon">📋</span>
+          <span class="bn-label">Histórico</span>
+        </button>
+        <button class="bn-item">
+          <span class="bn-icon">👤</span>
+          <span class="bn-label">Perfil</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- TELA 3: SCAN QR -->
+    <div class="tela" id="t3">
+      <div class="scan-viewfinder">
+        <div class="header" style="position:absolute;top:0;left:0;right:0;background:rgba(0,0,0,0.6);border:none">
+          <button class="back" onclick="ir('t2')" style="background:rgba(255,255,255,0.2);color:white">←</button>
+          <h2 style="color:white">Escanear QR Code</h2>
+        </div>
+        <div class="scan-overlay">
+          <div class="scan-line"></div>
+          <div class="scan-corner tl"></div>
+          <div class="scan-corner tr"></div>
+          <div class="scan-corner bl"></div>
+          <div class="scan-corner br"></div>
+        </div>
+        <p style="color:rgba(255,255,255,0.7);margin-top:20px;font-size:14px">Aponte para o QR code da residência</p>
+      </div>
+      <div class="scan-info">
+        <h3>Como funciona</h3>
+        <p>Cada imóvel tem uma placa com QR code único fixada na entrada. Aponte a câmera para carregar o histórico do imóvel automaticamente.</p>
+        <button class="btn-manual" onclick="ir('t4')">📋 Digitar endereço manualmente</button>
+        <button class="btn-primary" onclick="ir('t4')" style="background:linear-gradient(135deg,#1a5276,#117a65)">📷 Simular scan — Rua das Oliveiras, 142</button>
+      </div>
+    </div>
+
+    <!-- TELA 4: IMÓVEL -->
+    <div class="tela" id="t4">
+      <div class="header">
+        <button class="back" onclick="ir('t2')">←</button>
+        <h2>Imóvel</h2>
+        <span class="badge-status badge-online" style="background:#fdecea;color:#e74c3c">⚠️ Risco</span>
+      </div>
+      <div class="imovel-header">
+        <div class="endereco">Rua das Oliveiras, 142</div>
+        <div class="bairro">Bairro Jardim América · Setor Norte</div>
+        <div class="tags">
+          <span class="tag tag-alerta">⚠️ 2 focos anteriores</span>
+          <span class="tag tag-verde">45 dias s/ visita</span>
+          <span class="tag tag-risco">Reincidente</span>
+        </div>
+      </div>
+      <div class="hist-section">
+        <div class="hist-title">Histórico de Visitas</div>
+        <div class="hist-item">
+          <div class="hist-dot dot-vermelho"></div>
+          <div>
+            <div class="data">27 Jan 2026</div>
+            <div class="descricao">🔴 Foco encontrado — Calha entupida com água parada</div>
+            <div class="agente">Agente: Maria Santos · Tratado com larvicida</div>
+          </div>
+        </div>
+        <div class="hist-item">
+          <div class="hist-dot dot-laranja"></div>
+          <div>
+            <div class="data">05 Dez 2025</div>
+            <div class="descricao">🟡 Foco encontrado — Pneu em quintal</div>
+            <div class="agente">Agente: Carlos Silva · Eliminado</div>
+          </div>
+        </div>
+        <div class="hist-item">
+          <div class="hist-dot dot-verde"></div>
+          <div>
+            <div class="data">18 Out 2025</div>
+            <div class="descricao">✅ Visita normal — Sem focos encontrados</div>
+            <div class="agente">Agente: João Oliveira</div>
+          </div>
+        </div>
+        <div class="hist-item">
+          <div class="hist-dot dot-verde"></div>
+          <div>
+            <div class="data">02 Ago 2025</div>
+            <div class="descricao">✅ Visita normal — Sem focos encontrados</div>
+            <div class="agente">Agente: Maria Santos</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-nova-visita" onclick="ir('t5')">
+        📋 Registrar nova visita →
+      </button>
+    </div>
+
+    <!-- TELA 5: FORMULÁRIO -->
+    <div class="tela" id="t5">
+      <div class="header">
+        <button class="back" onclick="ir('t4')">←</button>
+        <h2>Nova Visita</h2>
+      </div>
+      <div style="background:#f0f4f8;padding:10px 20px;font-size:13px;color:#555;font-weight:600">
+        📍 Rua das Oliveiras, 142 — Jardim América
+      </div>
+      <div class="form-body">
+        <div class="form-group">
+          <label>TIPO DE VISITA</label>
+          <div class="radio-grid">
+            <div class="radio-opt sel" onclick="toggleOpt(this,'sel')">🔄 Rotina</div>
+            <div class="radio-opt" onclick="toggleOpt(this,'sel')">🔁 Retorno</div>
+            <div class="radio-opt" onclick="toggleOpt(this,'sel')">📢 Denúncia</div>
+            <div class="radio-opt" onclick="toggleOpt(this,'sel')">✅ Pós-tratamento</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>SITUAÇÃO DO IMÓVEL</label>
+          <div class="radio-grid">
+            <div class="radio-opt sel-red" onclick="toggleSit(this)" id="sit-foco">🔴 Foco encontrado</div>
+            <div class="radio-opt" onclick="toggleSit(this)" id="sit-normal">✅ Normal</div>
+            <div class="radio-opt" onclick="toggleSit(this)" id="sit-fechado">🚪 Fechado</div>
+            <div class="radio-opt" onclick="toggleSit(this)" id="sit-recusou">🚫 Recusou</div>
+          </div>
+        </div>
+        <div id="bloco-foco">
+          <div class="form-group">
+            <label>TIPO DE FOCO</label>
+            <div class="radio-grid">
+              <div class="radio-opt" onclick="toggleOpt(this,'sel-orange')">🪣 Caixa d'água</div>
+              <div class="radio-opt sel-orange" onclick="toggleOpt(this,'sel-orange')">🍃 Calha</div>
+              <div class="radio-opt" onclick="toggleOpt(this,'sel-orange')">🔘 Pneu</div>
+              <div class="radio-opt" onclick="toggleOpt(this,'sel-orange')">🏗️ Outro</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>AÇÃO TOMADA</label>
+            <div class="radio-grid">
+              <div class="radio-opt sel-green" onclick="toggleOpt(this,'sel-green')">✅ Eliminado</div>
+              <div class="radio-opt" onclick="toggleOpt(this,'sel-green')">💊 Larvicida</div>
+              <div class="radio-opt" onclick="toggleOpt(this,'sel-green')">⏰ Pendente</div>
+              <div class="radio-opt" onclick="toggleOpt(this,'sel-green')">📢 Notificado</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>FOTO DO FOCO <span style="color:#e74c3c">*obrigatória</span></label>
+            <div class="foto-area foto-ok" onclick="this.innerHTML='<div class=foto-icon>✅</div><div>Foto capturada · 14:32</div>'">
+              <div class="foto-icon">✅</div>
+              <div>Foto capturada · 14:32</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>OBSERVAÇÕES (opcional)</label>
+          <textarea class="obs-input" placeholder="Ex: Morador informou que a calha tem problema crônico...">Calha da varanda traseira com acúmulo de folhas. Morador avisado para limpeza semanal.</textarea>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn-cancel" onclick="confirmarCancelar()">Cancelar</button>
+        <button class="btn-salvar" onclick="ir('t6')">💾 Salvar Visita</button>
+      </div>
+    </div>
+
+    <!-- TELA 6: SUCESSO -->
+    <div class="tela t-sucesso" id="t6">
+      <div class="sucesso-icon">✅</div>
+      <h2>Visita registrada!</h2>
+      <p>Os dados foram salvos e sincronizados com a central em tempo real.</p>
+      <div class="sucesso-details">
+        <div class="det-row">
+          <span class="det-label">Endereço</span>
+          <span class="det-val">Rua das Oliveiras, 142</span>
+        </div>
+        <div class="det-row">
+          <span class="det-label">Situação</span>
+          <span class="det-val">🔴 Foco encontrado</span>
+        </div>
+        <div class="det-row">
+          <span class="det-label">Tipo</span>
+          <span class="det-val">Calha</span>
+        </div>
+        <div class="det-row">
+          <span class="det-label">Ação</span>
+          <span class="det-val">✅ Eliminado</span>
+        </div>
+        <div class="det-row">
+          <span class="det-label">Horário</span>
+          <span class="det-val">18:30 · 13/03/2026</span>
+        </div>
+        <div class="det-row">
+          <span class="det-label">Foto</span>
+          <span class="det-val">✅ Enviada</span>
+        </div>
+      </div>
+      <button class="btn-nova-home" onclick="ir('t2')">🏠 Voltar ao início</button>
+      <button class="btn-outra" onclick="ir('t3')">📷 Próximo imóvel</button>
+    </div>
+
+    <!-- TELA 7: ROTA -->
+    <div class="tela" id="t7">
+      <div class="header">
+        <button class="back" onclick="ir('t2')">←</button>
+        <h2>Minha Rota de Hoje</h2>
+        <button onclick="toggleMapaRota()" id="btn-mapa-toggle" style="background:#e8f0f7;border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;color:#1a5276;cursor:pointer">🗺️ Mapa</button>
+      </div>
+      <div style="background:#f0f4f8;padding:10px 20px;display:flex;gap:16px;font-size:13px;">
+        <span style="color:#27ae60;font-weight:700">✅ 18 visitados</span>
+        <span style="color:#f39c12;font-weight:700">⏰ 14 pendentes</span>
+        <span style="color:#e74c3c;font-weight:700">🔴 3 focos</span>
+      </div>
+
+      <!-- MAPA DA ROTA (toggle) -->
+      <div id="mapa-rota-view" style="display:none;padding:12px 16px;border-bottom:1px solid #eee;">
+        <div style="background:#e8f4e8;border-radius:14px;overflow:hidden;position:relative;height:200px;">
+          <!-- Mapa SVG simulado -->
+          <svg width="100%" height="200" viewBox="0 0 343 200" style="background:linear-gradient(180deg,#e8f5e9 0%,#c8e6c9 100%)">
+            <!-- Ruas -->
+            <line x1="0" y1="100" x2="343" y2="100" stroke="#bbb" stroke-width="3"/>
+            <line x1="0" y1="60" x2="343" y2="60" stroke="#ccc" stroke-width="2"/>
+            <line x1="0" y1="140" x2="343" y2="140" stroke="#ccc" stroke-width="2"/>
+            <line x1="80" y1="0" x2="80" y2="200" stroke="#ccc" stroke-width="2"/>
+            <line x1="180" y1="0" x2="180" y2="200" stroke="#bbb" stroke-width="3"/>
+            <line x1="270" y1="0" x2="270" y2="200" stroke="#ccc" stroke-width="2"/>
+            <!-- Rota tracejada -->
+            <polyline points="50,150 80,140 130,100 180,60 230,100 270,100 310,60" stroke="#1a5276" stroke-width="2.5" stroke-dasharray="6,3" fill="none"/>
+            <!-- Imóvel atual (você está aqui) -->
+            <circle cx="130" cy="100" r="10" fill="#1a5276"/>
+            <text x="130" y="104" text-anchor="middle" font-size="10" fill="white" font-weight="bold">📍</text>
+            <!-- Focos (vermelho) -->
+            <circle cx="50" cy="150" r="8" fill="#e74c3c"/>
+            <text x="50" y="154" text-anchor="middle" font-size="9" fill="white">1</text>
+            <circle cx="310" cy="60" r="8" fill="#e74c3c"/>
+            <text x="310" y="64" text-anchor="middle" font-size="9" fill="white">2</text>
+            <!-- Pendentes (laranja) -->
+            <circle cx="230" cy="100" r="7" fill="#f39c12"/>
+            <text x="230" y="104" text-anchor="middle" font-size="9" fill="white">5</text>
+            <circle cx="80" cy="140" r="7" fill="#f39c12"/>
+            <text x="80" y="144" text-anchor="middle" font-size="9" fill="white">4</text>
+            <!-- Visitados (verde) -->
+            <circle cx="180" cy="60" r="7" fill="#27ae60"/>
+            <text x="180" y="64" text-anchor="middle" font-size="9" fill="white">3</text>
+            <circle cx="270" cy="100" r="7" fill="#aaa"/>
+            <text x="270" y="104" text-anchor="middle" font-size="9" fill="white">6</text>
+          </svg>
+          <!-- Legenda -->
+          <div style="position:absolute;bottom:8px;left:8px;background:rgba(255,255,255,0.92);border-radius:8px;padding:6px 10px;font-size:10px;display:flex;gap:10px;">
+            <span>🔴 Foco</span><span style="color:#f39c12">⏰ Pendente</span><span style="color:#27ae60">✅ Visitado</span><span style="color:#1a5276">📍 Você</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LISTA DA ROTA -->
+      <div id="lista-rota-view" style="padding-top:12px">
+        <button class="rota-item" onclick="ir('t4')">
+          <div class="rota-num rn-vermelho">1</div>
+          <div class="rota-info">
+            <div class="rota-end">Rua das Oliveiras, 142</div>
+            <div class="rota-bairro">Jardim América</div>
+            <span class="rota-tag rt-foco">⚠️ Reincidente — prioridade</span>
+          </div>
+          <span class="rota-seta">›</span>
+        </button>
+        <button class="rota-item" onclick="ir('t3')">
+          <div class="rota-num rn-laranja">2</div>
+          <div class="rota-info">
+            <div class="rota-end">Av. Rondon Pacheco, 890</div>
+            <div class="rota-bairro">Centro</div>
+            <span class="rota-tag rt-pendente">⏰ Pendente</span>
+          </div>
+          <span class="rota-seta">›</span>
+        </button>
+        <button class="rota-item">
+          <div class="rota-num rn-verde">3</div>
+          <div class="rota-info">
+            <div class="rota-end">Rua José Bonifácio, 55</div>
+            <div class="rota-bairro">Santa Mônica</div>
+            <span class="rota-tag rt-ok">✅ Visitado</span>
+          </div>
+          <span class="rota-seta">›</span>
+        </button>
+        <button class="rota-item">
+          <div class="rota-num rn-cinza">4</div>
+          <div class="rota-info">
+            <div class="rota-end">Rua Vigário Dantas, 301</div>
+            <div class="rota-bairro">Osvaldo Rezende</div>
+            <span class="rota-tag rt-ausente">🚪 Ausente</span>
+          </div>
+          <span class="rota-seta">›</span>
+        </button>
+        <button class="rota-item" onclick="ir('t3')">
+          <div class="rota-num rn-laranja">5</div>
+          <div class="rota-info">
+            <div class="rota-end">Rua Pará, 1.240</div>
+            <div class="rota-bairro">Bom Jesus</div>
+            <span class="rota-tag rt-pendente">⏰ Pendente</span>
+          </div>
+          <span class="rota-seta">›</span>
+        </button>
+        <div style="text-align:center;padding:16px;color:#aaa;font-size:13px">+ 9 imóveis pendentes</div>
+      </div>
+      <div class="bottom-nav">
+        <button class="bn-item" onclick="ir('t2')"><span class="bn-icon">🏠</span><span class="bn-label">Início</span></button>
+        <button class="bn-item bn-ativo"><span class="bn-icon-wrap"><span class="bn-icon">🗺️</span><span class="bn-badge">14</span></span><span class="bn-label">Rota</span></button>
+        <button class="bn-item" onclick="ir('t3')"><span class="bn-icon">📷</span><span class="bn-label">Scan QR</span></button>
+        <button class="bn-item" onclick="ir('t8')"><span class="bn-icon">🏘️</span><span class="bn-label">Regiões</span></button>
+        <button class="bn-item" onclick="ir('t9')"><span class="bn-icon">👤</span><span class="bn-label">Perfil</span></button>
+      </div>
+    </div>
+
+    <!-- TELA 8: ROTEIRIZAÇÃO POR BAIRRO/REGIÃO -->
+    <div class="tela" id="t8">
+      <div class="header">
+        <button class="back" onclick="ir('t2')">←</button>
+        <h2>Roteirização</h2>
+        <span class="badge-status badge-online" style="background:#eaf4fb;color:#2980b9">14 Mar</span>
+      </div>
+
+      <!-- Seletor de tipo de visualização -->
+      <div style="display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid #eee">
+        <button onclick="setRotaView('regiao',this)" id="btn-regiao"
+          style="flex:1;padding:8px;border-radius:10px;border:2px solid #1a5276;background:#e8f0f7;color:#1a5276;font-size:13px;font-weight:700;cursor:pointer">
+          🗂️ Por Região
+        </button>
+        <button onclick="setRotaView('bairro',this)" id="btn-bairro"
+          style="flex:1;padding:8px;border-radius:10px;border:2px solid #eee;background:#fff;color:#888;font-size:13px;font-weight:600;cursor:pointer">
+          🏘️ Por Bairro
+        </button>
+        <button onclick="setRotaView('risco',this)" id="btn-risco"
+          style="flex:1;padding:8px;border-radius:10px;border:2px solid #eee;background:#fff;color:#888;font-size:13px;font-weight:600;cursor:pointer">
+          🔥 Por Risco
+        </button>
+      </div>
+
+      <div style="overflow-y:auto;padding-bottom:80px">
+
+        <!-- IA SUGESTÃO DE ROTA -->
+        <div style="padding:12px 16px 0">
+          <div class="rota-ia-box">
+            <div class="ia-titulo">🤖 Sugestão da IA para hoje</div>
+            <div class="ia-texto">Priorize o <strong>Setor Norte</strong> (7 focos em cluster) antes do Centro. Após o almoço, desloque-se para Jardim América onde há 2 reincidentes com retorno pendente.</div>
+            <button class="ia-acao" onclick="ir('t7')">Aceitar rota sugerida →</button>
+          </div>
+        </div>
+
+        <!-- VIEW: POR REGIÃO -->
+        <div id="view-regiao">
+          <div style="padding:12px 16px 4px;font-size:11px;font-weight:700;color:#aaa;letter-spacing:1px;text-transform:uppercase">
+            REGIÕES DA CIDADE — 14 MAR 2026
+          </div>
+
+          <!-- REGIÃO NORTE -->
+          <button class="regiao-card" onclick="toggleBairros('norte')">
+            <div class="regiao-header">
+              <div class="regiao-cor" style="background:#e74c3c"></div>
+              <div class="regiao-info">
+                <div class="reg-nome">🔴 Região Norte</div>
+                <div class="reg-bairros">Setor Norte · Tibery · Marta Helena · Jardins</div>
+              </div>
+              <span id="arrow-norte" style="font-size:18px;color:#ccc">›</span>
+            </div>
+            <div class="regiao-progress">
+              <div class="regiao-progress-fill" style="width:62%;background:#e74c3c"></div>
+            </div>
+            <div class="regiao-stats">
+              <div class="reg-stat"><div class="rs-val" style="color:#e74c3c">18</div><div class="rs-lbl">Focos</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#1a5276">142</div><div class="rs-lbl">Visitados</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#f39c12">87</div><div class="rs-lbl">Pendentes</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#27ae60">62%</div><div class="rs-lbl">Cobertura</div></div>
+            </div>
+          </button>
+          <div class="bairro-lista" id="bairros-norte">
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Setor Norte</div>
+              <div class="bi-imoveis">320 imóveis</div>
+              <span class="bi-focos bi-focos-red">🔴 7 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Tibery</div>
+              <div class="bi-imoveis">280 imóveis</div>
+              <span class="bi-focos bi-focos-red">🔴 6 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Marta Helena</div>
+              <div class="bi-imoveis">210 imóveis</div>
+              <span class="bi-focos bi-focos-orange">🟡 3 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Jardins</div>
+              <div class="bi-imoveis">190 imóveis</div>
+              <span class="bi-focos bi-focos-green">✅ 2 focos</span>
+            </div>
+          </div>
+
+          <!-- REGIÃO CENTRO -->
+          <button class="regiao-card" onclick="toggleBairros('centro')">
+            <div class="regiao-header">
+              <div class="regiao-cor" style="background:#f39c12"></div>
+              <div class="regiao-info">
+                <div class="reg-nome">🟡 Região Centro</div>
+                <div class="reg-bairros">Centro · Osvaldo Rezende · Martins · Fundinho</div>
+              </div>
+              <span id="arrow-centro" style="font-size:18px;color:#ccc">›</span>
+            </div>
+            <div class="regiao-progress">
+              <div class="regiao-progress-fill" style="width:78%;background:#f39c12"></div>
+            </div>
+            <div class="regiao-stats">
+              <div class="reg-stat"><div class="rs-val" style="color:#f39c12">11</div><div class="rs-lbl">Focos</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#1a5276">98</div><div class="rs-lbl">Visitados</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#f39c12">28</div><div class="rs-lbl">Pendentes</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#27ae60">78%</div><div class="rs-lbl">Cobertura</div></div>
+            </div>
+          </button>
+          <div class="bairro-lista" id="bairros-centro">
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Centro</div>
+              <div class="bi-imoveis">450 imóveis</div>
+              <span class="bi-focos bi-focos-orange">🟡 5 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Osvaldo Rezende</div>
+              <div class="bi-imoveis">310 imóveis</div>
+              <span class="bi-focos bi-focos-orange">🟡 4 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Martins</div>
+              <div class="bi-imoveis">180 imóveis</div>
+              <span class="bi-focos bi-focos-green">✅ 2 focos</span>
+            </div>
+          </div>
+
+          <!-- REGIÃO SUL -->
+          <button class="regiao-card" onclick="toggleBairros('sul')">
+            <div class="regiao-header">
+              <div class="regiao-cor" style="background:#f39c12"></div>
+              <div class="regiao-info">
+                <div class="reg-nome">🟡 Região Sul</div>
+                <div class="reg-bairros">Santa Mônica · Jardim América · Jardim Karaíba</div>
+              </div>
+              <span id="arrow-sul" style="font-size:18px;color:#ccc">›</span>
+            </div>
+            <div class="regiao-progress">
+              <div class="regiao-progress-fill" style="width:58%;background:#e74c3c"></div>
+            </div>
+            <div class="regiao-stats">
+              <div class="reg-stat"><div class="rs-val" style="color:#f39c12">9</div><div class="rs-lbl">Focos</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#1a5276">68</div><div class="rs-lbl">Visitados</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#e74c3c">49</div><div class="rs-lbl">Pendentes</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#e74c3c">58%</div><div class="rs-lbl">Cobertura</div></div>
+            </div>
+          </button>
+          <div class="bairro-lista" id="bairros-sul">
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Santa Mônica</div>
+              <div class="bi-imoveis">380 imóveis</div>
+              <span class="bi-focos bi-focos-orange">🟡 4 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Jardim América</div>
+              <div class="bi-imoveis">290 imóveis</div>
+              <span class="bi-focos bi-focos-red">🔴 3 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Jardim Karaíba</div>
+              <div class="bi-imoveis">210 imóveis</div>
+              <span class="bi-focos bi-focos-green">✅ 2 focos</span>
+            </div>
+          </div>
+
+          <!-- REGIÃO LESTE -->
+          <button class="regiao-card" onclick="toggleBairros('leste')">
+            <div class="regiao-header">
+              <div class="regiao-cor" style="background:#27ae60"></div>
+              <div class="regiao-info">
+                <div class="reg-nome">✅ Região Leste</div>
+                <div class="reg-bairros">Bom Jesus · Morumbi · Chácaras Tubalina</div>
+              </div>
+              <span id="arrow-leste" style="font-size:18px;color:#ccc">›</span>
+            </div>
+            <div class="regiao-progress">
+              <div class="regiao-progress-fill" style="width:85%;background:#27ae60"></div>
+            </div>
+            <div class="regiao-stats">
+              <div class="reg-stat"><div class="rs-val" style="color:#27ae60">5</div><div class="rs-lbl">Focos</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#1a5276">82</div><div class="rs-lbl">Visitados</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#f39c12">14</div><div class="rs-lbl">Pendentes</div></div>
+              <div class="reg-stat"><div class="rs-val" style="color:#27ae60">85%</div><div class="rs-lbl">Cobertura</div></div>
+            </div>
+          </button>
+          <div class="bairro-lista" id="bairros-leste">
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Bom Jesus</div>
+              <div class="bi-imoveis">260 imóveis</div>
+              <span class="bi-focos bi-focos-orange">🟡 3 focos</span>
+            </div>
+            <div class="bairro-item" onclick="ir('t7')">
+              <div class="bi-nome">Morumbi</div>
+              <div class="bi-imoveis">220 imóveis</div>
+              <span class="bi-focos bi-focos-green">✅ 2 focos</span>
+            </div>
+          </div>
+        </div><!-- /view-regiao -->
+
+        <!-- VIEW: POR BAIRRO (ordem alfabética) -->
+        <div id="view-bairro" style="display:none;padding:8px 16px">
+          <input type="text" placeholder="🔍 Buscar bairro..." style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid #e0e0e0;font-size:14px;margin-bottom:12px;background:#fafafa;outline:none">
+          <div class="bairro-item" style="background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onclick="ir('t7')">
+            <div class="bi-nome">Bom Jesus</div><div class="bi-imoveis">260 imóv.</div><span class="bi-focos bi-focos-orange">🟡 3</span>
+          </div>
+          <div class="bairro-item" style="background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onclick="ir('t7')">
+            <div class="bi-nome">Centro</div><div class="bi-imoveis">450 imóv.</div><span class="bi-focos bi-focos-orange">🟡 5</span>
+          </div>
+          <div class="bairro-item" style="background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onclick="ir('t7')">
+            <div class="bi-nome">Jardim América</div><div class="bi-imoveis">290 imóv.</div><span class="bi-focos bi-focos-red">🔴 3</span>
+          </div>
+          <div class="bairro-item" style="background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onclick="ir('t7')">
+            <div class="bi-nome">Morumbi</div><div class="bi-imoveis">220 imóv.</div><span class="bi-focos bi-focos-green">✅ 2</span>
+          </div>
+          <div class="bairro-item" style="background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onclick="ir('t7')">
+            <div class="bi-nome">Santa Mônica</div><div class="bi-imoveis">380 imóv.</div><span class="bi-focos bi-focos-orange">🟡 4</span>
+          </div>
+          <div class="bairro-item" style="background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onclick="ir('t7')">
+            <div class="bi-nome">Setor Norte</div><div class="bi-imoveis">320 imóv.</div><span class="bi-focos bi-focos-red">🔴 7</span>
+          </div>
+          <div class="bairro-item" style="background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)" onclick="ir('t7')">
+            <div class="bi-nome">Tibery</div><div class="bi-imoveis">280 imóv.</div><span class="bi-focos bi-focos-red">🔴 6</span>
+          </div>
+        </div>
+
+        <!-- VIEW: POR RISCO -->
+        <div id="view-risco" style="display:none;padding:8px 16px">
+          <div style="background:#fdecea;border-left:4px solid #e74c3c;border-radius:12px;padding:14px 16px;margin-bottom:10px">
+            <div style="font-size:12px;font-weight:700;color:#e74c3c;margin-bottom:8px">🔴 RISCO ALTO — Ação imediata</div>
+            <div class="bairro-item" style="padding:8px 0" onclick="ir('t7')"><div class="bi-nome">Setor Norte</div><span class="bi-focos bi-focos-red">7 focos · cluster</span></div>
+            <div class="bairro-item" style="padding:8px 0" onclick="ir('t7')"><div class="bi-nome">Tibery</div><span class="bi-focos bi-focos-red">6 focos</span></div>
+            <div class="bairro-item" style="padding:8px 0;border:none" onclick="ir('t7')"><div class="bi-nome">Jardim América</div><span class="bi-focos bi-focos-red">3 focos · reincidente</span></div>
+          </div>
+          <div style="background:#fef9e7;border-left:4px solid #f39c12;border-radius:12px;padding:14px 16px;margin-bottom:10px">
+            <div style="font-size:12px;font-weight:700;color:#f39c12;margin-bottom:8px">🟡 RISCO MÉDIO — Visitar hoje</div>
+            <div class="bairro-item" style="padding:8px 0" onclick="ir('t7')"><div class="bi-nome">Centro</div><span class="bi-focos bi-focos-orange">5 focos</span></div>
+            <div class="bairro-item" style="padding:8px 0" onclick="ir('t7')"><div class="bi-nome">Santa Mônica</div><span class="bi-focos bi-focos-orange">4 focos</span></div>
+            <div class="bairro-item" style="padding:8px 0;border:none" onclick="ir('t7')"><div class="bi-nome">Bom Jesus</div><span class="bi-focos bi-focos-orange">3 focos</span></div>
+          </div>
+          <div style="background:#e8f8f0;border-left:4px solid #27ae60;border-radius:12px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:700;color:#27ae60;margin-bottom:8px">✅ RISCO BAIXO — Rotina normal</div>
+            <div class="bairro-item" style="padding:8px 0" onclick="ir('t7')"><div class="bi-nome">Morumbi</div><span class="bi-focos bi-focos-green">2 focos</span></div>
+            <div class="bairro-item" style="padding:8px 0;border:none" onclick="ir('t7')"><div class="bi-nome">Jardim Karaíba</div><span class="bi-focos bi-focos-green">2 focos</span></div>
+          </div>
+        </div>
+
+      </div><!-- /scroll -->
+
+      <div class="bottom-nav">
+        <button class="bn-item" onclick="ir('t2')"><span class="bn-icon">🏠</span><span class="bn-label">Início</span></button>
+        <button class="bn-item" onclick="ir('t7')"><span class="bn-icon-wrap"><span class="bn-icon">🗺️</span><span class="bn-badge">14</span></span><span class="bn-label">Rota</span></button>
+        <button class="bn-item" onclick="ir('t3')"><span class="bn-icon">📷</span><span class="bn-label">Scan QR</span></button>
+        <button class="bn-item bn-ativo"><span class="bn-icon">🏘️</span><span class="bn-label">Regiões</span></button>
+        <button class="bn-item" onclick="ir('t9')"><span class="bn-icon">👤</span><span class="bn-label">Perfil</span></button>
+      </div>
+    </div>
+
+    <!-- TELA 9: PERFIL DO AGENTE -->
+    <div class="tela" id="t9" style="background:#f5f7fa;">
+      <div class="header">
+        <button class="back" onclick="ir('t2')">←</button>
+        <h2>Meu Perfil</h2>
+        <span id="status-badge-perfil" style="background:#d4edda;color:#155724;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">● Online</span>
+      </div>
+
+      <!-- Card do agente -->
+      <div style="background:linear-gradient(135deg,#1a5276,#117a65);margin:16px;border-radius:16px;padding:20px;color:white;text-align:center;">
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;">👤</div>
+        <div style="font-size:18px;font-weight:800">Carlos Silva</div>
+        <div style="font-size:13px;opacity:0.8;margin-top:4px">Agente de Endemias · Setor Norte</div>
+        <div style="font-size:11px;opacity:0.6;margin-top:4px">CPF: 123.456.789-00 · Matrícula: 4521</div>
+      </div>
+
+      <!-- Resumo do dia -->
+      <div style="margin:0 16px 16px;background:white;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,0.06)">
+        <div style="font-size:12px;font-weight:700;color:#1a5276;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">📊 Resumo de Hoje — 17 Mar 2026</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:#f0f8f3;border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:28px;font-weight:900;color:#27ae60">18</div>
+            <div style="font-size:11px;color:#666">Imóveis visitados</div>
+          </div>
+          <div style="background:#fef9e7;border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:28px;font-weight:900;color:#f39c12">14</div>
+            <div style="font-size:11px;color:#666">Pendentes</div>
+          </div>
+          <div style="background:#fdecea;border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:28px;font-weight:900;color:#e74c3c">3</div>
+            <div style="font-size:11px;color:#666">Focos encontrados</div>
+          </div>
+          <div style="background:#eaf4fb;border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:28px;font-weight:900;color:#2980b9">56%</div>
+            <div style="font-size:11px;color:#666">Cobertura do setor</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Histórico da semana -->
+      <div style="margin:0 16px 16px;background:white;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,0.06)">
+        <div style="font-size:12px;font-weight:700;color:#1a5276;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">📅 Esta Semana</div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:60px;margin-bottom:6px;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="background:#27ae60;border-radius:4px 4px 0 0;width:100%;height:45px;"></div>
+            <div style="font-size:9px;color:#888">Seg</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="background:#27ae60;border-radius:4px 4px 0 0;width:100%;height:38px;"></div>
+            <div style="font-size:9px;color:#888">Ter</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="background:#27ae60;border-radius:4px 4px 0 0;width:100%;height:50px;"></div>
+            <div style="font-size:9px;color:#888">Qua</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="background:#27ae60;border-radius:4px 4px 0 0;width:100%;height:32px;"></div>
+            <div style="font-size:9px;color:#888">Qui</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="background:#1a5276;border-radius:4px 4px 0 0;width:100%;height:28px;border:2px dashed #1a5276;background:rgba(26,82,118,0.2);"></div>
+            <div style="font-size:9px;color:#1a5276;font-weight:700">Hoje</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#666;text-align:center;">Média: 21 imóveis/dia esta semana</div>
+      </div>
+
+      <!-- Modo offline toggle -->
+      <div style="margin:0 16px 16px;background:white;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,0.06)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#1a1a2e">Modo Offline</div>
+            <div style="font-size:11px;color:#888;margin-top:2px">Salva localmente e sincroniza ao reconectar</div>
+          </div>
+          <div id="offline-toggle" onclick="toggleOffline()" style="width:44px;height:24px;border-radius:12px;background:#27ae60;cursor:pointer;position:relative;transition:background 0.3s;">
+            <div style="width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;right:2px;transition:right 0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.2)"></div>
+          </div>
+        </div>
+        <div id="sync-status" style="background:#f0f8f3;border-radius:8px;padding:8px 12px;font-size:11px;color:#27ae60;font-weight:600">
+          ✅ Sincronizado — último sync: 17/03 · 01:47
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div style="margin:0 16px 24px;">
+        <button onclick="ir('t1')" style="width:100%;padding:14px;background:#fdecea;border:1.5px solid #e74c3c;border-radius:12px;color:#e74c3c;font-size:14px;font-weight:700;cursor:pointer;">
+          Sair do aplicativo
+        </button>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="bn-item" onclick="ir('t2')"><span class="bn-icon">🏠</span><span class="bn-label">Início</span></button>
+        <button class="bn-item" onclick="ir('t7')"><span class="bn-icon-wrap"><span class="bn-icon">🗺️</span><span class="bn-badge">14</span></span><span class="bn-label">Rota</span></button>
+        <button class="bn-item" onclick="ir('t3')"><span class="bn-icon">📷</span><span class="bn-label">Scan QR</span></button>
+        <button class="bn-item" onclick="ir('t8')"><span class="bn-icon">🏘️</span><span class="bn-label">Regiões</span></button>
+        <button class="bn-item bn-ativo"><span class="bn-icon">👤</span><span class="bn-label">Perfil</span></button>
+      </div>
+    </div>
+
+  </div><!-- /screen -->
+</div><!-- /phone -->
+
+<!-- Modal confirmação cancelar visita -->
+<div id="modal-cancelar" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:16px;padding:28px 24px;margin:0 24px;text-align:center;max-width:320px;">
+    <div style="font-size:36px;margin-bottom:12px">⚠️</div>
+    <div style="font-size:17px;font-weight:800;color:#1a1a2e;margin-bottom:8px">Descartar visita?</div>
+    <div style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.5">Os dados preenchidos serão perdidos. Tem certeza que deseja cancelar?</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="fecharModal()" style="flex:1;padding:12px;background:#f5f7fa;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:#555">Continuar</button>
+      <button onclick="fecharModal();ir('t4')" style="flex:1;padding:12px;background:#e74c3c;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;color:white">Descartar</button>
+    </div>
+  </div>
+</div>
+
+<div style="color:rgba(255,255,255,0.4);font-size:13px;margin-top:20px;text-align:center">
+  Clique nos botões para navegar entre as telas
+</div>
+
+<script>
+function ir(id) {
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  document.getElementById(id).classList.add('ativa');
+}
+function toggleOpt(el, cls) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.radio-opt').forEach(o => {
+    o.classList.remove('sel','sel-red','sel-green','sel-orange');
+  });
+  el.classList.add(cls);
+}
+function toggleSit(el) {
+  document.querySelectorAll('[id^=sit-]').forEach(o => {
+    o.classList.remove('sel','sel-red','sel-green','sel-orange');
+  });
+  el.classList.add('sel-red');
+}
+function toggleBairros(reg) {
+  const lista = document.getElementById('bairros-' + reg);
+  const arrow = document.getElementById('arrow-' + reg);
+  if (lista.classList.contains('aberta')) {
+    lista.classList.remove('aberta');
+    arrow.textContent = '›';
+  } else {
+    lista.classList.add('aberta');
+    arrow.textContent = '⌄';
+  }
+}
+function toggleMapaRota() {
+  const mapa = document.getElementById('mapa-rota-view');
+  const lista = document.getElementById('lista-rota-view');
+  const btn = document.getElementById('btn-mapa-toggle');
+  if (mapa.style.display === 'none') {
+    mapa.style.display = 'block';
+    lista.style.display = 'none';
+    btn.textContent = '📋 Lista';
+    btn.style.background = '#e8f0f7';
+  } else {
+    mapa.style.display = 'none';
+    lista.style.display = 'block';
+    btn.textContent = '🗺️ Mapa';
+  }
+}
+function confirmarCancelar() {
+  const modal = document.getElementById('modal-cancelar');
+  modal.style.display = 'flex';
+}
+function fecharModal() {
+  document.getElementById('modal-cancelar').style.display = 'none';
+}
+let offlineMode = false;
+function toggleOffline() {
+  offlineMode = !offlineMode;
+  const toggle = document.getElementById('offline-toggle');
+  const status = document.getElementById('sync-status');
+  const dot = toggle.querySelector('div');
+  if (offlineMode) {
+    toggle.style.background = '#f39c12';
+    dot.style.right = '2px';
+    status.style.background = '#fff8e6';
+    status.style.color = '#f39c12';
+    status.textContent = '⏳ Modo offline — 3 registros aguardando sync';
+  } else {
+    toggle.style.background = '#27ae60';
+    dot.style.right = '2px';
+    status.style.background = '#f0f8f3';
+    status.style.color = '#27ae60';
+    status.textContent = '✅ Sincronizado — último sync: 17/03 · 01:47';
+  }
+}
+function setRotaView(view, btn) {
+  ['regiao','bairro','risco'].forEach(v => {
+    document.getElementById('view-' + v).style.display = 'none';
+    const b = document.getElementById('btn-' + v);
+    if (b) { b.style.border = '2px solid #eee'; b.style.background = '#fff'; b.style.color = '#888'; b.style.fontWeight = '600'; }
+  });
+  document.getElementById('view-' + view).style.display = 'block';
+  btn.style.border = '2px solid #1a5276';
+  btn.style.background = '#e8f0f7';
+  btn.style.color = '#1a5276';
+  btn.style.fontWeight = '700';
+}
+</script>
+</body>
+</html>

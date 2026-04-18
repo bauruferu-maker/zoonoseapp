@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>ZoonoseApp — Dossiê Completo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #fff; color: #1a1a1a; font-size: 13px; line-height: 1.65; }
+
+  /* ── CAPA ── */
+  .capa {
+    background: linear-gradient(150deg, #052e16 0%, #14532d 45%, #166534 100%);
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: space-between; padding: 70px 80px;
+    page-break-after: always; position: relative; overflow: hidden;
+  }
+  .capa::before {
+    content: ''; position: absolute; top: -120px; right: -120px;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: rgba(255,255,255,0.04); pointer-events: none;
+  }
+  .capa::after {
+    content: ''; position: absolute; bottom: -80px; left: -80px;
+    width: 350px; height: 350px; border-radius: 50%;
+    background: rgba(255,255,255,0.03); pointer-events: none;
+  }
+  .capa-topo { display: flex; align-items: center; gap: 14px; }
+  .capa-icon { font-size: 36px; }
+  .capa-nome { color: #4ade80; font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+  .capa-meio { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px 0 40px; }
+  .capa-tag { background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; padding: 6px 18px; border-radius: 100px; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; display: inline-block; margin-bottom: 24px; }
+  .capa h1 { font-size: 64px; color: #fff; font-weight: 900; line-height: 1.05; letter-spacing: -2px; margin-bottom: 16px; }
+  .capa .subtitulo { font-size: 20px; color: rgba(255,255,255,0.65); font-weight: 300; max-width: 520px; line-height: 1.5; }
+  .capa-rodape { display: flex; justify-content: space-between; align-items: flex-end; }
+  .capa-info { color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.8; }
+  .capa-info strong { color: rgba(255,255,255,0.8); }
+  .capa-confidencial { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.5); padding: 8px 18px; border-radius: 6px; font-size: 11px; }
+
+  /* ── ÍNDICE ── */
+  .indice { padding: 70px 80px; page-break-after: always; }
+  .indice h2 { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #16a34a; margin-bottom: 40px; }
+  .indice-item { display: flex; align-items: center; padding: 16px 0; border-bottom: 1px solid #f3f4f6; gap: 20px; }
+  .indice-num { min-width: 32px; height: 32px; background: #052e16; color: #4ade80; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .indice-txt strong { display: block; font-size: 15px; color: #111; font-weight: 600; }
+  .indice-txt span { font-size: 12px; color: #6b7280; }
+
+  /* ── SEÇÃO ── */
+  .secao { padding: 60px 80px; page-break-before: always; }
+  .secao-header { margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #f0fdf4; }
+  .secao-num-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #16a34a; margin-bottom: 8px; }
+  .secao-header h2 { font-size: 30px; font-weight: 800; color: #052e16; letter-spacing: -0.5px; line-height: 1.2; }
+  .secao-header p { font-size: 14px; color: #6b7280; margin-top: 8px; font-weight: 400; }
+
+  h3 { font-size: 15px; font-weight: 700; color: #052e16; margin: 32px 0 14px; padding-left: 14px; border-left: 3px solid #16a34a; }
+  h4 { font-size: 13px; font-weight: 600; color: #374151; margin: 20px 0 8px; }
+  p { margin-bottom: 12px; color: #374151; }
+
+  /* ── TABELAS ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; font-size: 12.5px; }
+  thead th { background: #052e16; color: #fff; padding: 11px 14px; text-align: left; font-weight: 600; font-size: 12px; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f3f4f6; color: #374151; }
+  tbody tr:nth-child(even) td { background: #f9fafb; }
+  tbody tr:last-child td { border-bottom: none; }
+  td strong { color: #052e16; font-weight: 700; }
+
+  /* ── CARDS MÉTRICAS ── */
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0 28px; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px 0 28px; }
+  .metric-card { border-radius: 12px; padding: 22px; }
+  .metric-card.verde { background: linear-gradient(135deg, #052e16, #14532d); }
+  .metric-card.esmeralda { background: linear-gradient(135deg, #064e3b, #065f46); }
+  .metric-card.azul { background: linear-gradient(135deg, #1e3a5f, #1e40af); }
+  .metric-card.roxo { background: linear-gradient(135deg, #3b0764, #6d28d9); }
+  .metric-card .valor { font-size: 32px; font-weight: 900; color: #fff; line-height: 1; }
+  .metric-card .label { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 6px; line-height: 1.4; }
+
+  /* ── CAIXAS ── */
+  .box { border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  .box-verde { background: #f0fdf4; border-left: 4px solid #16a34a; }
+  .box-azul { background: #eff6ff; border-left: 4px solid #2563eb; }
+  .box-amarelo { background: #fefce8; border-left: 4px solid #ca8a04; }
+  .box-vermelho { background: #fff1f2; border-left: 4px solid #e11d48; }
+  .box p { margin: 0; font-size: 13px; }
+  .box strong { color: #052e16; }
+  .box-azul strong { color: #1d4ed8; }
+  .box-amarelo strong { color: #92400e; }
+
+  /* ── GRID MÓDULOS ── */
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 20px 0; }
+  .modulo-card { border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 18px; transition: border-color 0.2s; }
+  .modulo-card .ic { font-size: 26px; margin-bottom: 10px; }
+  .modulo-card .titulo { font-size: 14px; font-weight: 700; color: #052e16; margin-bottom: 4px; }
+  .modulo-card .desc { font-size: 12px; color: #6b7280; line-height: 1.5; }
+  .modulo-card .badge { display: inline-block; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; margin-top: 8px; }
+  .modulo-card.atual { border-color: #16a34a; background: #f0fdf4; }
+
+  /* ── TIMELINE ── */
+  .timeline { padding-left: 28px; position: relative; margin: 20px 0; }
+  .timeline::before { content:''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(to bottom, #16a34a, #bbf7d0); }
+  .tl { position: relative; margin-bottom: 22px; }
+  .tl::before { content:''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; background: #16a34a; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 2px #16a34a; }
+  .tl-titulo { font-size: 12px; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tl-desc { font-size: 13px; color: #374151; margin-top: 3px; }
+
+  /* ── FASES PRODUTO ── */
+  .fase { display: flex; gap: 16px; margin-bottom: 18px; align-items: flex-start; }
+  .fase-num { min-width: 32px; height: 32px; background: #052e16; color: #4ade80; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+  .fase-body strong { display: block; font-size: 14px; color: #052e16; font-weight: 700; margin-bottom: 4px; }
+  .fase-body p { margin: 0; font-size: 13px; color: #4b5563; }
+
+  /* ── ROI DESTAQUE ── */
+  .roi-hero { background: linear-gradient(135deg, #052e16 0%, #14532d 100%); border-radius: 16px; padding: 40px; text-align: center; margin: 28px 0; }
+  .roi-hero .num { font-size: 80px; font-weight: 900; color: #4ade80; line-height: 1; }
+  .roi-hero .txt { font-size: 18px; color: rgba(255,255,255,0.9); margin-top: 10px; font-weight: 500; }
+  .roi-hero .sub { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 8px; }
+
+  /* ── CHECKLIST ── */
+  .checks { list-style: none; margin: 12px 0 20px; }
+  .checks li { padding: 8px 0 8px 28px; position: relative; border-bottom: 1px solid #f3f4f6; font-size: 13px; color: #374151; }
+  .checks li::before { content: "☐"; position: absolute; left: 0; top: 7px; color: #16a34a; font-size: 15px; }
+
+  /* ── SEMANAS ── */
+  .semana-titulo { background: #f0fdf4; border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 700; color: #052e16; margin: 24px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .semana-titulo::before { content: ""; display: block; width: 8px; height: 8px; background: #16a34a; border-radius: 50%; }
+
+  /* ── VISÃO LATAM ── */
+  .latam-hero { background: linear-gradient(135deg, #0c0a1e 0%, #1e1b4b 50%, #312e81 100%); border-radius: 16px; padding: 40px; color: #fff; margin-bottom: 32px; }
+  .latam-hero h3 { color: #a5b4fc; border-left-color: #6366f1; font-size: 13px; padding-left: 12px; margin-top: 0; }
+  .latam-hero .titulo { font-size: 32px; font-weight: 900; letter-spacing: -0.5px; margin: 12px 0 8px; }
+  .latam-hero .sub { font-size: 14px; color: rgba(255,255,255,0.65); max-width: 540px; line-height: 1.6; }
+  .latam-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+  .latam-card { border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 18px; }
+  .latam-card .ic { font-size: 24px; margin-bottom: 10px; }
+  .latam-card .nome { font-size: 13px; font-weight: 700; color: #052e16; margin-bottom: 4px; }
+  .latam-card .area { font-size: 12px; color: #6b7280; margin-bottom: 6px; line-height: 1.4; }
+  .latam-card .mercado { font-size: 11px; font-weight: 600; color: #16a34a; }
+  .latam-paises { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .pais-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; text-align: center; }
+  .pais-card .bandeira { font-size: 28px; margin-bottom: 8px; }
+  .pais-card .nome { font-size: 12px; font-weight: 700; color: #052e16; }
+  .pais-card .motivo { font-size: 11px; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+  .pais-card.prioridade { border-color: #16a34a; background: #f0fdf4; }
+  .pais-card .prioridade-tag { background: #16a34a; color: #fff; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; display: inline-block; margin-top: 6px; }
+
+  /* ── RODAPÉ ── */
+  .footer { background: #052e16; color: rgba(255,255,255,0.5); text-align: center; padding: 28px; font-size: 11px; margin-top: 60px; }
+  .footer strong { color: rgba(255,255,255,0.85); }
+
+  /* ── SEPARADOR ── */
+  .sep { height: 1px; background: linear-gradient(to right, #16a34a, transparent); margin: 28px 0; }
+
+  @media print { body { font-size: 12px; } }
+</style>
+</head>
+<body>
+
+<!-- ══════════ CAPA ══════════ -->
+<div class="capa">
+  <div class="capa-topo">
+    <div class="capa-icon">🦟</div>
+    <div class="capa-nome">ZoonoseApp</div>
+  </div>
+  <div class="capa-meio">
+    <div class="capa-tag">Dossiê Completo — Versão Sócio</div>
+    <h1>Controle<br>Digital de<br>Zoonoses</h1>
+    <p class="subtitulo">SaaS B2G para prefeituras brasileiras — da dengue à plataforma de fiscalização de campo para a América Latina</p>
+  </div>
+  <div class="capa-rodape">
+    <div class="capa-info">
+      <strong>Preparado por:</strong> Leonardo Albanesi<br>
+      <strong>Empresa:</strong> Baurufer — Uberlândia, MG<br>
+      <strong>Data:</strong> Março de 2026
+    </div>
+    <div class="capa-confidencial">Confidencial — uso restrito a sócios</div>
+  </div>
+</div>
+
+<!-- ══════════ ÍNDICE ══════════ -->
+<div class="indice">
+  <h2>Índice</h2>
+  <div class="indice-item"><div class="indice-num">01</div><div class="indice-txt"><strong>O Problema e a Oportunidade</strong><span>Por que dengue, por que agora, por que prefeituras</span></div></div>
+  <div class="indice-item"><div class="indice-num">02</div><div class="indice-txt"><strong>O Produto — App + Dashboard</strong><span>Como funciona, fluxo do agente, funcionalidades principais</span></div></div>
+  <div class="indice-item"><div class="indice-num">03</div><div class="indice-txt"><strong>Modelo Comercial e Preços</strong><span>Implantação + mensalidade, tabela por faixa, planos Lite e Pro</span></div></div>
+  <div class="indice-item"><div class="indice-num">04</div><div class="indice-txt"><strong>Custos Operacionais e Margens</strong><span>MVP, infraestrutura, equipe, margens por fase</span></div></div>
+  <div class="indice-item"><div class="indice-num">05</div><div class="indice-txt"><strong>ROI para a Prefeitura</strong><span>Economia gerada, payback e argumento definitivo de venda</span></div></div>
+  <div class="indice-item"><div class="indice-num">06</div><div class="indice-txt"><strong>Projeção Financeira — 5 Anos</strong><span>Receita e margens em cenário conservador</span></div></div>
+  <div class="indice-item"><div class="indice-num">07</div><div class="indice-txt"><strong>Go-to-Market</strong><span>Piloto sem licitação, Uberlândia via vereador, expansão por ARP</span></div></div>
+  <div class="indice-item"><div class="indice-num">08</div><div class="indice-txt"><strong>Plano de Ação — Próximas 4 Semanas</strong><span>Checklist concreto e prioridades imediatas</span></div></div>
+  <div class="indice-item"><div class="indice-num">09</div><div class="indice-txt"><strong>Riscos e Mitigações</strong><span>Os 7 principais riscos mapeados e como endereçar cada um</span></div></div>
+  <div class="indice-item"><div class="indice-num">10</div><div class="indice-txt"><strong>Visão GovField — Plataforma LATAM</strong><span>De app de dengue a plataforma de fiscalização para a América Latina</span></div></div>
+</div>
+
+<!-- ══════════ 01 — PROBLEMA ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 01</div>
+    <h2>O Problema e a Oportunidade</h2>
+    <p>Por que dengue, por que agora e por que prefeituras são o cliente ideal</p>
+  </div>
+
+  <div class="cards3">
+    <div class="metric-card verde">
+      <div class="valor">6,6M</div>
+      <div class="label">casos de dengue no Brasil em 2024 — recorde histórico</div>
+    </div>
+    <div class="metric-card esmeralda">
+      <div class="valor">5.900</div>
+      <div class="label">óbitos confirmados em 2024, segundo o Ministério da Saúde</div>
+    </div>
+    <div class="metric-card azul">
+      <div class="valor">R$ 74M</div>
+      <div class="label">custo estimado da dengue só em Uberlândia por ano</div>
+    </div>
+  </div>
+
+  <h3>O processo atual — cartão de papel</h3>
+  <p>Hoje, cada agente de endemias carrega um bloco de cartões físicos. Para cada imóvel visitado, preenche manualmente: data, situação e focos encontrados. Os dados chegam digitados 15 dias depois. Os problemas são críticos:</p>
+
+  <table>
+    <thead><tr><th>Problema</th><th>Impacto direto</th></tr></thead>
+    <tbody>
+      <tr><td>Morador perde o cartão do imóvel</td><td>Histórico do imóvel perdido permanentemente</td></tr>
+      <tr><td>Dados digitados 15 dias após a visita</td><td>Foco identificado tarde demais — mosquito já se reproduziu</td></tr>
+      <tr><td>Gestor não sabe em tempo real onde estão os focos</td><td>Impossível redirecionar agentes com agilidade</td></tr>
+      <tr><td>Sem foto da evidência</td><td>Difícil comprovar o trabalho realizado ao secretário</td></tr>
+      <tr><td>Rotas definidas manualmente no papel</td><td>Agente perde tempo visitando imóveis fechados repetidamente</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box box-verde">
+    <p><strong>O ciclo de vida do Aedes aegypti é de 7 a 10 dias do ovo ao adulto.</strong> Se o foco é identificado e registrado 15 dias depois, o mosquito já se reproduziu e contaminou a vizinhança inteira. Tecnologia que responde em menos de 24 horas quebra esse ciclo.</p>
+  </div>
+
+  <h3>Por que o mercado público é o ideal</h3>
+  <div class="grid2">
+    <div class="modulo-card">
+      <div class="titulo">💰 Receita previsível e estável</div>
+      <div class="desc">Prefeituras pagam mensalidade via orçamento aprovado. O churn é quase zero — diferente do B2C, não cancelam por impulso nem por crise financeira pessoal.</div>
+    </div>
+    <div class="modulo-card">
+      <div class="titulo">🏙️ 5.570 municípios disponíveis</div>
+      <div class="desc">350 municípios com mais de 50 mil habitantes como alvo prioritário. Mercado endereçável acima de R$ 500 milhões por ano em SaaS de saúde pública.</div>
+    </div>
+    <div class="modulo-card">
+      <div class="titulo">🔒 Lock-in físico — barreira de entrada</div>
+      <div class="desc">O QR code instalado no imóvel é um ativo físico da empresa. Quem instala primeiro cria uma barreira natural para concorrentes: trocar de sistema seria instalar novas placas em 290 mil imóveis.</div>
+    </div>
+    <div class="modulo-card">
+      <div class="titulo">🚨 Urgência política crescente</div>
+      <div class="desc">Epidemias de dengue viram crise política. Prefeito que digitaliza o controle ganha destaque eleitoral, cobertura da imprensa e reduz gastos com o SUS municipal.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 02 — PRODUTO ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 02</div>
+    <h2>O Produto</h2>
+    <p>App mobile para agentes de campo + painel web para gestores da secretaria</p>
+  </div>
+
+  <h3>Fluxo completo — do campo ao dashboard</h3>
+
+  <div class="fase"><div class="fase-num">1</div><div class="fase-body"><strong>Agente recebe a rota no app</strong><p>Ao iniciar o turno, o agente abre o app e visualiza os imóveis do dia organizados por rota otimizada (menor distância). Cada imóvel exibe o histórico de visitas anteriores e o status: nunca visitado, regular, com pendência ou reincidente.</p></div></div>
+  <div class="fase"><div class="fase-num">2</div><div class="fase-body"><strong>Chega ao imóvel — escaneia o QR</strong><p>Cada imóvel tem uma placa de PVC 5×5 cm com QR code único fixado na entrada. O agente escaneia com o próprio celular. O app abre automaticamente: endereço, histórico das últimas visitas, focos anteriores e nome do morador.</p></div></div>
+  <div class="fase"><div class="fase-num">3</div><div class="fase-body"><strong>Preenche o formulário guiado</strong><p>Perguntas objetivas: imóvel acessível? Focos encontrados? Tipo (caixa d'água, pneu, vaso, outro)? Tratamento aplicado? Foto da evidência. Tudo em menos de 2 minutos por imóvel.</p></div></div>
+  <div class="fase"><div class="fase-num">4</div><div class="fase-body"><strong>Sincroniza automaticamente — funciona offline</strong><p>Se o agente estiver em área sem sinal — comum em periferias — o app salva tudo localmente. Ao retornar com conexão, sincroniza de forma automática. Zero perda de dados.</p></div></div>
+  <div class="fase"><div class="fase-num">5</div><div class="fase-body"><strong>Gestor visualiza em tempo real no dashboard</strong><p>Na secretaria, o coordenador abre o painel web e vê: mapa de calor dos focos, agentes em campo, imóveis críticos, alertas automáticos de clusters e cobertura por bairro. Pode redirecionar equipes em minutos.</p></div></div>
+
+  <div class="sep"></div>
+  <h3>Funcionalidades — Lite vs. Pro</h3>
+  <table>
+    <thead><tr><th>Funcionalidade</th><th>Plano Lite</th><th>Plano Pro (+30%)</th></tr></thead>
+    <tbody>
+      <tr><td>App mobile para agentes (Android e iOS)</td><td>✓</td><td>✓</td></tr>
+      <tr><td>QR code único por imóvel</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Histórico permanente por endereço</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Modo offline com sincronização automática</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Painel web com mapa e KPIs em tempo real</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Roteirização automática de imóveis</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Foto do foco com evidência</td><td>—</td><td>✓</td></tr>
+      <tr><td>IA de classificação de foco (Google Vision)</td><td>—</td><td>✓</td></tr>
+      <tr><td>Relatório automático gerado por IA</td><td>—</td><td>✓</td></tr>
+      <tr><td>Mapa de calor preditivo</td><td>—</td><td>✓</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════ 03 — MODELO COMERCIAL ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 03</div>
+    <h2>Modelo Comercial e Preços</h2>
+    <p>Implantação única + mensalidade recorrente — modelo SaaS com receita previsível</p>
+  </div>
+
+  <div class="cards2">
+    <div class="modulo-card">
+      <div class="titulo">IMPLANTAÇÃO (cobrada uma vez)</div>
+      <div class="desc">Cobre: placas QR + cadastro inicial dos imóveis + configuração do ambiente + treinamento presencial. Representa a maior parte da receita no ano 1.</div>
+    </div>
+    <div class="modulo-card">
+      <div class="titulo">MENSALIDADE (receita recorrente)</div>
+      <div class="desc">Cobre: licença do app + painel web + infraestrutura em nuvem + suporte + atualizações e novas funcionalidades. Base do valuation da empresa.</div>
+    </div>
+  </div>
+
+  <h3>Tabela de preços por população</h3>
+  <table>
+    <thead><tr><th>Faixa</th><th>Habitantes</th><th>Implantação</th><th>Mensalidade</th><th>Total Ano 1</th><th>Renovação/ano</th></tr></thead>
+    <tbody>
+      <tr><td>F1</td><td>até 15 mil</td><td>R$ 8.000</td><td>R$ 2.000/mês</td><td>R$ 32.000</td><td>R$ 24.000</td></tr>
+      <tr><td>F2</td><td>15 a 30 mil</td><td>R$ 15.000</td><td>R$ 3.500/mês</td><td>R$ 57.000</td><td>R$ 42.000</td></tr>
+      <tr><td>F3</td><td>30 a 60 mil</td><td>R$ 25.000</td><td>R$ 6.000/mês</td><td>R$ 97.000</td><td>R$ 72.000</td></tr>
+      <tr><td>F4</td><td>60 a 100 mil</td><td>R$ 38.000</td><td>R$ 9.000/mês</td><td>R$ 146.000</td><td>R$ 108.000</td></tr>
+      <tr><td>F5</td><td>100 a 200 mil</td><td>R$ 60.000</td><td>R$ 15.000/mês</td><td>R$ 240.000</td><td>R$ 180.000</td></tr>
+      <tr><td>F6</td><td>200 a 350 mil</td><td>R$ 90.000</td><td>R$ 23.000/mês</td><td>R$ 366.000</td><td>R$ 276.000</td></tr>
+      <tr><td>F7</td><td>350 a 500 mil</td><td>R$ 120.000</td><td>R$ 30.000/mês</td><td>R$ 480.000</td><td>R$ 360.000</td></tr>
+      <tr><td><strong>F8 ★</strong></td><td><strong>500 a 750 mil</strong></td><td><strong>R$ 320.000</strong></td><td><strong>R$ 36.250/mês</strong></td><td><strong>R$ 755.000</strong></td><td><strong>R$ 435.000</strong></td></tr>
+      <tr><td>F9</td><td>750 mil a 1M</td><td>R$ 200.000</td><td>R$ 45.000/mês</td><td>R$ 740.000</td><td>R$ 540.000</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box box-azul">
+    <p><strong>★ Uberlândia é F8.</strong> Primeiro contrato grande: R$ 320 mil de implantação + R$ 36.250/mês = <strong>R$ 755 mil no ano 1</strong>. Esse único contrato já paga todo o investimento inicial (R$ 120 mil) e gera caixa para contratar equipe e acelerar.</p>
+  </div>
+
+  <div class="box box-verde">
+    <p><strong>0,63% do orçamento de saúde de Uberlândia</strong> (R$ 1,2 bilhão/ano). Menos de 1% do orçamento para economizar 20 a 30% do custo da dengue. É o argumento mais poderoso da venda.</p>
+  </div>
+</div>
+
+<!-- ══════════ 04 — CUSTOS ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 04</div>
+    <h2>Custos Operacionais e Margens</h2>
+    <p>O que custa para construir o MVP, manter a operação e qual a margem em cada fase</p>
+  </div>
+
+  <h3>Custo do MVP — antes do primeiro cliente pagar</h3>
+  <div class="cards2">
+    <div class="modulo-card">
+      <div class="titulo">Opção A — Bootstrap (5 meses)</div>
+      <div class="desc">Dev mobile React Native PJ (part-time): R$ 40 mil<br>Dev backend Node.js PJ (part-time): R$ 40 mil<br>Designer UX/UI (projeto): R$ 8 mil<br><br><strong>Total: R$ 88.000</strong></div>
+    </div>
+    <div class="modulo-card">
+      <div class="titulo">Opção B — Acelerado (3 meses)</div>
+      <div class="desc">Dev mobile React Native PJ (full-time): R$ 36 mil<br>Dev backend Node.js PJ (full-time): R$ 36 mil<br>Designer UX/UI (projeto): R$ 10 mil<br><br><strong>Total: R$ 82.000</strong></div>
+    </div>
+  </div>
+
+  <h3>Custo operacional total por fase</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Piloto (1–2 mun.)</th><th>Crescimento (10 mun.)</th><th>Escala (50 mun.)</th></tr></thead>
+    <tbody>
+      <tr><td>Equipe técnica</td><td>R$ 10.000</td><td>R$ 20.000</td><td>R$ 48.000</td></tr>
+      <tr><td>Infraestrutura AWS</td><td>R$ 342</td><td>R$ 1.247</td><td>R$ 4.060</td></tr>
+      <tr><td>APIs de IA (plano Pro)</td><td>R$ 500</td><td>R$ 2.000</td><td>R$ 8.000</td></tr>
+      <tr><td>Contador + jurídico</td><td>R$ 2.300</td><td>R$ 2.300</td><td>R$ 4.000</td></tr>
+      <tr><td>Comercial e vendas</td><td>R$ 0</td><td>R$ 6.000</td><td>R$ 12.000</td></tr>
+      <tr><td><strong>Total/mês</strong></td><td><strong>R$ 13.142</strong></td><td><strong>R$ 31.547</strong></td><td><strong>R$ 76.060</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Margens por fase</h3>
+  <table>
+    <thead><tr><th>Fase</th><th>Receita/mês</th><th>Custo/mês</th><th>Margem bruta</th><th>%</th></tr></thead>
+    <tbody>
+      <tr><td>Piloto (2 municípios)</td><td>R$ 38.250</td><td>R$ 13.142</td><td>R$ 25.108</td><td><strong>66%</strong></td></tr>
+      <tr><td>Crescimento (10 municípios)</td><td>R$ 120.000</td><td>R$ 31.547</td><td>R$ 88.453</td><td><strong>74%</strong></td></tr>
+      <tr><td>Escala (50 municípios)</td><td>R$ 520.000</td><td>R$ 76.060</td><td>R$ 443.940</td><td><strong>85%</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box box-verde">
+    <p><strong>SaaS B2G tem as melhores margens do mercado.</strong> Infraestrutura e jurídico são custos fixos — a margem melhora a cada novo município sem custo proporcional. Na escala, 85% de margem bruta supera qualquer SaaS B2C.</p>
+  </div>
+</div>
+
+<!-- ══════════ 05 — ROI ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 05</div>
+    <h2>ROI para a Prefeitura</h2>
+    <p>O argumento definitivo de venda — o sistema se paga em menos de 2 meses</p>
+  </div>
+
+  <h3>Custo da dengue em Uberlândia (base: dados SUS 2024)</h3>
+  <table>
+    <thead><tr><th>Tipo de custo</th><th>Custo unitário</th><th>Volume/ano</th><th>Total anual</th></tr></thead>
+    <tbody>
+      <tr><td>Consulta ambulatorial</td><td>R$ 180</td><td>60.000</td><td>R$ 10.800.000</td></tr>
+      <tr><td>Internação — dengue clássica</td><td>R$ 2.500</td><td>2.500</td><td>R$ 6.250.000</td></tr>
+      <tr><td>Internação UTI — dengue grave</td><td>R$ 8.000</td><td>200</td><td>R$ 1.600.000</td></tr>
+      <tr><td><strong>Custo direto SUS</strong></td><td></td><td></td><td><strong>R$ 18.650.000</strong></td></tr>
+      <tr><td>Custo indireto (absenteísmo, produtividade)</td><td></td><td></td><td>~ R$ 55.950.000</td></tr>
+      <tr><td><strong>Custo total estimado</strong></td><td></td><td></td><td><strong>R$ 74.600.000</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Economia gerada pelo ZoonoseApp (cenário conservador)</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Cálculo</th><th>Economia/ano</th></tr></thead>
+    <tbody>
+      <tr><td>Internações evitadas (redução de 20%)</td><td>500 × R$ 2.500</td><td>R$ 1.250.000</td></tr>
+      <tr><td>Internações em UTI evitadas (20%)</td><td>40 × R$ 8.000</td><td>R$ 320.000</td></tr>
+      <tr><td>Consultas evitadas (15%)</td><td>9.000 × R$ 180</td><td>R$ 1.620.000</td></tr>
+      <tr><td>Ganho operacional — agentes 25% mais produtivos</td><td>Equivale a 8 agentes extras sem contratar</td><td>R$ 480.000</td></tr>
+      <tr><td><strong>Economia total estimada</strong></td><td></td><td><strong>R$ 3.670.000/ano</strong></td></tr>
+      <tr><td>Custo do ZoonoseApp (implantação amortizada + mensalidade)</td><td></td><td>R$ 635.000/ano</td></tr>
+    </tbody>
+  </table>
+
+  <div class="roi-hero">
+    <div class="num">5,8×</div>
+    <div class="txt">Para cada R$ 1,00 investido, Uberlândia economiza R$ 5,80</div>
+    <div class="sub">Payback em menos de 2 meses — o primeiro mês de economia já paga a implantação inteira</div>
+  </div>
+
+  <div class="box box-azul">
+    <p><strong>Frase para o pitch:</strong> "Por 0,63% do orçamento de saúde, Uberlândia economiza 20 a 30% do custo da dengue e se torna referência nacional em controle digital de zoonoses."</p>
+  </div>
+</div>
+
+<!-- ══════════ 06 — PROJEÇÃO ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 06</div>
+    <h2>Projeção Financeira — 5 Anos</h2>
+    <p>Cenário conservador — crescimento orgânico, sem captação externa</p>
+  </div>
+
+  <table>
+    <thead><tr><th>Ano</th><th>Novos municípios</th><th>Carteira</th><th>Receita mensal</th><th>Receita anual</th><th>Margem</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ano 1</strong></td><td>2 (F1 + F8 Uberlândia)</td><td>2</td><td>R$ 38.250</td><td>R$ 459k + R$ 320k implant.</td><td>66%</td></tr>
+      <tr><td><strong>Ano 2</strong></td><td>+5 (mix F2–F4)</td><td>7</td><td>R$ 73.750</td><td>R$ 885.000</td><td>70%</td></tr>
+      <tr><td><strong>Ano 3</strong></td><td>+8 (mix F3–F6)</td><td>15</td><td>R$ 165.000</td><td>R$ 1.980.000</td><td>74%</td></tr>
+      <tr><td><strong>Ano 4</strong></td><td>+15 (mix F2–F7)</td><td>30</td><td>R$ 310.000</td><td>R$ 3.720.000</td><td>80%</td></tr>
+      <tr><td><strong>Ano 5</strong></td><td>+20 (mix F2–F8)</td><td>50</td><td>R$ 520.000</td><td>R$ 6.240.000</td><td>85%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cards3">
+    <div class="metric-card verde"><div class="valor">R$ 6,2M</div><div class="label">Receita recorrente anual no Ano 5</div></div>
+    <div class="metric-card esmeralda"><div class="valor">85%</div><div class="label">Margem bruta na escala</div></div>
+    <div class="metric-card azul"><div class="valor">50 cidades</div><div class="label">Cenário conservador — Ano 5</div></div>
+  </div>
+
+  <div class="box box-amarelo">
+    <p><strong>Cenário otimista — Ata de Registro de Preços (ARP):</strong> Se Uberlândia licitar via ARP (Art. 86, Lei 14.133/21), outros municípios podem aderir sem novo processo licitatório. Potencial de 30 a 80 municípios em 3 anos, triplicando a projeção acima.</p>
+  </div>
+
+  <h3>Investimento necessário para chegar no primeiro contrato</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Formalização da empresa + registro INPI</td><td>R$ 3.780</td></tr>
+      <tr><td>Placas QR — piloto (5.500 unidades)</td><td>R$ 8.250</td></tr>
+      <tr><td>Dev mobile MVP (5 meses PJ)</td><td>R$ 40.000</td></tr>
+      <tr><td>Dev backend MVP (5 meses PJ)</td><td>R$ 40.000</td></tr>
+      <tr><td>Designer UX/UI</td><td>R$ 8.000</td></tr>
+      <tr><td>Infraestrutura AWS (6 meses)</td><td>R$ 2.052</td></tr>
+      <tr><td>Contador + advogado (6 meses)</td><td>R$ 7.800</td></tr>
+      <tr><td>Reserva operacional</td><td>R$ 10.000</td></tr>
+      <tr><td><strong>Total para chegar no primeiro contrato</strong></td><td><strong>R$ 119.882</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════ 07 — GO-TO-MARKET ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 07</div>
+    <h2>Go-to-Market</h2>
+    <p>Como entrar no mercado sem licitação e escalar via Ata de Registro de Preços</p>
+  </div>
+
+  <h3>Fase 0 — Formalizar a empresa (Semanas 1 e 2)</h3>
+  <div class="box box-verde">
+    <p><strong>Tipo recomendado:</strong> ME SLU (Sociedade Limitada Unipessoal) no Simples Nacional. CNAEs: 6201-5/01, 6202-3/00 e 6311-9/00. Custo total de formalização: aproximadamente R$ 3.780.</p>
+  </div>
+  <ul class="checks">
+    <li>Abrir empresa com contador (ME SLU, Simples Nacional) — R$ 500 a R$ 1.500</li>
+    <li>Conta bancária PJ gratuita (Nubank PJ ou Inter)</li>
+    <li>Certificado digital e-CNPJ A1 — necessário para assinar contratos públicos — R$ 300 a R$ 500</li>
+    <li>Cadastro no SICAF — Sistema de Fornecedores do Governo Federal (gratuito em gov.br)</li>
+    <li>Registro de marca "ZoonoseApp" no INPI — classes 9 e 42 — R$ 1.780</li>
+  </ul>
+
+  <h3>Fase 1 — Piloto com o prefeito amigo (Mês 1 a 3)</h3>
+  <div class="modulo-card" style="margin-bottom:16px;">
+    <div class="titulo">Instrumento: Termo de Cooperação Técnica — sem licitação</div>
+    <div class="desc">Não é contrato oneroso. Pode ser assinado pelo prefeito por decreto simples. A prefeitura fornece agentes e logística. Você fornece app + placas + treinamento. 90 dias gratuitos. Ao final: relatório documentado de resultados, que se torna o case para Uberlândia.</div>
+  </div>
+
+  <h4>Roteiro da conversa com o prefeito</h4>
+  <table>
+    <thead><tr><th>#</th><th>Pergunta ou afirmação</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>"Vocês ainda usam cartão físico nos agentes de zoonose?"</td></tr>
+      <tr><td>2</td><td>"Quanto vocês gastaram com dengue no último ano em atendimentos?"</td></tr>
+      <tr><td>3</td><td>"Posso te mostrar como outras cidades estão resolvendo isso com tecnologia?"</td></tr>
+      <tr><td>4</td><td>"Me deixa rodar 90 dias numa regional — vocês não pagam nada. Se funcionar, a gente formaliza."</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Fase 2 — Uberlândia via vereador (Mês 2 a 6)</h3>
+  <table>
+    <thead><tr><th>Perfil</th><th>Mensagem-chave</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Vereador</strong> (porta de entrada)</td><td>"Dengue custou R$ 18 milhões a Uberlândia. Tenho uma solução que já está rodando em [cidade piloto] e reduz esse custo em 20 a 30%. Preciso de 20 minutos com o Secretário de Saúde."</td></tr>
+      <tr><td><strong>Secretário de Saúde</strong></td><td>"290 mil imóveis visitados com cartão de papel. Se o morador perde o cartão, perde o histórico. Com o ZoonoseApp, cada imóvel tem histórico permanente e você vê os focos em tempo real."</td></tr>
+      <tr><td><strong>Coordenador de Endemias</strong></td><td>"Você vai saber hoje, agora, quais imóveis têm foco ativo. Vai poder redirecionar agentes antes de virar epidemia. E não perde mais dado porque alguém perdeu o cartão."</td></tr>
+      <tr><td><strong>Prefeito</strong></td><td>"Por R$ 755 mil no primeiro ano — menos de 0,63% do orçamento de saúde — Uberlândia economiza R$ 3,67 milhões e se torna referência nacional em controle digital de zoonoses."</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Fase 3 — Expansão via Ata de Registro de Preços (Mês 12 a 36)</h3>
+  <div class="box box-azul">
+    <p><strong>Art. 86, Lei 14.133/21 — mecanismo de carona:</strong> quando Uberlândia licitar via ARP, outros municípios aderem sem novo processo licitatório. Você divulga a ata para prefeituras do Triângulo Mineiro e de Minas Gerais. Expansão sem custo de aquisição.</p>
+  </div>
+  <div class="timeline">
+    <div class="tl"><div class="tl-titulo">Triângulo Mineiro — Mês 6 a 18</div><div class="tl-desc">Cidade piloto → Uberlândia → Uberaba → Araguari → Ituiutaba</div></div>
+    <div class="tl"><div class="tl-titulo">Minas Gerais — Mês 18 a 30</div><div class="tl-desc">AMVAP e AMM — apresentar o case em congresso de municípios mineiros</div></div>
+    <div class="tl"><div class="tl-titulo">Expansão Nacional — Mês 30 a 60</div><div class="tl-desc">Regiões endêmicas: Centro-Oeste, Norte e Nordeste. Parceiros revendedores locais com 20 a 30% da receita.</div></div>
+  </div>
+</div>
+
+<!-- ══════════ 08 — PLANO DE AÇÃO ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 08</div>
+    <h2>Plano de Ação — Próximas 4 Semanas</h2>
+    <p>O que fazer agora, em ordem de prioridade e execução imediata</p>
+  </div>
+
+  <div class="semana-titulo">Semana 1</div>
+  <ul class="checks">
+    <li>Agendar conversa informal com o prefeito amigo — apresentar a ideia sem pressão</li>
+    <li>Contratar contador e iniciar abertura da ME SLU no Simples Nacional</li>
+    <li>Identificar o Secretário de Saúde e o Coordenador de Endemias de Uberlândia</li>
+  </ul>
+
+  <div class="semana-titulo">Semana 2</div>
+  <ul class="checks">
+    <li>Briefing de 20 minutos com o vereador vizinho — pitch informal, foco no problema</li>
+    <li>Pedir ao vereador o contato com a Secretaria de Saúde</li>
+    <li>Iniciar cadastro no SICAF em gov.br</li>
+    <li>Protocolar registro da marca ZoonoseApp no INPI (classes 9 e 42)</li>
+  </ul>
+
+  <div class="semana-titulo">Semana 3</div>
+  <ul class="checks">
+    <li>Reunião exploratória na Secretaria de Saúde de Uberlândia — objetivo: entender o processo atual, não vender</li>
+    <li>Levar o protótipo online e este dossiê em PDF como material de apoio</li>
+    <li>Confirmar o piloto com a cidade pequena e preparar o Termo de Cooperação Técnica</li>
+  </ul>
+
+  <div class="semana-titulo">Semana 4</div>
+  <ul class="checks">
+    <li>Contratar dev mobile freelancer PJ para o MVP (React Native)</li>
+    <li>Contratar dev backend freelancer PJ (Node.js ou Python)</li>
+    <li>Solicitar orçamento de placas QR — 5.500 unidades para o piloto</li>
+    <li>Configurar o ambiente AWS inicial (custo: R$ 342/mês)</li>
+  </ul>
+</div>
+
+<!-- ══════════ 09 — RISCOS ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 09</div>
+    <h2>Riscos e Mitigações</h2>
+    <p>Os 7 principais riscos mapeados e como endereçar cada um</p>
+  </div>
+
+  <table>
+    <thead><tr><th>Risco</th><th>Probabilidade</th><th>Mitigação</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Concorrente entra rápido</strong></td><td>Média</td>
+        <td>O QR code instalado no imóvel é um ativo físico. Quem instala primeiro vence — trocar de sistema exigiria instalar novas placas em centenas de milhares de imóveis.</td>
+      </tr>
+      <tr>
+        <td><strong>Prefeitura sem orçamento disponível</strong></td><td>Baixa</td>
+        <td>Dengue é prioridade eleitoral. O ROI de 5,8× mostra que é economia, não gasto. Prefeitura que não compra paga mais caro no SUS.</td>
+      </tr>
+      <tr>
+        <td><strong>Processo licitatório lento</strong></td><td>Alta</td>
+        <td>O piloto sem licitação (Termo de Cooperação) corre em paralelo. Quando o contrato é aprovado, o produto já está validado em campo.</td>
+      </tr>
+      <tr>
+        <td><strong>Resistência dos agentes de campo</strong></td><td>Média</td>
+        <td>UX ultra-simples pensado para baixa alfabetização digital + treinamento presencial. O app reduz trabalho burocrático — os agentes ganham, não perdem.</td>
+      </tr>
+      <tr>
+        <td><strong>Troca de prefeito ou secretário</strong></td><td>Alta</td>
+        <td>Enraizar o produto no técnico (Coordenadoria de Endemias), não no político. O coordenador permanece com a troca de governo; o prefeito vai.</td>
+      </tr>
+      <tr>
+        <td><strong>Sistema federal (SUS Digital) lançar algo similar</strong></td><td>Média</td>
+        <td>Diferenciais difíceis de replicar: offline-first, QR vitalício por imóvel, IA de classificação e suporte local presencial. SaaS privado itera 10× mais rápido que sistema federal.</td>
+      </tr>
+      <tr>
+        <td><strong>E a vacina da dengue não resolve isso?</strong></td><td>Baixa</td>
+        <td>A vacina protege o humano; o app elimina o criadouro. São ferramentas complementares — como vacina e saneamento básico. Além disso: a Dengvaxia cobre apenas 9 a 45 anos, não cobre Zika nem Chikungunya e não elimina o mosquito.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════ 10 — GOVFIELD LATAM ══════════ -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num-label">Seção 10</div>
+    <h2>Visão GovField — Plataforma LATAM</h2>
+    <p>De app de dengue a plataforma de fiscalização de campo para toda a América Latina</p>
+  </div>
+
+  <div class="latam-hero">
+    <h3>A grande visão</h3>
+    <div class="titulo">A mesma base.<br>Infinitos problemas resolvidos.</div>
+    <div class="sub">A lógica do ZoonoseApp — rotas, inspeção em campo, QR code por ativo, dashboard em tempo real — resolve qualquer problema de fiscalização de campo em escala. O que muda são os módulos, os formulários e os clientes. A infraestrutura é a mesma.</div>
+  </div>
+
+  <h3>Módulos da plataforma GovField</h3>
+  <div class="latam-cards">
+    <div class="latam-card" style="border-color:#16a34a; background:#f0fdf4;">
+      <div class="ic">🦟</div>
+      <div class="nome">ZoonoseApp <span style="background:#16a34a;color:#fff;font-size:9px;padding:2px 7px;border-radius:100px;font-weight:700;">ATIVO</span></div>
+      <div class="area">Controle de dengue, Zika e Chikungunya</div>
+      <div class="mercado">5.570 prefeituras brasileiras</div>
+    </div>
+    <div class="latam-card">
+      <div class="ic">🌾</div>
+      <div class="nome">AgroField</div>
+      <div class="area">Fiscalização de pragas, pulverização e rastreabilidade de lavouras</div>
+      <div class="mercado">Secretarias de Agricultura + cooperativas</div>
+    </div>
+    <div class="latam-card">
+      <div class="ic">💧</div>
+      <div class="nome">SaneaField</div>
+      <div class="area">Inspeção de rede de água, esgoto e fossas clandestinas</div>
+      <div class="mercado">SAAE, COPASA, SABESP e autarquias municipais</div>
+    </div>
+    <div class="latam-card">
+      <div class="ic">🍽️</div>
+      <div class="nome">VigiField</div>
+      <div class="area">Vigilância sanitária — bares, feiras, restaurantes e indústrias</div>
+      <div class="mercado">Vigilâncias sanitárias municipais e estaduais</div>
+    </div>
+    <div class="latam-card">
+      <div class="ic">🏗️</div>
+      <div class="nome">ObraField</div>
+      <div class="area">Fiscalização de obras irregulares, calçadas e alvarás de construção</div>
+      <div class="mercado">Secretarias de Obras e Urbanismo</div>
+    </div>
+    <div class="latam-card">
+      <div class="ic">🌿</div>
+      <div class="nome">AmbienteField</div>
+      <div class="area">Desmatamento, queimadas e lançamento de esgoto em cursos d'água</div>
+      <div class="mercado">IBAMA, SEMAD e secretarias estaduais de meio ambiente</div>
+    </div>
+  </div>
+
+  <h3>Expansão para a América Latina</h3>
+  <p>Os mesmos problemas existem em toda a LATAM. O produto brasileiro já nasce competitivo em dólar pelo câmbio favorável, e o modelo de gestão pública municipal é similar em todos os países.</p>
+
+  <div class="latam-paises">
+    <div class="pais-card">
+      <div class="bandeira">🇧🇷</div>
+      <div class="nome">Brasil</div>
+      <div class="motivo">Laboratório e case de referência. Base para toda a expansão.</div>
+      <div class="prioridade-tag">Fase 1</div>
+    </div>
+    <div class="pais-card prioridade">
+      <div class="bandeira">🇨🇴</div>
+      <div class="nome">Colômbia</div>
+      <div class="motivo">Alta incidência de dengue. Orçamento público de saúde robusto. Programa nacional ativo.</div>
+      <div class="prioridade-tag">Fase 2</div>
+    </div>
+    <div class="pais-card prioridade">
+      <div class="bandeira">🇲🇽</div>
+      <div class="nome">México</div>
+      <div class="motivo">Maior mercado da LATAM. 2.400 municípios. IMSS e estados com orçamento de TI em saúde.</div>
+      <div class="prioridade-tag">Fase 2</div>
+    </div>
+    <div class="pais-card">
+      <div class="bandeira">🇦🇷</div>
+      <div class="nome">Argentina</div>
+      <div class="motivo">Surto recorde de dengue em 2024. Governo federal com programa de controle vetorial ativo.</div>
+      <div class="prioridade-tag">Fase 3</div>
+    </div>
+  </div>
+
+  <div class="box box-azul">
+    <p><strong>Estratégia de entrada LATAM:</strong> Brasil como laboratório e case documentado → Colômbia e México como primeiro mercado externo (maior orçamento público em saúde) → parceria com empresas locais de TI governamental, evitando processo licitatório direto e acelerando o ciclo de venda.</p>
+  </div>
+
+  <h3>Por que a base tecnológica é o maior ativo</h3>
+  <table>
+    <thead><tr><th>Componente</th><th>Reaproveitamento</th></tr></thead>
+    <tbody>
+      <tr><td>App mobile (agente de campo)</td><td>100% — apenas muda o formulário e o ícone do módulo</td></tr>
+      <tr><td>Backend e banco de dados</td><td>100% — arquitetura multi-tenant já suporta múltiplos módulos</td></tr>
+      <tr><td>Dashboard web (gestor)</td><td>~80% — KPIs e mapa são genéricos; alertas são específicos</td></tr>
+      <tr><td>Infraestrutura AWS</td><td>100% — custo marginal de novos módulos é quase zero</td></tr>
+      <tr><td>Processo comercial e licitatório</td><td>~70% — playbook de vendas B2G é replicável entre módulos</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box box-verde">
+    <p><strong>O valuation da empresa muda completamente</strong> quando o pitch deixa de ser "app de dengue para prefeituras brasileiras" e passa a ser "plataforma de fiscalização de campo para governos da América Latina". Mesmo produto, narrativa de 10× maior.</p>
+  </div>
+</div>
+
+<!-- RODAPÉ -->
+<div class="footer">
+  <strong>ZoonoseApp — Dossiê Completo v2.0</strong> — Março de 2026<br>
+  Preparado por Leonardo Albanesi — Baurufer, Uberlândia MG<br>
+  Confidencial — uso restrito a sócios e investidores
+</div>
+
+</body>
+</html>

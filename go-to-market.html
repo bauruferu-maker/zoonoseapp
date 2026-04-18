@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>ZoonoseApp — Go-to-Market + Formalização</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; color: #1a1a2e; background: white; }
+  .page { width: 210mm; padding: 14mm 16mm; margin: 0 auto; }
+
+  .cover { background: linear-gradient(135deg, #117a65 0%, #1a5276 100%); color: white; padding: 36px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+  .cover h1 { font-size: 24px; font-weight: 800; }
+  .cover .sub { font-size: 12px; opacity: 0.85; margin-top: 6px; }
+  .cover .badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 6px 14px; font-size: 11px; font-weight: 600; }
+
+  h2 { font-size: 13px; font-weight: 700; color: #117a65; border-bottom: 2px solid #117a65; padding-bottom: 4px; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  h3 { font-size: 11px; font-weight: 700; color: #1a5276; margin: 12px 0 6px; }
+  h4 { font-size: 10.5px; font-weight: 600; color: #555; margin: 8px 0 4px; }
+
+  p { line-height: 1.6; margin-bottom: 6px; font-size: 10.5px; }
+  ul { padding-left: 16px; margin-bottom: 8px; }
+  li { margin-bottom: 3px; font-size: 10.5px; line-height: 1.5; }
+  strong { color: #1a5276; }
+
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 10px; }
+  th { background: #117a65; color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 9.5px; }
+  td { padding: 5px 8px; border-bottom: 1px solid #e8edf5; vertical-align: top; }
+  tr:nth-child(even) td { background: #f7faf8; }
+  .highlight td { background: #e0f4ec !important; font-weight: 600; color: #117a65; }
+  .total-row td { background: #117a65 !important; color: white !important; font-weight: 700; }
+
+  .fase-header { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #117a65, #1a5276); color: white; border-radius: 8px; padding: 14px 20px; margin: 18px 0 12px; }
+  .fase-num { font-size: 28px; font-weight: 900; opacity: 0.7; }
+  .fase-title { font-size: 14px; font-weight: 700; }
+  .fase-sub { font-size: 10px; opacity: 0.8; margin-top: 2px; }
+
+  .checklist { background: #f0faf5; border: 1px solid #b2dfce; border-radius: 8px; padding: 14px 18px; margin: 8px 0; }
+  .checklist-item { display: flex; align-items: flex-start; gap: 8px; padding: 4px 0; font-size: 10.5px; border-bottom: 1px solid #d4eee3; }
+  .checklist-item:last-child { border: none; }
+  .check-box { width: 14px; height: 14px; border: 2px solid #117a65; border-radius: 3px; flex-shrink: 0; margin-top: 1px; }
+
+  .quote-box { background: #f0faf5; border-left: 4px solid #117a65; border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 6px 0 10px; font-style: italic; font-size: 10.5px; color: #333; }
+  .quote-label { font-size: 9px; font-weight: 700; color: #117a65; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-style: normal; }
+
+  .budget-total { background: linear-gradient(135deg, #117a65, #1a5276); color: white; border-radius: 10px; padding: 18px 24px; margin: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+  .budget-total .num { font-size: 28px; font-weight: 900; }
+  .budget-total .lbl { font-size: 10px; opacity: 0.8; margin-top: 2px; }
+  .budget-total .nota { font-size: 10px; opacity: 0.85; max-width: 300px; line-height: 1.5; }
+
+  .week-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0; }
+  .week-card { background: #f7faf8; border: 1px solid #b2dfce; border-radius: 8px; padding: 12px; }
+  .week-card .week-num { font-size: 11px; font-weight: 700; color: #117a65; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .week-card ul { padding-left: 12px; }
+  .week-card li { font-size: 9.5px; margin-bottom: 4px; line-height: 1.4; }
+
+  .geo-box { background: #1a1a2e; color: #e0f4ec; border-radius: 8px; padding: 14px 18px; font-family: 'Courier New', monospace; font-size: 9.5px; line-height: 2; margin: 8px 0; }
+  .geo-box .region { color: #52d9aa; font-weight: 700; }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .risk-item { background: #fff8e6; border: 1px solid #ffd966; border-radius: 6px; padding: 10px; }
+  .risk-item .risk-title { font-size: 10px; font-weight: 700; color: #856404; margin-bottom: 4px; }
+  .risk-item .risk-mit { font-size: 9.5px; color: #555; line-height: 1.4; }
+
+  .msg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; }
+  .msg-card { background: white; border: 1px solid #dde3ee; border-radius: 8px; padding: 12px; }
+  .msg-card .perfil { font-size: 9px; font-weight: 700; color: #117a65; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .msg-card p { font-size: 10px; color: #333; font-style: italic; line-height: 1.5; }
+
+  .footer { border-top: 1px solid #dde3ee; margin-top: 20px; padding-top: 8px; text-align: center; color: #999; font-size: 9px; }
+  hr { border: none; border-top: 1px solid #e0f4ec; margin: 14px 0; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 600; margin: 2px; }
+  .tag-green { background: #d4edda; color: #155724; }
+  .tag-blue { background: #d0e7ff; color: #1a5276; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="cover">
+    <div>
+      <div style="font-size:10px;opacity:0.7;margin-bottom:6px;">🗺️ ESTRATÉGIA COMERCIAL · GOVTECH</div>
+      <h1>ZoonoseApp — Go-to-Market</h1>
+      <div class="sub">Formalização da Empresa + Plano de Entrada + Expansão</div>
+      <div style="margin-top:10px;font-size:10px;opacity:0.7;">v2.0 · Março 2026</div>
+    </div>
+    <div style="text-align:right">
+      <div class="badge">CONFIDENCIAL</div>
+      <div style="margin-top:12px;font-size:10px;opacity:0.7;line-height:1.5">Piloto → Uberlândia<br>→ Triângulo Mineiro → Brasil</div>
+    </div>
+  </div>
+
+  <!-- FASE 0 -->
+  <div class="fase-header">
+    <div class="fase-num">0</div>
+    <div>
+      <div class="fase-title">Formalizar a Empresa</div>
+      <div class="fase-sub">Semanas 1–2 · Custo total: ~R$ 3.780 · Sem CNPJ não há contrato público</div>
+    </div>
+  </div>
+
+  <h3>Tipo de empresa recomendado</h3>
+  <table>
+    <tr><th>Opção</th><th>Quando usar</th><th>Limite faturamento</th><th>Imposto</th></tr>
+    <tr><td>MEI</td><td>Só enquanto testa a ideia</td><td>R$ 81k/ano</td><td>R$ 70/mês fixo</td></tr>
+    <tr class="highlight"><td><strong>ME SLU — Simples Nacional</strong></td><td><strong>Recomendado desde o início</strong></td><td><strong>R$ 4,8M/ano</strong></td><td><strong>6–15,5% receita</strong></td></tr>
+    <tr><td>LTDA</td><td>Quando tiver sócio ou crescer</td><td>Sem limite</td><td>Simples ou Lucro Presumido</td></tr>
+  </table>
+
+  <p><strong>CNAEs necessários:</strong> 6201-5/01 (desenvolvimento sob encomenda) · 6202-3/00 (licenciamento de software) · 6311-9/00 (tratamento de dados / SaaS)</p>
+
+  <h3>Checklist de formalização</h3>
+  <div class="checklist">
+    <div class="checklist-item"><div class="check-box"></div><span>Abrir empresa ME SLU com contador — Simples Nacional (R$ 500–1.500, 1–2 semanas)</span></div>
+    <div class="checklist-item"><div class="check-box"></div><span>Abrir conta PJ gratuita (Nubank PJ, Inter ou Itaú)</span></div>
+    <div class="checklist-item"><div class="check-box"></div><span>Certificado digital e-CNPJ A1 ou A3 — obrigatório para assinar contratos públicos (R$ 300–500)</span></div>
+    <div class="checklist-item"><div class="check-box"></div><span>Cadastro no SICAF — Sistema de Cadastramento de Fornecedores Federais (gratuito, gov.br)</span></div>
+    <div class="checklist-item"><div class="check-box"></div><span>Registrar marca "ZoonoseApp" no INPI — classes 9 (software) e 42 (SaaS) — R$ 890 × 2 = R$ 1.780</span></div>
+    <div class="checklist-item"><div class="check-box"></div><span>Incluir cláusula de propriedade intelectual no contrato social</span></div>
+  </div>
+
+  <table>
+    <tr><th>Item</th><th>Custo</th></tr>
+    <tr><td>Honorários contador (abertura)</td><td>R$ 500–1.500</td></tr>
+    <tr><td>Certificado digital e-CNPJ</td><td>R$ 300–500</td></tr>
+    <tr><td>Registro de marca INPI (2 classes)</td><td>R$ 1.780</td></tr>
+    <tr><td>Cadastro SICAF + conta PJ</td><td>Gratuito</td></tr>
+    <tr class="total-row"><td><strong>Total formalização</strong></td><td><strong>~R$ 2.580–3.780</strong></td></tr>
+  </table>
+
+  <!-- FASE 1 -->
+  <div class="fase-header">
+    <div class="fase-num">1</div>
+    <div>
+      <div class="fase-title">Piloto com o Prefeito Amigo</div>
+      <div class="fase-sub">Mês 1–3 · ~15k hab · Sem licitação · Custo: R$ 8.250 em placas</div>
+    </div>
+  </div>
+
+  <p>Cidade de ~15k habitantes: ~5.500 imóveis, operação controlável, acesso direto ao prefeito. Decisão em dias, não meses. <strong>Instrumento: Termo de Cooperação Técnica</strong> — não é contrato oneroso, não exige licitação.</p>
+
+  <h3>Roteiro da conversa com o prefeito</h3>
+  <div class="checklist">
+    <div class="checklist-item"><div class="check-box"></div><span>"Vocês ainda usam cartão físico nos agentes de zoonose?"</span></div>
+    <div class="checklist-item"><div class="check-box"></div><span>"Quanto vocês gastaram com dengue no último ano em atendimentos?"</span></div>
+    <div class="checklist-item"><div class="check-box"></div><span>"Me deixa rodar 90 dias numa regional — vocês não pagam nada. Se funcionar, a gente formaliza."</span></div>
+  </div>
+
+  <h3>Entregáveis do piloto (base para o contrato grande)</h3>
+  <ul>
+    <li>Imóveis visitados com app vs. cartão físico (comparativo)</li>
+    <li>Tempo médio de resposta a focos — meta: &lt;24h (era 5–15 dias)</li>
+    <li>Focos encontrados, eliminados e reincidentes</li>
+    <li>Satisfação dos agentes (NPS interno)</li>
+    <li>Relatório PDF documentado para embasar pregão eletrônico</li>
+  </ul>
+
+  <!-- FASE 2 -->
+  <div class="fase-header">
+    <div class="fase-num">2</div>
+    <div>
+      <div class="fase-title">Uberlândia via Vereador</div>
+      <div class="fase-sub">Mês 2–6 · F8 · R$ 320k implantação + R$ 36.250/mês · Pregão eletrônico</div>
+    </div>
+  </div>
+
+  <p><strong>O vereador não fecha contrato — mas abre a porta.</strong> Com o case do piloto em mãos, ele faz a ponte com o Secretário de Saúde. Uma reunião técnica com a Coordenadoria de Endemias é suficiente para iniciar o processo.</p>
+
+  <h3>Mensagem para cada perfil</h3>
+  <div class="msg-grid">
+    <div class="msg-card">
+      <div class="perfil">Para o Vereador</div>
+      <p>"Dengue custou R$ 18 milhões a Uberlândia no último ano. Eu tenho uma solução rodando em [cidade piloto] que reduz esse custo em 20–30%. Preciso de 20 minutos com o Secretário de Saúde."</p>
+    </div>
+    <div class="msg-card">
+      <div class="perfil">Para o Secretário de Saúde</div>
+      <p>"Seus agentes visitam 290 mil imóveis com cartão de papel. Se o morador perde o cartão, perde o histórico. Com o ZoonoseApp, cada imóvel tem histórico permanente e você responde a focos em horas, não em semanas."</p>
+    </div>
+    <div class="msg-card">
+      <div class="perfil">Para o Coordenador de Endemias</div>
+      <p>"Você vai saber hoje, agora, quais imóveis têm foco ativo. Vai poder redirecionar agentes antes de virar epidemia. E não perde mais dado porque alguém perdeu o cartão."</p>
+    </div>
+    <div class="msg-card">
+      <div class="perfil">Para o Prefeito de Uberlândia</div>
+      <p>"Por R$ 755 mil no primeiro ano — 0,63% do orçamento de saúde — Uberlândia economiza R$ 3,67 milhões e se torna referência nacional em controle digital de zoonoses."</p>
+    </div>
+  </div>
+
+  <h3>Caminho licitatório</h3>
+  <table>
+    <tr><th>Modalidade</th><th>Quando usar</th><th>Vantagem</th></tr>
+    <tr><td>Dispensa (até R$ 57.9k)</td><td>Piloto remunerado</td><td>Rápido, sem processo</td></tr>
+    <tr class="highlight"><td><strong>Pregão eletrônico — Técnica e Preço</strong></td><td><strong>Contrato pleno</strong></td><td><strong>Melhor para software</strong></td></tr>
+    <tr><td>Ata de Registro de Preços (ARP)</td><td>Renovação + expansão</td><td>Outros municípios aderem sem licitar</td></tr>
+  </table>
+  <p style="font-size:10px;color:#555;font-style:italic;">Vantagem de quem entra primeiro: você influencia o edital técnico. Requisitos como offline-first, QR vitalício e IA de classificação viram barreiras de entrada para concorrentes.</p>
+
+  <!-- FASE 3 -->
+  <div class="fase-header">
+    <div class="fase-num">3</div>
+    <div>
+      <div class="fase-title">Expansão via Ata de Registro de Preços</div>
+      <div class="fase-sub">Mês 12–36 · Outros municípios aderem sem novo processo licitatório</div>
+    </div>
+  </div>
+
+  <div class="geo-box">
+<span class="region">TRIÂNGULO MINEIRO</span> (Mês 6–18)
+  [Cidade piloto] → Uberlândia → Uberaba → Araguari → Ituiutaba → Patos de Minas
+
+<span class="region">MINAS GERAIS</span> (Mês 18–30)
+  AMVAP (Associação dos Municípios do Vale do Paranaíba)
+  AMM (Associação Mineira de Municípios) → apresentar o case
+
+<span class="region">EXPANSÃO NACIONAL</span> (Mês 30–60)
+  Regiões endêmicas: Centro-Oeste, Norte, Nordeste
+  Parceiros revendedores locais (20–30% da receita anual)</div>
+
+  <!-- RISCOS -->
+  <h2>Riscos e Mitigações</h2>
+  <div class="risk-grid">
+    <div class="risk-item">
+      <div class="risk-title">⚡ Concorrente entra rápido</div>
+      <div class="risk-mit">QR code instalado = lock-in físico. Quem instala 290k placas primeiro vence — concorrente teria que reinstalar tudo.</div>
+    </div>
+    <div class="risk-item">
+      <div class="risk-title">💰 Prefeitura sem orçamento</div>
+      <div class="risk-mit">Dengue é prioridade eleitoral. ROI 5,8x — é economia, não gasto. R$ 755k para economizar R$ 3,67M.</div>
+    </div>
+    <div class="risk-item">
+      <div class="risk-title">⏳ Processo licitatório lento</div>
+      <div class="risk-mit">Piloto sem licitação (Termo de Cooperação) roda em paralelo enquanto processo formal corre.</div>
+    </div>
+    <div class="risk-item">
+      <div class="risk-title">🔄 Troca de prefeito</div>
+      <div class="risk-mit">Enraizar no técnico (Coordenadoria de Endemias), não no político. Técnico permanece na troca de gestão.</div>
+    </div>
+  </div>
+
+  <!-- PLANO 4 SEMANAS -->
+  <h2>Plano de Ação — Próximas 4 Semanas</h2>
+  <div class="week-grid">
+    <div class="week-card">
+      <div class="week-num">Semana 1</div>
+      <ul>
+        <li>Conversa informal com o prefeito amigo</li>
+        <li>Contratar contador e abrir empresa</li>
+        <li>Identificar Secretário de Saúde de Uberlândia</li>
+      </ul>
+    </div>
+    <div class="week-card">
+      <div class="week-num">Semana 2</div>
+      <ul>
+        <li>Briefing de 20 min com o vereador</li>
+        <li>Pedir contato com a Secretaria de Saúde</li>
+        <li>Iniciar cadastro SICAF</li>
+        <li>Protocolar INPI</li>
+      </ul>
+    </div>
+    <div class="week-card">
+      <div class="week-num">Semana 3</div>
+      <ul>
+        <li>Reunião exploratória na Secretaria de Saúde (entender processo, não vender)</li>
+        <li>Assinar Termo de Cooperação com cidade piloto</li>
+      </ul>
+    </div>
+    <div class="week-card">
+      <div class="week-num">Semana 4</div>
+      <ul>
+        <li>Orçamento placas QR (5.500 un.)</li>
+        <li>Contratar dev mobile PJ</li>
+        <li>Contratar dev backend PJ</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ORÇAMENTO DE LANÇAMENTO -->
+  <h2>Orçamento Total de Lançamento (Meses 1–6)</h2>
+  <table>
+    <tr><th>Item</th><th>Custo</th></tr>
+    <tr><td>Formalização da empresa + INPI</td><td>R$ 3.780</td></tr>
+    <tr><td>Placas QR piloto (5.500 un. × R$ 1,50)</td><td>R$ 8.250</td></tr>
+    <tr><td>Dev mobile React Native (5 meses part-time)</td><td>R$ 40.000</td></tr>
+    <tr><td>Dev backend Node.js/Python (5 meses part-time)</td><td>R$ 40.000</td></tr>
+    <tr><td>Designer UX/UI (projeto)</td><td>R$ 8.000</td></tr>
+    <tr><td>Infraestrutura AWS (6 meses piloto)</td><td>R$ 2.052</td></tr>
+    <tr><td>Contador mensal (6 meses × R$ 800)</td><td>R$ 4.800</td></tr>
+    <tr><td>Advogado (Termo de Cooperação + minutas de contrato)</td><td>R$ 3.000</td></tr>
+    <tr><td>Reserva operacional</td><td>R$ 10.000</td></tr>
+    <tr class="total-row"><td><strong>Total para chegar no primeiro contrato</strong></td><td><strong>R$ 119.882</strong></td></tr>
+  </table>
+
+  <div class="budget-total">
+    <div>
+      <div class="num">R$ 119.882</div>
+      <div class="lbl">Investimento total até o 1º contrato grande</div>
+    </div>
+    <div class="nota">O primeiro contrato F8 (Uberlândia) paga R$ 320.000 de implantação — cobre todo o investimento e ainda gera R$ 200k de caixa no ato da assinatura.</div>
+  </div>
+
+  <div class="footer">
+    ZoonoseApp · Go-to-Market v2.0 · Março 2026 · Confidencial
+  </div>
+
+</div>
+</body>
+</html>

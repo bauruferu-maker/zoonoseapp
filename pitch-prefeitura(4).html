@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZoonoseApp — Pitch Prefeitura</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a202c; }
+
+  .slide {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    page-break-after: always;
+    position: relative;
+  }
+
+  /* SLIDE 1 — CAPA */
+  .slide-capa {
+    background: linear-gradient(135deg, #1a5276 0%, #117a65 100%);
+    color: white;
+    text-align: center;
+  }
+  .slide-capa .logo { font-size: 14px; letter-spacing: 4px; opacity: 0.7; margin-bottom: 40px; text-transform: uppercase; }
+  /* slide count update: 9 slides total */
+  .slide-capa h1 { font-size: 72px; font-weight: 900; letter-spacing: -2px; margin-bottom: 16px; }
+  .slide-capa h1 span { color: #52d9aa; }
+  .slide-capa .tagline { font-size: 24px; opacity: 0.9; margin-bottom: 50px; font-weight: 300; }
+  .slide-capa .badge-row { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+  .slide-capa .badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 100px; padding: 10px 24px; font-size: 14px; font-weight: 600; }
+
+  /* SLIDE 2 — PROBLEMA */
+  .slide-problema { background: #fff; }
+  .slide-problema .slide-label { color: #e74c3c; font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .slide-problema h2 { font-size: 46px; font-weight: 800; color: #1a202c; margin-bottom: 40px; line-height: 1.1; }
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  .impact-card { background: #fff5f5; border-left: 4px solid #e74c3c; border-radius: 8px; padding: 24px; }
+  .impact-card .number { font-size: 42px; font-weight: 900; color: #e74c3c; line-height: 1; }
+  .impact-card .label { font-size: 15px; color: #555; margin-top: 8px; line-height: 1.4; }
+  .problema-box { background: #fff8e1; border-left: 4px solid #f39c12; border-radius: 8px; padding: 24px 32px; }
+  .problema-box p { font-size: 18px; line-height: 1.7; color: #444; }
+  .problema-box strong { color: #e67e22; }
+
+  /* SLIDE 3 — POR QUE FALHA */
+  .slide-falha { background: #fafafa; }
+  .slide-label { color: #7f8c8d; font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .slide-falha h2 { font-size: 46px; font-weight: 800; margin-bottom: 40px; line-height: 1.1; }
+  .processo-row { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: center; margin-bottom: 32px; }
+  .processo-card { border-radius: 12px; padding: 28px; }
+  .processo-card.hoje { background: #fdecea; border: 2px solid #e74c3c; }
+  .processo-card.novo { background: #e8f8f5; border: 2px solid #27ae60; }
+  .processo-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .processo-card.hoje h3 { color: #e74c3c; }
+  .processo-card.novo h3 { color: #27ae60; }
+  .processo-card p { font-size: 15px; line-height: 1.6; color: #444; }
+  .processo-card .tempo { font-size: 28px; font-weight: 900; margin-top: 16px; }
+  .processo-card.hoje .tempo { color: #e74c3c; }
+  .processo-card.novo .tempo { color: #27ae60; }
+  .vs { text-align: center; font-size: 22px; font-weight: 900; color: #aaa; }
+  .mosquito-note { background: #1a5276; color: white; border-radius: 12px; padding: 20px 32px; text-align: center; font-size: 17px; }
+  .mosquito-note strong { color: #52d9aa; font-size: 20px; }
+
+  /* SLIDE 4 — SOLUÇÃO */
+  .slide-solucao { background: linear-gradient(135deg, #0d3b4f 0%, #1a5276 100%); color: white; }
+  .slide-solucao .slide-label { color: #52d9aa; }
+  .slide-solucao h2 { font-size: 46px; font-weight: 800; margin-bottom: 40px; color: white; }
+  .modulos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .modulo-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 28px; }
+  .modulo-card .icon { font-size: 36px; margin-bottom: 16px; }
+  .modulo-card h3 { font-size: 18px; font-weight: 700; color: #52d9aa; margin-bottom: 12px; }
+  .modulo-card ul { list-style: none; }
+  .modulo-card ul li { font-size: 14px; opacity: 0.85; padding: 5px 0; padding-left: 16px; position: relative; line-height: 1.4; }
+  .modulo-card ul li::before { content: '→'; position: absolute; left: 0; color: #52d9aa; font-size: 12px; top: 6px; }
+
+  /* SLIDE 5 — IMPACTO */
+  .slide-impacto { background: #fff; }
+  .slide-impacto h2 { font-size: 46px; font-weight: 800; margin-bottom: 8px; }
+  .slide-impacto .subtitle { font-size: 18px; color: #777; margin-bottom: 40px; }
+  .economia-destaque { background: linear-gradient(135deg, #1a5276, #117a65); border-radius: 16px; padding: 36px; color: white; margin-bottom: 32px; display: flex; align-items: center; gap: 40px; }
+  .economia-numero { text-align: center; min-width: 200px; }
+  .economia-numero .valor { font-size: 58px; font-weight: 900; color: #52d9aa; line-height: 1; }
+  .economia-numero .label { font-size: 16px; opacity: 0.8; margin-top: 8px; }
+  .economia-detalhe { flex: 1; }
+  .economia-detalhe .linha { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 15px; }
+  .economia-detalhe .linha:last-child { border: none; font-weight: 700; font-size: 17px; padding-top: 14px; }
+  .roi-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .roi-card { border-radius: 12px; padding: 24px; text-align: center; }
+  .roi-card.green { background: #e8f8f5; border: 2px solid #27ae60; }
+  .roi-card.blue { background: #eaf4fb; border: 2px solid #2980b9; }
+  .roi-card.orange { background: #fef9e7; border: 2px solid #f39c12; }
+  .roi-card .val { font-size: 40px; font-weight: 900; }
+  .roi-card.green .val { color: #27ae60; }
+  .roi-card.blue .val { color: #2980b9; }
+  .roi-card.orange .val { color: #f39c12; }
+  .roi-card .desc { font-size: 14px; color: #555; margin-top: 8px; line-height: 1.4; }
+
+  /* SLIDE 6 — INVESTIMENTO */
+  .slide-invest { background: #fafafa; }
+  .slide-invest h2 { font-size: 46px; font-weight: 800; margin-bottom: 8px; }
+  .slide-invest .subtitle { font-size: 18px; color: #777; margin-bottom: 40px; }
+  .invest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+  .invest-card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+  .invest-card h3 { font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #999; margin-bottom: 20px; }
+  .invest-card .linha { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 16px; }
+  .invest-card .linha:last-child { border: none; font-weight: 700; font-size: 18px; color: #1a5276; }
+  .invest-card .linha span.valor { font-weight: 700; color: #1a5276; }
+  .payback-box { background: linear-gradient(135deg, #1a5276, #117a65); color: white; border-radius: 16px; padding: 28px 40px; display: flex; justify-content: space-around; align-items: center; }
+  .payback-item { text-align: center; }
+  .payback-item .val { font-size: 44px; font-weight: 900; color: #52d9aa; line-height: 1; }
+  .payback-item .desc { font-size: 14px; opacity: 0.8; margin-top: 8px; }
+  .payback-divider { width: 1px; height: 60px; background: rgba(255,255,255,0.2); }
+
+  /* SLIDE 7 — PILOTO */
+  .slide-piloto { background: linear-gradient(135deg, #117a65, #1e8449); color: white; }
+  .slide-piloto .slide-label { color: #a9dfbf; }
+  .slide-piloto h2 { font-size: 46px; font-weight: 800; color: white; margin-bottom: 12px; }
+  .slide-piloto .subtitle { font-size: 20px; opacity: 0.85; margin-bottom: 40px; }
+  .piloto-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+  .piloto-step { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; text-align: center; }
+  .piloto-step .num { font-size: 36px; font-weight: 900; color: #a9dfbf; margin-bottom: 12px; }
+  .piloto-step h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .piloto-step p { font-size: 13px; opacity: 0.8; line-height: 1.5; }
+  .piloto-bottom { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 24px 32px; text-align: center; }
+  .piloto-bottom p { font-size: 18px; line-height: 1.6; }
+  .piloto-bottom strong { color: #a9dfbf; font-size: 20px; }
+
+  /* SLIDE 8 — FECHAMENTO */
+  .slide-fecha { background: #1a202c; color: white; text-align: center; }
+  .slide-fecha h2 { font-size: 52px; font-weight: 900; margin-bottom: 20px; line-height: 1.1; }
+  .slide-fecha h2 span { color: #52d9aa; }
+  .slide-fecha .frase { font-size: 20px; opacity: 0.75; max-width: 700px; margin: 0 auto 50px; line-height: 1.6; }
+  .contato-box { display: inline-block; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 32px 60px; }
+  .contato-box p { font-size: 16px; opacity: 0.6; margin-bottom: 8px; }
+  .contato-box .nome { font-size: 26px; font-weight: 700; color: #52d9aa; }
+
+  /* NAV */
+  .nav { position: fixed; bottom: 24px; right: 32px; display: flex; gap: 8px; z-index: 100; }
+  .nav button { background: #1a5276; color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; }
+  .nav button:hover { background: #117a65; }
+  .slide-num { position: absolute; bottom: 28px; left: 80px; font-size: 13px; color: #aaa; font-weight: 600; }
+
+  @media print { .nav { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1 — CAPA -->
+<div class="slide slide-capa" id="s1">
+  <div class="logo">Apresentação Confidencial — 2026</div>
+  <h1>Zoonose<span>App</span></h1>
+  <p class="tagline">Inteligência digital no combate à dengue e zoonoses</p>
+  <div class="badge-row">
+    <span class="badge">📍 QR Code em cada imóvel</span>
+    <span class="badge">📱 App para agentes de campo</span>
+    <span class="badge">🧠 IA integrada</span>
+    <span class="badge">📊 Painel em tempo real</span>
+  </div>
+  <div class="slide-num">1 / 9</div>
+</div>
+
+<!-- SLIDE 2 — O PROBLEMA -->
+<div class="slide slide-problema" id="s2">
+  <div class="slide-label">O Problema</div>
+  <h2>Dengue custa caro.<br>E o sistema atual não funciona.</h2>
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="number">~80 mil</div>
+      <div class="label">casos notificados em Uberlândia em 2024 — o pior surto da história</div>
+    </div>
+    <div class="impact-card">
+      <div class="number">R$ 18,6 M</div>
+      <div class="label">gasto em atendimentos diretos no SUS municipal por ano</div>
+    </div>
+    <div class="impact-card">
+      <div class="number">70%</div>
+      <div class="label">dos atendimentos nas UPAs foram dengue no pico do surto — colapsando o sistema inteiro</div>
+    </div>
+  </div>
+  <div class="problema-box">
+    <p>Durante o surto, pacientes com <strong>infarto, AVC e trauma</strong> aguardaram 6–12h nas UPAs.
+    Cirurgias eletivas foram canceladas. Programas de <strong>pré-natal e vacinação pararam</strong>.
+    O custo indireto — absenteísmo e perda de produtividade — é estimado em <strong>3–4x o custo direto: R$ 55–75 milhões/ano.</strong></p>
+  </div>
+  <div class="slide-num">2 / 8</div>
+</div>
+
+<!-- SLIDE 3 — POR QUE FALHA -->
+<div class="slide slide-falha" id="s3">
+  <div class="slide-label">O Diagnóstico</div>
+  <h2>O cartão físico cria um lag fatal.</h2>
+  <div class="processo-row">
+    <div class="processo-card hoje">
+      <h3>🚫 Processo Atual</h3>
+      <p>Agente visita imóvel → preenche cartão físico → entrega ficha → digitação manual → análise → ação corretiva</p>
+      <div class="tempo">5 a 15 dias</div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="processo-card novo">
+      <h3>✅ Com ZoonoseApp</h3>
+      <p>Agente escaneia QR code → registra no app → gestor vê em tempo real → rota reprogramada no dia seguinte</p>
+      <div class="tempo">&lt; 24 horas</div>
+    </div>
+  </div>
+  <div class="mosquito-note">
+    O <em>Aedes aegypti</em> leva <strong>7–10 dias</strong> do ovo ao adulto.
+    Com 15 dias de lag, o foco já gerou centenas de mosquitos.
+    Com resposta em 24h, o ciclo é quebrado antes de se multiplicar.
+  </div>
+  <div class="slide-num">3 / 8</div>
+</div>
+
+<!-- SLIDE 4 — SOLUÇÃO -->
+<div class="slide slide-solucao" id="s4">
+  <div class="slide-label">A Solução</div>
+  <h2>Três módulos. Uma plataforma integrada.</h2>
+  <div class="modulos-grid">
+    <div class="modulo-card">
+      <div class="icon">📱</div>
+      <h3>App de Campo</h3>
+      <ul>
+        <li>Agente escaneia QR code do imóvel</li>
+        <li>Formulário rápido de visita (30s)</li>
+        <li>Foto obrigatória quando há foco</li>
+        <li>IA classifica tipo de criadouro</li>
+        <li>Funciona 100% offline</li>
+        <li>Histórico completo do imóvel</li>
+      </ul>
+    </div>
+    <div class="modulo-card">
+      <div class="icon">🖥️</div>
+      <h3>Painel de Gestão</h3>
+      <ul>
+        <li>Mapa em tempo real de focos ativos</li>
+        <li>Mapa de calor por bairro/quadra</li>
+        <li>Alertas automáticos de clusters</li>
+        <li>Rotas otimizadas por risco</li>
+        <li>Relatório automático por IA</li>
+        <li>Exportação para Ministério da Saúde</li>
+      </ul>
+    </div>
+    <div class="modulo-card">
+      <div class="icon">🏷️</div>
+      <h3>QR Code Vitalício</h3>
+      <ul>
+        <li>Placa PVC fixada pelo próprio agente</li>
+        <li>Instalação sem custo extra</li>
+        <li>Permanente — imóvel não muda de lugar</li>
+        <li>Substitui o cartão físico para sempre</li>
+        <li>Cobre qualquer endemia futura</li>
+        <li>Infraestrutura permanente da cidade</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">4 / 8</div>
+</div>
+
+<!-- SLIDE 5 — IMPACTO / ECONOMIA -->
+<div class="slide slide-impacto" id="s5">
+  <div class="slide-label">O Impacto</div>
+  <h2>Simulação de economia para Uberlândia</h2>
+  <p class="subtitle">Base: dados SUS 2024 · Redução conservadora de 15–20% com resposta em &lt;24h</p>
+  <div class="economia-destaque">
+    <div class="economia-numero">
+      <div class="valor">R$ 3,67 M</div>
+      <div class="label">economia anual estimada</div>
+    </div>
+    <div class="economia-detalhe">
+      <div class="linha"><span>500 internações evitadas (20%) × R$ 2.500</span><span>R$ 1.250.000</span></div>
+      <div class="linha"><span>40 casos UTI evitados (20%) × R$ 8.000</span><span>R$ 320.000</span></div>
+      <div class="linha"><span>9.000 consultas evitadas (15%) × R$ 180</span><span>R$ 1.620.000</span></div>
+      <div class="linha"><span>Ganho operacional (agentes 25% mais produtivos)</span><span>R$ 480.000</span></div>
+      <div class="linha"><span>Total economia estimada</span><span>R$ 3.670.000</span></div>
+    </div>
+  </div>
+  <div class="roi-cards">
+    <div class="roi-card green">
+      <div class="val">5,8x</div>
+      <div class="desc">Retorno sobre investimento<br>Para cada R$ 1,00 investido</div>
+    </div>
+    <div class="roi-card blue">
+      <div class="val">&lt; 2 meses</div>
+      <div class="desc">Payback do investimento inicial<br>com a economia gerada</div>
+    </div>
+    <div class="roi-card orange">
+      <div class="val">0,63%</div>
+      <div class="desc">Do orçamento de saúde municipal<br>para resolver o problema da dengue</div>
+    </div>
+  </div>
+  <div class="slide-num">5 / 8</div>
+</div>
+
+<!-- SLIDE 6 — INVESTIMENTO -->
+<div class="slide slide-invest" id="s6">
+  <div class="slide-label">O Investimento</div>
+  <h2>Implantação + mensalidade.</h2>
+  <p class="subtitle">Um único contrato. Um único fornecedor responsável por tudo.</p>
+  <div class="invest-grid">
+    <div class="invest-card">
+      <h3>Implantação (único)</h3>
+      <div class="linha"><span>QR codes — 290k imóveis (PVC)</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Cadastro e configuração inicial</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Treinamento presencial dos agentes</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Setup do ambiente da prefeitura</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Total implantação</span><span class="valor">R$ 320.000</span></div>
+    </div>
+    <div class="invest-card">
+      <h3>Mensalidade (recorrente)</h3>
+      <div class="linha"><span>Licença app + painel web</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Infraestrutura em nuvem</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Suporte técnico com SLA</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Atualizações e novas funcionalidades</span><span class="valor">incluso</span></div>
+      <div class="linha"><span>Mensalidade</span><span class="valor">R$ 36.250/mês</span></div>
+    </div>
+  </div>
+  <div class="payback-box">
+    <div class="payback-item">
+      <div class="val">R$ 755 mil</div>
+      <div class="desc">Total ano 1 (implantação + 12 meses)</div>
+    </div>
+    <div class="payback-divider"></div>
+    <div class="payback-item">
+      <div class="val">R$ 435 mil</div>
+      <div class="desc">Renovação anual (a partir do ano 2)</div>
+    </div>
+    <div class="payback-divider"></div>
+    <div class="payback-item">
+      <div class="val">R$ 3,67 M</div>
+      <div class="desc">Economia estimada por ano</div>
+    </div>
+    <div class="payback-divider"></div>
+    <div class="payback-item">
+      <div class="val">5,8x ROI</div>
+      <div class="desc">Retorno sobre o investimento</div>
+    </div>
+  </div>
+  <div class="slide-num">6 / 8</div>
+</div>
+
+<!-- SLIDE 7 — PROPOSTA DE PILOTO -->
+<div class="slide slide-piloto" id="s7">
+  <div class="slide-label">Como Começar</div>
+  <h2>Piloto de 90 dias. Risco zero.</h2>
+  <p class="subtitle">Sem licitação imediata. Validação real antes do contrato grande.</p>
+  <div class="piloto-steps">
+    <div class="piloto-step">
+      <div class="num">30</div>
+      <h4>dias para iniciar</h4>
+      <p>App configurado, agentes treinados e QR codes instalados em uma regional piloto (5.000 imóveis)</p>
+    </div>
+    <div class="piloto-step">
+      <div class="num">90</div>
+      <h4>dias de piloto</h4>
+      <p>Operação real com dados reais — cobertura de visitas, focos encontrados, tempo de resposta</p>
+    </div>
+    <div class="piloto-step">
+      <div class="num">100%</div>
+      <h4>custo zero no piloto</h4>
+      <p>A prefeitura não paga nada durante os 90 dias. Validação sem risco financeiro ou político</p>
+    </div>
+    <div class="piloto-step">
+      <div class="num">1°</div>
+      <h4>Uberlândia no Brasil</h4>
+      <p>A primeira capital regional com controle digital de zoonoses — referência para todo o Triângulo Mineiro</p>
+    </div>
+  </div>
+  <div class="piloto-bottom">
+    <p>Instrumento: <strong>Termo de Cooperação Técnica</strong> — não exige licitação imediata.<br>
+    Ao final do piloto, relatório documentado para embasar o <strong>pregão eletrônico do contrato pleno.</strong></p>
+  </div>
+  <div class="slide-num">7 / 9</div>
+</div>
+
+<!-- SLIDE 8 — A VACINA NÃO RESOLVE -->
+<div class="slide" id="s8" style="background:#fff;">
+  <div class="slide-label" style="color:#8e44ad;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;">Objeção Frequente</div>
+  <h2 style="font-size:46px;font-weight:800;margin-bottom:36px;line-height:1.1;">"E a vacina da dengue<br>não resolve isso?"</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:32px;">
+    <div style="background:#fdf2f8;border-left:4px solid #8e44ad;border-radius:10px;padding:28px;">
+      <h3 style="font-size:15px;font-weight:800;color:#8e44ad;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">O que a vacina faz</h3>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:7px 0;border-bottom:1px solid #f0d9f7;font-size:15px;color:#444;">✓ Reduz gravidade nos vacinados</li>
+        <li style="padding:7px 0;border-bottom:1px solid #f0d9f7;font-size:15px;color:#444;">✓ ~80% de eficácia geral</li>
+        <li style="padding:7px 0;font-size:15px;color:#444;">✓ Complementa o controle vetorial</li>
+      </ul>
+    </div>
+    <div style="background:#fff5f5;border-left:4px solid #e74c3c;border-radius:10px;padding:28px;">
+      <h3 style="font-size:15px;font-weight:800;color:#e74c3c;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">O que a vacina NÃO faz</h3>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:7px 0;border-bottom:1px solid #fdd;font-size:15px;color:#444;">✗ Não elimina o mosquito</li>
+        <li style="padding:7px 0;border-bottom:1px solid #fdd;font-size:15px;color:#444;">✗ Não cobre bebês nem idosos</li>
+        <li style="padding:7px 0;border-bottom:1px solid #fdd;font-size:15px;color:#444;">✗ Não protege contra Zika e Chikungunya</li>
+        <li style="padding:7px 0;font-size:15px;color:#444;">✗ Não desobriga a prefeitura dos agentes</li>
+      </ul>
+    </div>
+  </div>
+  <div style="background:linear-gradient(135deg,#1a5276,#117a65);color:white;border-radius:14px;padding:24px 36px;display:flex;align-items:center;gap:32px;">
+    <div style="font-size:42px;">🦟</div>
+    <div>
+      <p style="font-size:17px;line-height:1.7;">A vacina protege <strong style="color:#52d9aa;">o humano</strong>. O ZoonoseApp elimina <strong style="color:#52d9aa;">o criadouro</strong>.<br>
+      As cidades mais avançadas usam os dois — e precisam de <strong style="color:#52d9aa;">dados para saber onde focar</strong>.<br>
+      A lei federal mantém a obrigação dos agentes independente da cobertura vacinal.</p>
+    </div>
+  </div>
+  <div class="slide-num">8 / 9</div>
+</div>
+
+<!-- SLIDE 9 — FECHAMENTO -->
+<div class="slide slide-fecha" id="s8">
+  <h2>Dengue não é <span>inevitável.</span><br>É um problema de <span>dados e velocidade.</span></h2>
+  <p class="frase">Uberlândia gasta R$ 18 milhões por ano tratando uma doença que pode ser controlada com tecnologia que já existe. O ZoonoseApp transforma o processo reativo de hoje em inteligência preventiva em tempo real.</p>
+  <div class="contato-box">
+    <p>Apresentado por</p>
+    <div class="nome">Leonardo</div>
+    <p style="margin-top:8px; font-size:14px; opacity:0.5;">Proposta confidencial · Março 2026</p>
+  </div>
+  <div class="slide-num">9 / 9</div>
+</div>
+
+<div class="nav">
+  <button onclick="scrollSlide(-1)">← Anterior</button>
+  <button onclick="scrollSlide(1)">Próximo →</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  function scrollSlide(dir) {
+    current = Math.max(0, Math.min(slides.length - 1, current + dir));
+    slides[current].scrollIntoView({ behavior: 'smooth' });
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') scrollSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') scrollSlide(-1);
+  });
+</script>
+</body>
+</html>

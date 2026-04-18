@@ -1,0 +1,10 @@
+.env
+.env.local
+*.env
+seed-visits*.js
+seed*.js
+*.key
+*.pem
+node_modules/
+.next/
+dist/

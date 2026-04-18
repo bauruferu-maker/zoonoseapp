@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>ZoonoseApp — Dossiê Institucional</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: #fff; color: #1c1c1c; font-size: 13px; line-height: 1.75; }
+
+  /* ── CAPA ── */
+  .capa {
+    background: #0f1f0f;
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: space-between; padding: 80px 90px;
+    page-break-after: always;
+  }
+  .capa-topo { border-bottom: 1px solid #2d4a2d; padding-bottom: 20px; }
+  .capa-topo span { font-family: 'Segoe UI', Arial, sans-serif; color: #5a8a5a; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+  .capa-meio { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 70px 0 50px; }
+  .capa h1 { font-size: 52px; color: #e8f0e8; font-weight: 400; line-height: 1.1; letter-spacing: -1px; margin-bottom: 20px; }
+  .capa h1 strong { font-weight: 700; color: #fff; }
+  .capa .subtitulo { font-size: 16px; color: #7a9a7a; font-style: italic; max-width: 500px; line-height: 1.6; border-left: 2px solid #3a6a3a; padding-left: 16px; }
+  .capa-rodape { display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #2d4a2d; padding-top: 20px; }
+  .capa-info { color: #5a7a5a; font-size: 11px; line-height: 1.9; font-family: 'Segoe UI', Arial, sans-serif; }
+  .capa-info strong { color: #8aaa8a; }
+  .capa-versao { font-family: 'Segoe UI', Arial, sans-serif; color: #3a5a3a; font-size: 11px; text-align: right; }
+
+  /* ── PÁGINA PADRÃO ── */
+  .pagina { padding: 64px 90px; page-break-before: always; }
+  .pagina-header { margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #e8e8e8; display: flex; justify-content: space-between; align-items: flex-end; }
+  .pagina-num { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; color: #999; letter-spacing: 1px; text-transform: uppercase; }
+  .pagina h2 { font-size: 26px; font-weight: 700; color: #0f1f0f; letter-spacing: -0.3px; line-height: 1.2; margin-bottom: 6px; }
+  .pagina .intro { font-size: 14px; color: #555; font-style: italic; margin-bottom: 28px; line-height: 1.6; }
+
+  h3 { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; font-weight: 700; color: #1a3a1a; margin: 28px 0 10px; text-transform: uppercase; letter-spacing: 0.8px; }
+  h4 { font-size: 13px; font-weight: 700; color: #1c1c1c; margin: 18px 0 6px; }
+  p { margin-bottom: 14px; color: #2c2c2c; }
+  ul, ol { padding-left: 20px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; color: #2c2c2c; }
+
+  /* ── TABELAS ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 12px; font-family: 'Segoe UI', Arial, sans-serif; }
+  thead th { background: #0f1f0f; color: #e8f0e8; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tbody tr:nth-child(even) td { background: #fafafa; }
+  td strong { color: #1a3a1a; }
+
+  /* ── CAIXAS ── */
+  .nota { background: #f7f9f7; border-left: 3px solid #4a7a4a; padding: 14px 18px; margin: 16px 0; border-radius: 0 4px 4px 0; font-size: 12.5px; }
+  .nota.hipotese { background: #fdf9f0; border-left-color: #a07a1a; }
+  .nota.atencao { background: #fdf5f5; border-left-color: #a03a3a; }
+  .nota.neutro { background: #f5f5f7; border-left-color: #6a6a8a; }
+  .nota strong { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px; }
+  .nota.hipotese strong { color: #7a5a0a; }
+  .nota.atencao strong { color: #7a2a2a; }
+  .nota.neutro strong { color: #4a4a6a; }
+  .nota p { margin: 0; color: #333; }
+
+  /* ── GRID ── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .card { border: 1px solid #e0e8e0; border-radius: 6px; padding: 18px; font-family: 'Segoe UI', Arial, sans-serif; }
+  .card .titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #4a7a4a; margin-bottom: 8px; }
+  .card p { font-size: 12.5px; color: #333; margin: 0; line-height: 1.6; }
+
+  /* ── MÉTRICAS ── */
+  .metrica-linha { display: flex; gap: 12px; margin: 16px 0; }
+  .metrica { flex: 1; background: #0f1f0f; color: #fff; border-radius: 6px; padding: 18px; text-align: center; font-family: 'Segoe UI', Arial, sans-serif; }
+  .metrica .val { font-size: 28px; font-weight: 800; color: #90c090; line-height: 1; }
+  .metrica .desc { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 6px; line-height: 1.4; }
+  .metrica.claro { background: #f5f9f5; }
+  .metrica.claro .val { color: #1a5a1a; }
+  .metrica.claro .desc { color: #555; }
+
+  /* ── FLUXO ── */
+  .passo { display: flex; gap: 14px; margin-bottom: 16px; align-items: flex-start; }
+  .passo-n { min-width: 28px; height: 28px; background: #0f1f0f; color: #90c090; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .passo-body strong { font-size: 13px; color: #0f1f0f; display: block; margin-bottom: 3px; }
+  .passo-body p { margin: 0; font-size: 12.5px; color: #444; }
+
+  /* ── PILOTO ── */
+  .piloto-item { border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 18px; margin-bottom: 12px; font-family: 'Segoe UI', Arial, sans-serif; }
+  .piloto-item .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #4a7a4a; margin-bottom: 6px; }
+  .piloto-item p { margin: 0; font-size: 12.5px; color: #333; line-height: 1.6; }
+  .piloto-item ul { margin: 6px 0 0; padding-left: 18px; }
+  .piloto-item li { font-size: 12.5px; color: #333; margin-bottom: 4px; }
+
+  /* ── RODAPÉ ── */
+  .footer { background: #0f1f0f; color: #4a6a4a; text-align: center; padding: 28px; font-size: 11px; margin-top: 60px; font-family: 'Segoe UI', Arial, sans-serif; letter-spacing: 0.3px; }
+  .footer strong { color: #7a9a7a; }
+
+  .sep { height: 1px; background: #e8e8e8; margin: 24px 0; }
+  .sep-verde { height: 1px; background: linear-gradient(to right, #4a7a4a, transparent); margin: 28px 0; }
+
+  /* ── RESUMO EXEC ── */
+  .resumo-bloco { background: #f7f9f7; border: 1px solid #d8e8d8; border-radius: 8px; padding: 24px 28px; margin-bottom: 20px; }
+  .resumo-bloco .rb-titulo { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #4a7a4a; margin-bottom: 10px; }
+  .resumo-bloco p { margin: 0; font-size: 13px; color: #2c2c2c; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ CAPA ══════════ -->
+<div class="capa">
+  <div class="capa-topo">
+    <span>Dossiê Institucional — Versão Sócio / Parceiro</span>
+  </div>
+  <div class="capa-meio">
+    <h1><strong>ZoonoseApp</strong><br>Operação Digital de<br>Vigilância de Endemias</h1>
+    <p class="subtitulo">Uma proposta de digitalização do fluxo operacional de controle de zoonoses em municípios brasileiros — com consciência de risco, critérios claros de validação e caminho real para adoção institucional.</p>
+  </div>
+  <div class="capa-rodape">
+    <div class="capa-info">
+      <strong>Projeto:</strong> ZoonoseApp<br>
+      <strong>Empresa:</strong> Baurufer — Uberlândia, MG<br>
+      <strong>Contato:</strong> Leonardo Albanesi<br>
+      <strong>Data:</strong> Março de 2026
+    </div>
+    <div class="capa-versao">
+      Confidencial<br>Uso restrito a sócios e parceiros<br>Versão 1.0
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RESUMO EXECUTIVO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Resumo Executivo</h2>
+    <span class="pagina-num">Seção 01</span>
+  </div>
+
+  <div class="resumo-bloco">
+    <div class="rb-titulo">O problema observado</div>
+    <p>Equipes de vigilância de endemias operam hoje com suporte predominantemente físico — cartões de visita em papel, registros manuais e digitalização retroativa dos dados. O resultado é um atraso informacional sistemático entre a ocorrência no campo e a visibilidade gerencial. Focos identificados levam dias ou semanas para aparecer em relatórios. Imóveis sem histórico são revisitados sem contexto. Priorização de resposta é feita com informação incompleta.</p>
+  </div>
+
+  <div class="resumo-bloco">
+    <div class="rb-titulo">A proposta do ZoonoseApp</div>
+    <p>Um sistema digital composto por aplicativo móvel para agentes de campo e painel web para coordenadores, com identificação de imóvel por QR code. O objetivo principal é digitalizar o registro no ponto de origem — a visita — reduzindo o atraso informacional e criando histórico contínuo por endereço.</p>
+  </div>
+
+  <div class="resumo-bloco">
+    <div class="rb-titulo">O que já é plausível</div>
+    <p>A digitalização do registro no campo pode comprimir o tempo entre visita e dado disponível de dias para minutos. Isso é tecnicamente realizável e tem precedentes em operações de campo similares. A rastreabilidade por imóvel pode reduzir revisitas sem contexto e melhorar a qualidade das informações gerenciais.</p>
+  </div>
+
+  <div class="resumo-bloco">
+    <div class="rb-titulo">O que ainda precisa ser validado</div>
+    <p>Adesão real dos agentes em operação de campo. Funcionamento consistente em condições reais de conectividade e territórios irregulares. Disposição do coordenador e da secretaria de usar e responder aos dados com mais agilidade. Impacto operacional mensurável após 90 dias de uso real. Esses são os temas centrais do piloto.</p>
+  </div>
+
+  <div class="resumo-bloco">
+    <div class="rb-titulo">Por que vale explorar</div>
+    <p>O problema é real, verificável e persistente. A solução é tecnicamente madura. O custo de validação é baixo relative ao valor potencial. E a ausência de alternativas digitais estruturadas no setor público municipal cria um espaço genuíno de utilidade — desde que a execução seja honesta, operacionalmente sólida e conduzida com respeito às restrições reais do ambiente público.</p>
+  </div>
+</div>
+
+<!-- ══════════ 03 — O PROBLEMA OPERACIONAL ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>O Problema Operacional</h2>
+    <span class="pagina-num">Seção 02</span>
+  </div>
+  <p class="intro">O problema central não é a dengue em si. É a precariedade informacional que fragiliza a gestão do trabalho que deveria combatê-la.</p>
+
+  <h3>Como o processo funciona hoje</h3>
+  <p>Em prefeituras de médio porte, os agentes de endemias saem a campo com um conjunto de cartões físicos — um por imóvel da rota. Ao realizar a visita, preenchem manualmente: data, situação do imóvel, focos encontrados, tratamento aplicado. Esses cartões retornam à supervisão ao final do dia ou da semana. A digitação ocorre dias depois, quando ocorre.</p>
+  <p>O histórico do imóvel existe somente enquanto o cartão físico existe. Se o morador o perde, descarta ou o cartão se deteriora, o histórico é perdido permanentemente. Não há base de endereços estruturada. Não há vínculo estável entre visita, imóvel e dado.</p>
+
+  <h3>Consequências informacionais verificáveis</h3>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="titulo">Atraso informacional</div>
+      <p>O coordenador não tem visibilidade do que aconteceu no campo até que os papéis sejam coletados e digitados. Esse intervalo pode ser de dias a semanas, dependendo da rotina administrativa.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Fragmentação do histórico</div>
+      <p>Sem identificador persistente do imóvel, cada visita é um evento isolado. Não é possível saber quantas vezes um imóvel foi visitado, qual era o histórico de focos nem se ele é reincidente.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Priorização sem dados</div>
+      <p>A decisão de qual região priorizar, quais imóveis reinspecionar ou onde concentrar esforço depende de memória, experiência e intuição — não de dados estruturados e atualizados.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Invisibilidade da cobertura</div>
+      <p>Não há forma sistemática de saber, em tempo real, qual percentual da área foi coberta, quais imóveis estão sem visita recente ou quais agentes estão com a rota atrasada.</p>
+    </div>
+  </div>
+
+  <div class="nota">
+    <strong>Nota de calibração</strong>
+    <p>As consequências acima são amplamente reconhecidas por coordenadores de vigilância epidemiológica em registros técnicos do setor. Contudo, o impacto exato sobre indicadores sanitários varia por município, sazonalidade e capacidade de resposta da secretaria. Não tratamos essas consequências como comprovadamente causadoras de piora epidemiológica — apenas como ineficiências operacionais reais e verificáveis.</p>
+  </div>
+</div>
+
+<!-- ══════════ 04 — HIPÓTESE DE VALOR ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Hipótese de Valor do Produto</h2>
+    <span class="pagina-num">Seção 03</span>
+  </div>
+  <p class="intro">O ZoonoseApp não promete resolver a dengue. Promete melhorar um conjunto específico de condições operacionais que hoje dificultam a gestão territorial das endemias.</p>
+
+  <h3>Promessa principal — já plausível tecnicamente</h3>
+  <table>
+    <thead><tr><th>Promessa</th><th>Mecanismo</th><th>Nível de certeza</th></tr></thead>
+    <tbody>
+      <tr><td>Compressão do atraso informacional</td><td>Dado registrado no campo via app sincroniza em minutos, não dias</td><td>Plausível — tecnicamente realizável</td></tr>
+      <tr><td>Histórico contínuo por imóvel</td><td>Identificador por QR vincula todas as visitas ao mesmo endereço permanentemente</td><td>Plausível — depende de adoção consistente</td></tr>
+      <tr><td>Visibilidade de cobertura em tempo real</td><td>Painel mostra progresso de rota, imóveis visitados e pendentes por região</td><td>Plausível — depende de conectividade e uso</td></tr>
+      <tr><td>Priorização baseada em dados</td><td>Imóveis reincidentes e regiões com maior incidência ficam visíveis no painel</td><td>Hipótese — requer que coordenador use os dados para agir</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Promessas secundárias — condicionadas</h3>
+  <table>
+    <thead><tr><th>Promessa</th><th>Condição para se realizar</th></tr></thead>
+    <tbody>
+      <tr><td>Redução de revisitas sem sentido</td><td>Agente consulta histórico antes de visitar — requer hábito formado</td></tr>
+      <tr><td>Melhora na qualidade do registro</td><td>Formulário estruturado só ajuda se o agente preenche com atenção</td></tr>
+      <tr><td>Prova de execução para prestação de contas</td><td>Gestor precisa usar o dado como evidência — requer cultura de accountability</td></tr>
+    </tbody>
+  </table>
+
+  <h3>O que o produto não promete</h3>
+  <div class="nota hipotese">
+    <strong>Hipótese não provada</strong>
+    <p>Que a melhora informacional se traduza automaticamente em redução mensurável de focos ou de casos de dengue. Essa tradução depende de fatores fora do controle do produto: velocidade de resposta da equipe após identificação do foco, capacidade operacional da prefeitura, cooperação do morador, sazonalidade, clima e outros vetores. O piloto pode fornecer indicações observacionais iniciais, mas não prova causal.</p>
+  </div>
+
+  <div class="nota atencao">
+    <strong>Limite explícito</strong>
+    <p>O produto é um instrumento de melhoria operacional e informacional. Não é uma intervenção sanitária em si. Ele cria condições melhores para que as intervenções sanitárias sejam mais bem direcionadas — mas é a equipe, a gestão e a resposta da secretaria que determinam o resultado final.</p>
+  </div>
+</div>
+
+<!-- ══════════ 05 — COMO FUNCIONA NO MUNDO REAL ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Como o Produto Funciona no Mundo Real</h2>
+    <span class="pagina-num">Seção 04</span>
+  </div>
+  <p class="intro">Esta seção descreve a operação esperada — incluindo as exceções que acontecem com frequência e como o sistema deve lidar com elas.</p>
+
+  <h3>Jornada do agente de campo</h3>
+  <div class="passo"><div class="passo-n">1</div><div class="passo-body"><strong>Início do turno</strong><p>O agente abre o app e recebe a rota do dia — lista de imóveis com endereços ordenados. Se não houver conexão, a rota já sincronizada aparece offline.</p></div></div>
+  <div class="passo"><div class="passo-n">2</div><div class="passo-body"><strong>Chegada ao imóvel — com QR disponível</strong><p>Escaneia a placa fixada na entrada. O app abre o histórico de visitas anteriores e o formulário estruturado. Preenche os campos, tira foto se necessário e confirma. O registro fica salvo localmente e sincroniza quando houver conexão.</p></div></div>
+  <div class="passo"><div class="passo-n">3</div><div class="passo-body"><strong>Imóvel fechado</strong><p>O app permite registrar "imóvel fechado com ou sem aviso" — o evento é documentado, o imóvel entra em fila de revisita prioritária automaticamente. Não há perda de informação.</p></div></div>
+  <div class="passo"><div class="passo-n">4</div><div class="passo-body"><strong>QR danificado ou ausente</strong><p>O agente pode buscar o imóvel manualmente por endereço ou CEP. O registro é feito pelo identificador de texto. A placa pode ser solicitada para substituição via app. Essa exceção é documentada na tela de revisão do coordenador.</p></div></div>
+  <div class="passo"><div class="passo-n">5</div><div class="passo-body"><strong>Área sem conexão</strong><p>O aplicativo funciona integralmente offline. Dados ficam armazenados localmente com marcação de pendente. Sincronização ocorre automaticamente quando o dispositivo retorna à área de cobertura — sem ação manual do agente.</p></div></div>
+  <div class="passo"><div class="passo-n">6</div><div class="passo-body"><strong>Endereço irregular ou sem numeração</strong><p>O sistema permite registro por coordenadas GPS ou por referência livre de texto. Territórios irregulares são uma realidade conhecida — o app não exige endereço formal para registrar uma visita.</p></div></div>
+
+  <h3>Jornada do coordenador</h3>
+  <div class="passo"><div class="passo-n">1</div><div class="passo-body"><strong>Acompanhamento de cobertura</strong><p>Painel mostra percentual de imóveis visitados por regional e por agente no dia corrente. Imóveis sem visita recente aparecem destacados.</p></div></div>
+  <div class="passo"><div class="passo-n">2</div><div class="passo-body"><strong>Identificação de reincidentes</strong><p>Imóveis com múltiplos registros de foco nos últimos ciclos aparecem agrupados em lista de prioridade — para decisão de visita especial ou notificação ao morador.</p></div></div>
+  <div class="passo"><div class="passo-n">3</div><div class="passo-body"><strong>Relatório de prestação de contas</strong><p>Exportação de dados por período, regional, agente e tipo de ocorrência — para relatórios internos e prestação de contas à secretaria e ao Ministério da Saúde.</p></div></div>
+
+  <div class="nota atencao">
+    <strong>Riscos operacionais explícitos</strong>
+    <p>Mudança de morador sem atualização do cadastro pode gerar histórico associado à pessoa errada. Reposição de placas danificadas depende de logística municipal. Uso do app em dispositivo pessoal do agente pode gerar resistência ou limitação de armazenamento. Cada um desses pontos precisa de protocolo definido antes do piloto.</p>
+  </div>
+</div>
+
+<!-- ══════════ 06 — VALOR POR PERFIL ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Valor por Perfil Envolvido</h2>
+    <span class="pagina-num">Seção 05</span>
+  </div>
+  <p class="intro">O produto só funciona se entregar valor real a cada pessoa que o usa — especialmente ao agente de campo, que é o elo mais crítico e mais frequentemente ignorado no design de sistemas para o setor público.</p>
+
+  <h3>Para o agente de campo</h3>
+  <table>
+    <thead><tr><th>Ganho esperado</th><th>Como se realiza</th></tr></thead>
+    <tbody>
+      <tr><td>Menos papel para carregar e preencher</td><td>Formulário digital substitui o bloco de cartões físicos</td></tr>
+      <tr><td>Histórico do imóvel disponível no momento da visita</td><td>O agente sabe o que encontrou nas últimas visitas antes de entrar</td></tr>
+      <tr><td>Prova de que a visita foi feita</td><td>Registro com hora, geolocalização e foto protege o agente de cobranças injustas</td></tr>
+      <tr><td>Rota organizada — menos decisão logística manual</td><td>App apresenta ordem otimizada de visitas sem precisar o agente planejar</td></tr>
+    </tbody>
+  </table>
+
+  <div class="nota hipotese">
+    <strong>Atenção</strong>
+    <p>Rastreabilidade digital pode gerar percepção de vigilância sobre o agente — especialmente se o painel for usado para cobrar produtividade de forma punitiva. Esse risco é real e precisa ser gerenciado ativamente: o sistema deve ser apresentado e usado como ferramenta de apoio operacional, não de controle disciplinar.</p>
+  </div>
+
+  <h3>Para o coordenador de endemias</h3>
+  <ul>
+    <li>Visibilidade de cobertura em tempo real, sem esperar papéis</li>
+    <li>Capacidade de identificar imóveis reincidentes e regiões críticas antes da reunião de segunda-feira</li>
+    <li>Dados estruturados para relatórios ao Ministério da Saúde e secretarias estaduais</li>
+    <li>Evidência documentada do trabalho executado — importante para prestação de contas</li>
+  </ul>
+
+  <h3>Para a secretaria municipal de saúde</h3>
+  <ul>
+    <li>Registro auditável de visitas realizadas — reduz vulnerabilidade em auditorias</li>
+    <li>Dados históricos por endereço criam base territorial que não existia antes</li>
+    <li>Capacidade de resposta mais rápida a alertas epidemiológicos, se os dados forem usados ativamente</li>
+  </ul>
+
+  <h3>Para o morador</h3>
+  <p>O benefício é indireto. O morador não interage com o sistema, mas pode se beneficiar de uma equipe de agentes melhor direcionada, que prioriza seu imóvel se ele for identificado como reincidente, e que tem histórico de visitas para evitar duplicidade sem sentido.</p>
+
+  <div class="nota neutro">
+    <strong>Observação de design</strong>
+    <p>A LGPD se aplica ao tratamento de dados de moradores e imóveis. O projeto deve definir desde o início: quais dados são coletados, por quanto tempo são retidos, quem tem acesso e como são anonimizados ou descartados. Isso não é detalhe — é requisito para contratação pública.</p>
+  </div>
+</div>
+
+<!-- ══════════ 07 — RISCOS DE ADOÇÃO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Riscos de Adoção</h2>
+    <span class="pagina-num">Seção 06</span>
+  </div>
+  <p class="intro">Esta seção existe porque riscos de adoção são o principal motivo pelo qual sistemas similares falham em operações públicas de campo. Identificá-los não é pessimismo — é pré-requisito para um piloto bem desenhado.</p>
+
+  <table>
+    <thead><tr><th>Risco</th><th>Natureza</th><th>Como tratar</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Resistência dos agentes ao uso do app</strong></td>
+        <td>Comportamental / cultural</td>
+        <td>Treinamento presencial, interface mínima, benefício tangível para o agente desde o primeiro dia. O app precisa ajudar antes de monitorar.</td>
+      </tr>
+      <tr>
+        <td><strong>Uso protocolar — agente registra sem visitar de fato</strong></td>
+        <td>Integridade do dado</td>
+        <td>Geolocalização no registro, foto obrigatória em casos de foco, revisão amostral pelo coordenador. Sem inviabilizar o fluxo.</td>
+      </tr>
+      <tr>
+        <td><strong>Coordenador não usa o painel para agir</strong></td>
+        <td>Gestão / cultura organizacional</td>
+        <td>Esse é o risco mais sério. O sistema entrega dados — mas não entrega decisão. O piloto deve medir explicitamente se o dado gerado altera o comportamento gerencial.</td>
+      </tr>
+      <tr>
+        <td><strong>Conectividade insuficiente em campo</strong></td>
+        <td>Infraestrutura</td>
+        <td>Funcionamento offline completo é não negociável. Sincronização assíncrona robusta. Teste em campo real antes do piloto pleno.</td>
+      </tr>
+      <tr>
+        <td><strong>Placas danificadas, roubadas ou ausentes</strong></td>
+        <td>Manutenção física</td>
+        <td>Protocolo de reposição definido antes do piloto. Fallback por endereço textual ou GPS. Custo de reposição incluído no modelo.</td>
+      </tr>
+      <tr>
+        <td><strong>Dependência de um champion interno</strong></td>
+        <td>Político / organizacional</td>
+        <td>O produto deve ser enraizado no técnico — coordenador de endemias — não no gestor político. Troca de secretário não pode encerrar o projeto.</td>
+      </tr>
+      <tr>
+        <td><strong>Dispositivos pessoais dos agentes inadequados</strong></td>
+        <td>Infraestrutura / trabalhista</td>
+        <td>BYOD gera resistência legítima. O piloto deve definir se os dispositivos são fornecidos pela prefeitura ou se há compensação. Não ignorar esse ponto.</td>
+      </tr>
+      <tr>
+        <td><strong>Integração territorial — endereços irregulares</strong></td>
+        <td>Dados / território</td>
+        <td>Municípios brasileiros têm partes significativas do território sem endereçamento formal. O sistema precisa suportar isso desde a v1.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════ 08 — PILOTO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Proposta de Piloto Realista</h2>
+    <span class="pagina-num">Seção 07</span>
+  </div>
+  <p class="intro">O piloto é a etapa mais importante deste projeto. Seu objetivo não é demonstrar o produto — é aprender se as hipóteses centrais se sustentam em operação real.</p>
+
+  <div class="piloto-item">
+    <div class="label">Escopo</div>
+    <p>Uma regional ou setor de vigilância de um município de pequeno a médio porte (entre 5.000 e 15.000 imóveis). Início em período fora do pico de dengue — para não distorcer indicadores e para ter ambiente com menos pressão operacional.</p>
+  </div>
+
+  <div class="piloto-item">
+    <div class="label">Duração</div>
+    <p>90 dias corridos. Com check-in quinzenal entre coordenador e equipe do projeto. Avaliação formal ao final dos 90 dias com relatório conjunto.</p>
+  </div>
+
+  <div class="piloto-item">
+    <div class="label">Instrumento jurídico</div>
+    <p>Termo de Cooperação Técnica — instrumento não oneroso, que não exige processo licitatório. A prefeitura cede acesso operacional e os agentes; o projeto fornece o sistema, as placas e o treinamento. Prevê cláusula de sigilo dos dados e responsabilidade de tratamento em conformidade com a LGPD.</p>
+  </div>
+
+  <div class="piloto-item">
+    <div class="label">Responsabilidades da prefeitura</div>
+    <ul>
+      <li>Designar equipe de agentes para a área piloto (mínimo 5, ideal 10–15)</li>
+      <li>Disponibilizar coordenador de referência com agenda para check-ins quinzenais</li>
+      <li>Garantir que os agentes participem do treinamento inicial (4 horas)</li>
+      <li>Fornecer base de endereços ou mapa da área piloto</li>
+    </ul>
+  </div>
+
+  <div class="piloto-item">
+    <div class="label">Responsabilidades do projeto</div>
+    <ul>
+      <li>Fornecer o sistema operacional (app + painel) sem custo durante o piloto</li>
+      <li>Fornecer e instalar as placas QR nos imóveis da área piloto</li>
+      <li>Conduzir treinamento presencial com agentes e coordenador</li>
+      <li>Suporte técnico durante o período (resposta em até 4 horas)</li>
+      <li>Relatório final de piloto com métricas objetivas</li>
+    </ul>
+  </div>
+
+  <h3>Métricas a medir</h3>
+  <table>
+    <thead><tr><th>Métrica</th><th>Baseline a capturar antes</th><th>Meta mínima aceitável</th></tr></thead>
+    <tbody>
+      <tr><td>Tempo médio entre visita e dado disponível ao gestor</td><td>Tempo atual (dias)</td><td>Menos de 2 horas após sincronização</td></tr>
+      <tr><td>Percentual de imóveis da área com histórico registrado</td><td>Próximo de zero (sem sistema)</td><td>Acima de 70% ao fim de 90 dias</td></tr>
+      <tr><td>Taxa de uso do app pelos agentes designados</td><td>Zero</td><td>Acima de 80% de uso consistente na 6ª semana</td></tr>
+      <tr><td>Taxa de sincronização bem-sucedida</td><td>—</td><td>Acima de 95% (offline não pode perder dados)</td></tr>
+      <tr><td>Número de imóveis reincidentes identificados</td><td>Número informado pelo coordenador atualmente</td><td>Identificação deve ser ao menos igual à atual</td></tr>
+      <tr><td>Percepção do agente — NPS interno</td><td>—</td><td>Acima de 0 (mais promotores que detratores)</td></tr>
+      <tr><td>Percepção do coordenador — utilidade do painel</td><td>—</td><td>Avaliação qualitativa estruturada ao fim do piloto</td></tr>
+    </tbody>
+  </table>
+
+  <div class="nota atencao">
+    <strong>O que NÃO será prometido no piloto</strong>
+    <p>Redução de casos de dengue. Redução de internações. Qualquer métrica epidemiológica de resultado. Essas são hipóteses de impacto de longo prazo que 90 dias de piloto não conseguem provar — e tentar fazê-lo comprometeria a credibilidade do restante dos dados.</p>
+  </div>
+</div>
+
+<!-- ══════════ 09 — CONTRATAÇÃO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Modelo de Contratação e Implantação</h2>
+    <span class="pagina-num">Seção 08</span>
+  </div>
+  <p class="intro">O produto precisa caber na realidade jurídica e administrativa pública. Esta seção descreve o caminho institucional — sem atalhos.</p>
+
+  <h3>Caminhos de contratação</h3>
+  <table>
+    <thead><tr><th>Modalidade</th><th>Quando se aplica</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td>Termo de Cooperação Técnica</td><td>Piloto — sem custo para a prefeitura</td><td>Não oneroso. Dispensa licitação. Prazo limitado. Requer aprovação da procuradoria municipal.</td></tr>
+      <tr><td>Dispensa de licitação (até R$ 57,9 mil — 2026)</td><td>Contratos iniciais em municípios menores</td><td>Lei 14.133/21. Processo mais ágil. Requer justificativa e pesquisa de preço.</td></tr>
+      <tr><td>Pregão Eletrônico — Técnica e Preço</td><td>Contratos de maior valor, especialmente municípios grandes</td><td>Modalidade mais adequada para SaaS com implantação. Processo mais longo mas mais robusto.</td></tr>
+      <tr><td>Ata de Registro de Preços</td><td>Expansão após contrato estabelecido em município de referência</td><td>Art. 86, Lei 14.133/21. Outros municípios podem aderir. Depende de estrutura correta do edital original.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Pontos jurídicos e administrativos obrigatórios</h3>
+  <ul>
+    <li><strong>LGPD:</strong> dados de moradores (nome, endereço, histórico de visitas) são dados pessoais. A prefeitura é controladora; o projeto é operador. O contrato deve especificar finalidade, prazo de retenção, acesso e descarte.</li>
+    <li><strong>Dispositivos:</strong> uso de celular pessoal do agente para fins de trabalho requer regulamentação por acordo coletivo ou norma interna. BYOD sem respaldo jurídico gera passivo trabalhista.</li>
+    <li><strong>Foto dos imóveis e moradores:</strong> coleta de imagem de fachada e do interior dos imóveis pode exigir consentimento. Definir escopo antes do piloto.</li>
+    <li><strong>Integração com sistemas preexistentes:</strong> a prefeitura pode ter sistemas de vigilância epidemiológica existentes (e-SUS, SINAN, sistemas próprios). A integração ou a coexistência precisa ser endereçada no escopo.</li>
+    <li><strong>Registro no SICAF:</strong> necessário para qualquer contratação federal. Para contratos municipais, pode ser exigido o cadastro no sistema de fornecedores local.</li>
+  </ul>
+
+  <div class="nota neutro">
+    <strong>Postura institucional</strong>
+    <p>O processo licitatório existe para proteger o interesse público. Não tratamos os mecanismos de compra pública como obstáculos a contornar — mas como o ambiente natural no qual o produto precisa funcionar. A confiança de longo prazo com a administração pública é construída pelo respeito à governança, não pelo desvio dela.</p>
+  </div>
+</div>
+
+<!-- ══════════ 10 — MODELO ECONÔMICO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Modelo Econômico Realista</h2>
+    <span class="pagina-num">Seção 09</span>
+  </div>
+  <p class="intro">Este é um negócio com componente operacional relevante — não é software puro. Tratamos os números com prudência.</p>
+
+  <h3>Estrutura de receita</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="titulo">Taxa de implantação (única)</div>
+      <p>Cobre: levantamento do território, cadastro inicial dos imóveis, fornecimento e instalação das placas QR, configuração do ambiente, treinamento presencial. Não é margem pura — tem custo operacional significativo.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Licença mensal (recorrente)</div>
+      <p>Cobre: licença do app e painel, infraestrutura em nuvem, suporte técnico, atualizações. É onde está o modelo de longo prazo. Depende de renovação contratual anual ou plurianual.</p>
+    </div>
+  </div>
+
+  <h3>Referência de preços — tabela por faixa</h3>
+  <table>
+    <thead><tr><th>Faixa</th><th>Habitantes</th><th>Implantação</th><th>Licença mensal</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td>F1</td><td>até 15 mil</td><td>R$ 8.000</td><td>R$ 2.000/mês</td><td>Piloto — valor de entrada</td></tr>
+      <tr><td>F2–F3</td><td>15 a 60 mil</td><td>R$ 15k–25k</td><td>R$ 3.500–6.000/mês</td><td>Municípios de médio porte</td></tr>
+      <tr><td>F4–F5</td><td>60 a 200 mil</td><td>R$ 38k–60k</td><td>R$ 9.000–15.000/mês</td><td>Municípios relevantes</td></tr>
+      <tr><td>F6–F7</td><td>200 a 500 mil</td><td>R$ 90k–120k</td><td>R$ 23.000–30.000/mês</td><td>Capitais regionais</td></tr>
+      <tr><td>F8</td><td>500 a 750 mil</td><td>R$ 320.000</td><td>R$ 36.250/mês</td><td>Ex: Uberlândia — ver detalhamento</td></tr>
+    </tbody>
+  </table>
+
+  <div class="nota hipotese">
+    <strong>Premissa — não validada em mercado</strong>
+    <p>Estes preços são estimativas baseadas em referências de mercado de SaaS B2G brasileiro e custo estimado de materiais. Ainda não foram testados em processo licitatório real. O preço efetivo pode ser diferente após pesquisa de mercado, negociação e primeiro contrato. Tratar como ponto de partida para modelagem, não como dado confirmado.</p>
+  </div>
+
+  <h3>Custos operacionais que não podem ser ignorados</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Natureza</th><th>Estimativa</th></tr></thead>
+    <tbody>
+      <tr><td>Placas QR (fornecimento + logística)</td><td>Material físico por imóvel</td><td>R$ 0,55–R$ 1,50/unidade em escala</td></tr>
+      <tr><td>Treinamento presencial (por implantação)</td><td>Deslocamento + tempo</td><td>R$ 3.000–8.000 por município</td></tr>
+      <tr><td>Suporte técnico contínuo</td><td>Equipe dedicada</td><td>R$ 4.000–8.000/mês conforme carteira</td></tr>
+      <tr><td>Reposição de placas danificadas</td><td>Manutenção física contínua</td><td>Variável — estimativa 5–10%/ano</td></tr>
+      <tr><td>Infraestrutura AWS</td><td>Cloud — varia por volume</td><td>R$ 342/mês (piloto) a R$ 4.060/mês (50+ mun.)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Projeção conservadora — Ano 1</h3>
+  <table>
+    <thead><tr><th>Cenário</th><th>Municípios</th><th>Receita anual estimada</th><th>Premissa central</th></tr></thead>
+    <tbody>
+      <tr><td>Conservador</td><td>1 piloto + 1 contrato F8</td><td>R$ 459k (licenças) + R$ 320k (implant.)</td><td>Piloto convertido em contrato em até 6 meses</td></tr>
+      <tr><td>Moderado</td><td>3–5 municípios</td><td>R$ 800k–1,2M</td><td>Pelo menos 2 conversões de piloto em 12 meses</td></tr>
+      <tr><td>Otimista</td><td>8–10 municípios</td><td>R$ 2M+</td><td>Requer equipe comercial ativa e ARP funcionando</td></tr>
+    </tbody>
+  </table>
+
+  <div class="nota atencao">
+    <strong>Alerta de modelagem</strong>
+    <p>Margens de software puro não se aplicam aqui. Este modelo tem implantação, treinamento, material físico e suporte presencial. Margem bruta realista na fase inicial é de 40–55%, não 80%. Com escala e padronização dos processos de implantação, pode melhorar — mas não antes.</p>
+  </div>
+</div>
+
+<!-- ══════════ 11 — O QUE PRECISA SER PROVADO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>O Que Ainda Precisa Ser Provado</h2>
+    <span class="pagina-num">Seção 10</span>
+  </div>
+  <p class="intro">Esta seção existe para separar o que sabemos do que ainda são premissas. Um projeto honesto conhece a diferença.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="titulo">Premissa 1 — Adesão do agente</div>
+      <p>Que o agente de campo, com baixo incentivo extrínseco e alta carga operacional, vai adotar o app de forma consistente no dia a dia. Não está provado. É a hipótese mais crítica do projeto.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Premissa 2 — Qualidade do registro</div>
+      <p>Que o dado digitado pelo agente via app será confiável — que ele não vai preencher o formulário sem visitar ou preencher de forma protocolar para cumprir meta. Requer mecanismo de verificação.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Premissa 3 — Reação gerencial</div>
+      <p>Que o coordenador vai usar os dados do painel para tomar decisões diferentes das que tomaria sem o sistema. Ter mais dados não garante melhores decisões. Esse é o link mais fraco da cadeia de valor.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Premissa 4 — Robustez territorial</div>
+      <p>Que o sistema funciona com consistência em territórios irregulares, endereços sem numeração, áreas de difícil acesso e com alta rotatividade de moradores. Precisa ser testado em campo real.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Premissa 5 — Sustentabilidade operacional</div>
+      <p>Que a prefeitura terá capacidade interna de manter o uso do sistema após a fase de implantação intensiva — sem depender continuamente do fornecedor para operar o básico.</p>
+    </div>
+    <div class="card">
+      <div class="titulo">Premissa 6 — Conversão pós-piloto</div>
+      <p>Que o resultado positivo do piloto se traduzirá em vontade política e administrativa de contratar. A lógica pública não é: "funcionou = compramos". Há etapas orçamentárias, licitatórias e políticas entre o piloto e o contrato.</p>
+    </div>
+  </div>
+
+  <div class="nota">
+    <strong>Postura esperada</strong>
+    <p>O objetivo do piloto é reduzir a incerteza dessas premissas — não eliminá-la. Ao final de 90 dias, algumas dessas questões terão respostas melhores. Outras precisarão de mais ciclos. Um projeto maduro sabe navegar essa realidade sem inflar expectativas.</p>
+  </div>
+</div>
+
+<!-- ══════════ 12 — VISÃO DE FUTURO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Visão de Futuro</h2>
+    <span class="pagina-num">Seção 11</span>
+  </div>
+  <p class="intro">Esta seção é curta por design. O futuro do projeto só faz sentido se a operação-base se provar real.</p>
+
+  <h3>Se o piloto confirmar as hipóteses centrais</h3>
+  <p>O modelo de identificação territorial, registro de campo e gestão por dados pode ser aplicado a outros problemas de fiscalização municipal: vigilância sanitária, saneamento, fiscalização de obras, controle de pragas agrícolas. A infraestrutura técnica é reaproveitável. O processo comercial e de implantação é replicável.</p>
+
+  <h3>Se o contrato com Uberlândia se confirmar</h3>
+  <p>A Ata de Registro de Preços (Art. 86, Lei 14.133/21) permite que outros municípios adiram ao mesmo contrato sem novo processo licitatório, dentro de limites legais. Esse mecanismo só existe e tem valor se o contrato original for bem estruturado desde o início — o que requer assessoria jurídica especializada.</p>
+
+  <h3>O que não está no horizonte imediato</h3>
+  <ul>
+    <li>Expansão para América Latina — só faz sentido após consolidação e documentação robusta no Brasil</li>
+    <li>Plataforma multi-vertical — é uma possibilidade lógica, não uma promessa presente</li>
+    <li>IA, visão computacional e mapa preditivo — funcionalidades condicionadas ao sucesso da operação-base e à demanda real do cliente, não ao roadmap do fundador</li>
+  </ul>
+
+  <div class="nota neutro">
+    <strong>Princípio de disciplina estratégica</strong>
+    <p>Uma empresa que ainda não completou seu primeiro piloto bem-sucedido não deve articular uma visão de plataforma LATAM. Isso não é modéstia — é credibilidade. O interlocutor sério lê esse tipo de ambição prematura como sinal de imaturidade, não de visão.</p>
+  </div>
+</div>
+
+<!-- ══════════ 13 — CONCLUSÃO ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Conclusão</h2>
+    <span class="pagina-num">Seção 12</span>
+  </div>
+
+  <p>O ZoonoseApp parte de um problema operacional real, verificável e persistente no setor de vigilância de endemias em municípios brasileiros. A digitalização do registro de campo é uma intervenção tecnicamente madura, com precedentes em outros setores de operação territorial.</p>
+  <p>A proposta não afirma que o produto vai resolver a dengue. Afirma que ele pode melhorar rastreabilidade, reduzir atraso informacional e criar base territorial de dados que hoje não existe — e que essas melhorias, se confirmadas em campo, têm valor real para gestores, agentes e para a administração pública.</p>
+  <p>O que justifica entrar nesse projeto agora não é a certeza do resultado — é a plausibilidade da hipótese, o baixo custo de validação, a ausência de soluções maduras no setor público municipal e a possibilidade de construir algo genuinamente útil antes que outros o façam.</p>
+
+  <div class="sep-verde"></div>
+
+  <h3>O que estamos pedindo</h3>
+  <p>Não estamos pedindo que se acredite no mercado bilionário. Estamos pedindo que se avalie se as hipóteses centrais são plausíveis o suficiente para merecer um piloto bem desenhado, com critérios honestos de sucesso e fracasso.</p>
+  <p>Se o piloto confirmar as hipóteses — temos um negócio. Se não confirmar — temos aprendizado documentado sobre por que o modelo falhou, o que tem valor próprio. Preferimos essa honestidade a qualquer promessa de inevitabilidade.</p>
+
+  <div class="nota">
+    <strong>Próximo passo concreto</strong>
+    <p>Selecionar o município de piloto. Definir o coordenador interno de referência. Redigir o Termo de Cooperação Técnica com assessoria jurídica. Executar o piloto com as métricas descritas neste documento. Avaliar com honestidade. Decidir com dados.</p>
+  </div>
+</div>
+
+<!-- ══════════ BLOCO 4 — AUDITORIA ══════════ -->
+<div class="pagina">
+  <div class="pagina-header">
+    <h2>Auditoria do Documento</h2>
+    <span class="pagina-num">Anexo — Bloco 4</span>
+  </div>
+  <p class="intro">Esta seção é para uso interno — responde às perguntas difíceis que um sócio ou parceiro sério vai fazer.</p>
+
+  <h3>Onde o documento ainda depende de prova</h3>
+  <ul>
+    <li><strong>Adesão do agente:</strong> toda a cadeia de valor depende disso. Sem dado real de campo, é premissa.</li>
+    <li><strong>Reação gerencial:</strong> o painel só tem valor se o coordenador usar os dados para agir diferente. Não testado.</li>
+    <li><strong>Preços de mercado:</strong> tabela de preços não foi validada em processo licitatório. Pode ser contestada.</li>
+    <li><strong>Margem real:</strong> 40–55% é estimativa. Custo real de implantação só é conhecido depois do primeiro ciclo completo.</li>
+  </ul>
+
+  <h3>O que continua sendo premissa</h3>
+  <ul>
+    <li>Que municipio de piloto converterá em contrato após 90 dias positivos</li>
+    <li>Que a ARP funcionará como mecanismo de expansão na prática</li>
+    <li>Que o componente operacional (implantação, treinamento, suporte) será escalável sem crescimento proporcional de custo</li>
+  </ul>
+
+  <h3>Perguntas difíceis que um cético ainda fará</h3>
+  <table>
+    <thead><tr><th>Pergunta</th><th>Resposta honesta</th></tr></thead>
+    <tbody>
+      <tr><td>"Por que os agentes vão usar o app se têm resistência a qualquer controle?"</td><td>Não sabemos ainda. É a hipótese mais arriscada. O piloto foi desenhado para medir isso explicitamente.</td></tr>
+      <tr><td>"Já existem sistemas de vigilância epidemiológica federais. Por que mais um?"</td><td>Sistemas federais como e-SUS e SINAN têm foco em notificação, não em operação de campo em tempo real. Há espaço complementar — mas requer validação.</td></tr>
+      <tr><td>"Qual a diferença real entre isso e uma planilha compartilhada?"</td><td>Identificação por imóvel, funcionamento offline robusto, geolocalização e painel em tempo real. Mas reconhecemos que a diferença percebida precisa ser demonstrada, não apenas afirmada.</td></tr>
+      <tr><td>"Se a prefeitura sair, os dados ficam com quem?"</td><td>Questão de contrato. Os dados pertencem à prefeitura — isso precisa estar explícito no instrumento jurídico. Migração deve ser prevista.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Por que este documento é mais robusto que o anterior</h3>
+  <ul>
+    <li>Separa fato de hipótese em vez de tratar tudo como verdade estabelecida</li>
+    <li>Reconhece riscos de adoção em vez de minimizá-los</li>
+    <li>Propõe métricas de piloto com critérios de fracasso, não só de sucesso</li>
+    <li>Remove narrativa de lock-in, inevitabilidade e atalho político</li>
+    <li>Trata o componente operacional com honestidade, sem inflar margem</li>
+    <li>Subordina a visão de futuro ao sucesso da operação-base</li>
+    <li>Inclui obrigações jurídicas (LGPD, BYOD, integração) que o material anterior ignorava</li>
+  </ul>
+</div>
+
+<!-- RODAPÉ -->
+<div class="footer">
+  <strong>ZoonoseApp — Dossiê Institucional v1.0</strong> — Março de 2026<br>
+  Baurufer — Uberlândia, MG — Leonardo Albanesi<br>
+  Confidencial — uso restrito a sócios e parceiros
+</div>
+
+</body>
+</html>

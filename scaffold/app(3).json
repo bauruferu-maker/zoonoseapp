@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "ZoonoseApp",
+    "slug": "zoonoseapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "zoonoseapp",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#006B3F"
+    },
+    "android": {
+      "package": "com.baurufer.zoonoseapp",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#006B3F"
+      },
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+    },
+    "ios": {
+      "bundleIdentifier": "com.baurufer.zoonoseapp",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Precisamos da câmera para escanear QR codes e registrar evidências fotográficas.",
+        "NSLocationWhenInUseUsageDescription": "Precisamos da localização para geomarcar suas visitas."
+      }
+    },
+    "plugins": [
+      "expo-router",
+      ["expo-camera", { "cameraPermission": "Permitir acesso à câmera para escanear QR codes e tirar fotos." }],
+      "expo-image-picker",
+      ["expo-location", { "locationWhenInUsePermission": "Permitir acesso à localização para registrar visitas." }]
+    ],
+    "extra": {
+      "eas": { "projectId": "SEU_PROJECT_ID_AQUI" }
+    }
+  }
+}

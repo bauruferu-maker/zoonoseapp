@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "ZoonoseApp",
+    "slug": "zoonoseapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#14532d"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.zoonoseapp.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#14532d",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "com.zoonoseapp.mobile",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_NETWORK_STATE",
+        "INTERNET",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-sqlite",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "ZoonoseApp precisa acessar a camera para registrar fotos das visitas.",
+          "photosPermission": "ZoonoseApp precisa acessar a galeria para anexar fotos das visitas."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#14532d",
+          "defaultChannel": "default"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "zoonoseapp"
+      }
+    }
+  }
+}

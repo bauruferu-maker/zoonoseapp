@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ZoonoseApp Scaffold MVP v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a1628;--card:#111d35;--border:#1e3a5f;--blue:#3b82f6;--blue-light:#60a5fa;--green:#10b981;--text:#e2e8f0;--muted:#94a3b8;--code-bg:#0f172a}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Inter",sans-serif;font-size:15px;line-height:1.6}
+a{color:var(--blue-light);text-decoration:none}
+a:hover{text-decoration:underline}
+#header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,22,40,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo-icon{width:36px;height:36px;border-radius:9px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0}
+.logo-text{font-weight:700;font-size:17px;color:var(--text)}
+.badge-scaffold{background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);color:var(--blue-light);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.3px}
+.header-right{color:var(--muted);font-size:12px}
+#wrap{display:flex;padding-top:60px;min-height:100vh}
+#sidebar{width:240px;flex-shrink:0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);padding:24px 0;background:var(--bg)}
+#sidebar h3{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:0 20px;margin-bottom:8px}
+#sidebar ul{list-style:none}
+#sidebar ul li a{display:block;padding:8px 20px;font-size:13px;color:var(--muted);border-left:2px solid transparent;transition:all .15s}
+#sidebar ul li a:hover{color:var(--text);border-left-color:var(--blue);background:rgba(59,130,246,0.06);text-decoration:none}
+.sidebar-num{display:inline-block;width:18px;height:18px;background:rgba(59,130,246,0.15);color:var(--blue-light);border-radius:4px;font-size:10px;font-weight:700;text-align:center;line-height:18px;margin-right:8px}
+#main{flex:1;max-width:960px;padding:40px 48px 80px;overflow:hidden}
+.section{margin-bottom:72px}
+.section-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.section-num{width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--blue-light);flex-shrink:0;margin-top:2px}
+.section-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px}
+.section-desc{font-size:14px;color:var(--muted)}
+.file-badge{display:block;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-bottom:none;border-radius:8px 8px 0 0;padding:6px 14px;font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:500;color:var(--blue-light);margin-top:20px}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:0 8px 8px 8px;padding:20px 22px;overflow-x:auto;margin-bottom:4px;font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.7;color:#e2e8f0;tab-size:2;white-space:pre-wrap;word-break:break-word}
+code{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:4px;padding:1px 6px;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--blue-light)}
+.kw{color:#c792ea}.str{color:#c3e88d}.num{color:#f78c6c}.cmt{color:#546e7a;font-style:italic}.fn{color:#82aaff}.type{color:#ffcb6b}
+.checklist{list-style:none;counter-reset:steps;margin-top:16px}
+.checklist li{counter-increment:steps;display:flex;align-items:flex-start;gap:12px;padding:10px 14px;margin-bottom:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text)}
+.checklist li::before{content:counter(steps);display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex-shrink:0;background:rgba(59,130,246,0.15);color:var(--blue-light);border-radius:6px;font-size:11px;font-weight:700;margin-top:1px}
+#footer{border-top:1px solid var(--border);padding:24px 48px;text-align:center;font-size:12px;color:var(--muted);background:var(--bg);margin-top:40px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@media(max-width:768px){#sidebar{display:none}#main{padding:24px 20px 60px}}
+</style>
+</head>
+<body>
+<header id="header">
+  <div class="header-left">
+    <div class="logo-icon">Z</div>
+    <span class="logo-text">ZoonoseApp</span>
+    <span class="badge-scaffold">Scaffold v1.0</span>
+  </div>
+  <div class="header-right">Expo + Supabase + Next.js &nbsp;&middot;&nbsp; Android-first MVP</div>
+</header>
+<div id="wrap">
+<nav id="sidebar">
+  <h3>Conte&uacute;do</h3>
+  <ul>
+    <li><a href="#sec1"><span class="sidebar-num">1</span>Estrutura de Diret&oacute;rios</a></li>
+    <li><a href="#sec2"><span class="sidebar-num">2</span>Banco de Dados</a></li>
+    <li><a href="#sec3"><span class="sidebar-num">3</span>App Mobile</a></li>
+    <li><a href="#sec4"><span class="sidebar-num">4</span>Painel Web</a></li>
+    <li><a href="#sec5"><span class="sidebar-num">5</span>Config &amp; Deploy</a></li>
+    <li><a href="#sec6"><span class="sidebar-num">6</span>Import CSV</a></li>
+  </ul>
+</nav>
+<main id="main">
+<section class="section" id="sec1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div><div class="section-title">Estrutura de Diret&oacute;rios</div>
+    <div class="section-desc">Monorepo com /app (Expo), /web (Next.js), /supabase e /scripts</div></div>
+  </div>
+<div class="file-badge">&#128193; zoonoseapp/ &mdash; monorepo root</div>
+<pre>zoonoseapp/
+&#9500;&#9472;&#9472; app/                          <span class="cmt"># Expo React Native</span>
+&#9474;   &#9500;&#9472;&#9472; src/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; screens/
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; LoginScreen.tsx
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; HomeScreen.tsx
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; PropertyDetailScreen.tsx
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; RegisterVisitScreen.tsx
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; ConfirmVisitScreen.tsx
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; HistoryScreen.tsx
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; SyncStatusScreen.tsx
+&#9474;   &#9474;   &#9474;   &#9492;&#9472;&#9472; SettingsScreen.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; hooks/
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; useOfflineSync.ts
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; useAuth.ts
+&#9474;   &#9474;   &#9474;   &#9492;&#9472;&#9472; useProperties.ts
+&#9474;   &#9474;   &#9500;&#9472;&#9472; lib/
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; supabase.ts
+&#9474;   &#9474;   &#9474;   &#9492;&#9472;&#9472; mmkv.ts
+&#9474;   &#9474;   &#9500;&#9472;&#9472; types/index.ts
+&#9474;   &#9474;   &#9492;&#9472;&#9472; navigation/AppNavigator.tsx
+&#9474;   &#9500;&#9472;&#9472; app.json
+&#9474;   &#9500;&#9472;&#9472; eas.json
+&#9474;   &#9492;&#9472;&#9472; package.json
+&#9500;&#9472;&#9472; web/                          <span class="cmt"># Next.js &mdash; painel coordenador</span>
+&#9474;   &#9500;&#9472;&#9472; app/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; (auth)/login/page.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; dashboard/page.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; dashboard/imoveis/page.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; dashboard/imoveis/[id]/page.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; dashboard/agentes/page.tsx
+&#9474;   &#9474;   &#9492;&#9472;&#9472; api/export/route.ts
+&#9474;   &#9500;&#9472;&#9472; components/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; MetricCard.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; PropertyTable.tsx
+&#9474;   &#9474;   &#9492;&#9472;&#9472; AgentTable.tsx
+&#9474;   &#9500;&#9472;&#9472; lib/supabase.ts
+&#9474;   &#9492;&#9472;&#9472; package.json
+&#9500;&#9472;&#9472; supabase/
+&#9474;   &#9500;&#9472;&#9472; migrations/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; 001_schema.sql
+&#9474;   &#9474;   &#9500;&#9472;&#9472; 002_indexes.sql
+&#9474;   &#9474;   &#9492;&#9472;&#9472; 003_seed.sql
+&#9474;   &#9492;&#9472;&#9472; config.toml
+&#9492;&#9472;&#9472; scripts/
+    &#9492;&#9472;&#9472; import-imoveis.js</pre>
+</section>
+
+<section class="section" id="sec2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div>
+      <div class="section-title">Banco de Dados &mdash; Supabase Schema</div>
+      <div class="section-desc">SQL completo para o Supabase SQL Editor: 6 tabelas, RLS policies, &iacute;ndices.</div>
+    </div>
+  </div>
+<div class="file-badge">&#128451; supabase/migrations/001_schema.sql</div>
+<pre><span class="cmt">-- ZOONOSEAPP MVP -- SCHEMA COMPLETO</span>
+
+<span class="kw">CREATE TABLE</span> sectors (
+  id           <span class="type">UUID</span> <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  name         <span class="type">TEXT</span> <span class="kw">NOT NULL</span>,
+  municipality <span class="type">TEXT</span> <span class="kw">NOT NULL DEFAULT</span> <span class="str">'Uberlandia'</span>,
+  created_at   <span class="type">TIMESTAMPTZ</span> <span class="kw">DEFAULT</span> NOW()
+);
+
+<span class="kw">CREATE TABLE</span> profiles (
+  id         <span class="type">UUID</span> <span class="kw">PRIMARY KEY REFERENCES</span> auth.users(id) <span class="kw">ON DELETE CASCADE</span>,
+  name       <span class="type">TEXT</span> <span class="kw">NOT NULL</span>,
+  role       <span class="type">TEXT</span> <span class="kw">NOT NULL CHECK</span> (role <span class="kw">IN</span> (<span class="str">'agent'</span>,<span class="str">'coordinator'</span>,<span class="str">'manager'</span>,<span class="str">'admin'</span>)),
+  sector_id  <span class="type">UUID</span> <span class="kw">REFERENCES</span> sectors(id),
+  active     <span class="type">BOOLEAN</span> <span class="kw">DEFAULT TRUE</span>,
+  created_at <span class="type">TIMESTAMPTZ</span> <span class="kw">DEFAULT</span> NOW()
+);
+
+<span class="kw">CREATE OR REPLACE FUNCTION</span> handle_new_user() <span class="kw">RETURNS TRIGGER AS</span> $$
+<span class="kw">BEGIN</span>
+  <span class="kw">INSERT INTO</span> profiles (id, name, role) <span class="kw">VALUES</span>
+  (NEW.id, NEW.raw_user_meta_data->><span class="str">'name'</span>, COALESCE(NEW.raw_user_meta_data->><span class="str">'role'</span>, <span class="str">'agent'</span>));
+<span class="kw">RETURN</span> NEW; <span class="kw">END</span>; $$ <span class="kw">LANGUAGE</span> plpgsql <span class="kw">SECURITY DEFINER</span>;
+
+<span class="kw">CREATE TRIGGER</span> on_auth_user_created
+  <span class="kw">AFTER INSERT ON</span> auth.users
+  <span class="kw">FOR EACH ROW EXECUTE FUNCTION</span> handle_new_user();
+
+<span class="kw">CREATE TABLE</span> properties (
+  id         <span class="type">UUID</span> <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  code       <span class="type">TEXT</span> <span class="kw">UNIQUE NOT NULL</span>,
+  address    <span class="type">TEXT</span> <span class="kw">NOT NULL</span>,
+  sector_id  <span class="type">UUID</span> <span class="kw">REFERENCES</span> sectors(id),
+  type       <span class="type">TEXT</span> <span class="kw">DEFAULT</span> <span class="str">'residencial'</span>
+               <span class="kw">CHECK</span> (type <span class="kw">IN</span> (<span class="str">'residencial'</span>,<span class="str">'comercial'</span>,<span class="str">'terreno'</span>,<span class="str">'especial'</span>)),
+  lat        <span class="type">DOUBLE PRECISION</span>,
+  lng        <span class="type">DOUBLE PRECISION</span>,
+  active     <span class="type">BOOLEAN</span> <span class="kw">DEFAULT TRUE</span>,
+  created_at <span class="type">TIMESTAMPTZ</span> <span class="kw">DEFAULT</span> NOW()
+);
+
+<span class="kw">CREATE TABLE</span> visits (
+  id          <span class="type">UUID</span> <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  property_id <span class="type">UUID</span> <span class="kw">NOT NULL REFERENCES</span> properties(id),
+  agent_id    <span class="type">UUID</span> <span class="kw">NOT NULL REFERENCES</span> profiles(id),
+  status      <span class="type">TEXT</span> <span class="kw">NOT NULL CHECK</span> (status <span class="kw">IN</span> (
+                <span class="str">'visitado_sem_foco'</span>,<span class="str">'visitado_com_achado'</span>,<span class="str">'fechado'</span>,
+                <span class="str">'recusado'</span>,<span class="str">'nao_localizado'</span>,<span class="str">'pendente_revisao'</span>)),
+  notes       <span class="type">TEXT</span>,
+  visited_at  <span class="type">TIMESTAMPTZ</span> <span class="kw">NOT NULL DEFAULT</span> NOW(),
+  synced_at   <span class="type">TIMESTAMPTZ</span>,
+  created_at  <span class="type">TIMESTAMPTZ</span> <span class="kw">DEFAULT</span> NOW()
+);
+
+<span class="kw">CREATE TABLE</span> evidences (
+  id           <span class="type">UUID</span> <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  visit_id     <span class="type">UUID</span> <span class="kw">NOT NULL REFERENCES</span> visits(id) <span class="kw">ON DELETE CASCADE</span>,
+  storage_path <span class="type">TEXT</span> <span class="kw">NOT NULL</span>,
+  created_at   <span class="type">TIMESTAMPTZ</span> <span class="kw">DEFAULT</span> NOW()
+);
+
+<span class="kw">CREATE TABLE</span> activity_logs (
+  id         <span class="type">UUID</span> <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  user_id    <span class="type">UUID</span> <span class="kw">REFERENCES</span> profiles(id),
+  action     <span class="type">TEXT</span> <span class="kw">NOT NULL</span>,
+  entity     <span class="type">TEXT</span>, entity_id <span class="type">UUID</span>,
+  created_at <span class="type">TIMESTAMPTZ</span> <span class="kw">DEFAULT</span> NOW()
+);
+
+<span class="cmt">-- RLS POLICIES</span>
+<span class="kw">ALTER TABLE</span> visits     <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+<span class="kw">ALTER TABLE</span> profiles   <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+<span class="kw">ALTER TABLE</span> properties <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+<span class="kw">ALTER TABLE</span> evidences  <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="kw">CREATE POLICY</span> <span class="str">"profiles_self"</span> <span class="kw">ON</span> profiles <span class="kw">FOR SELECT USING</span>
+  (id = auth.uid() <span class="kw">OR EXISTS</span> (<span class="kw">SELECT</span> 1 <span class="kw">FROM</span> profiles p
+   <span class="kw">WHERE</span> p.id = auth.uid() <span class="kw">AND</span> p.role <span class="kw">IN</span> (<span class="str">'admin'</span>,<span class="str">'manager'</span>)));
+
+<span class="kw">CREATE POLICY</span> <span class="str">"properties_read"</span> <span class="kw">ON</span> properties <span class="kw">FOR SELECT USING</span> (auth.role() = <span class="str">'authenticated'</span>);
+
+<span class="kw">CREATE POLICY</span> <span class="str">"visits_read"</span> <span class="kw">ON</span> visits <span class="kw">FOR SELECT USING</span> (
+  agent_id = auth.uid() <span class="kw">OR EXISTS</span> (<span class="kw">SELECT</span> 1 <span class="kw">FROM</span> profiles p
+  <span class="kw">WHERE</span> p.id = auth.uid() <span class="kw">AND</span> p.role <span class="kw">IN</span> (<span class="str">'coordinator'</span>,<span class="str">'manager'</span>,<span class="str">'admin'</span>)));
+
+<span class="kw">CREATE POLICY</span> <span class="str">"visits_insert"</span> <span class="kw">ON</span> visits <span class="kw">FOR INSERT WITH CHECK</span> (agent_id = auth.uid());
+
+<span class="cmt">-- Indices</span>
+<span class="kw">CREATE INDEX</span> idx_visits_property   <span class="kw">ON</span> visits(property_id);
+<span class="kw">CREATE INDEX</span> idx_visits_agent      <span class="kw">ON</span> visits(agent_id);
+<span class="kw">CREATE INDEX</span> idx_visits_status     <span class="kw">ON</span> visits(status);
+<span class="kw">CREATE INDEX</span> idx_visits_visited_at <span class="kw">ON</span> visits(visited_at <span class="kw">DESC</span>);
+<span class="kw">CREATE INDEX</span> idx_properties_code   <span class="kw">ON</span> properties(code);
+<span class="kw">CREATE INDEX</span> idx_properties_sector <span class="kw">ON</span> properties(sector_id);</pre>
+<div class="file-badge">&#127807; supabase/migrations/003_seed.sql</div>
+<pre><span class="cmt">-- SEED DE DEMO</span>
+<span class="kw">INSERT INTO</span> sectors (id, name) <span class="kw">VALUES</span>
+  (<span class="str">'11111111-0000-0000-0000-000000000001'</span>, <span class="str">'Setor Norte'</span>),
+  (<span class="str">'11111111-0000-0000-0000-000000000002'</span>, <span class="str">'Setor Sul'</span>);
+
+<span class="kw">INSERT INTO</span> properties (code, address, sector_id, type) <span class="kw">VALUES</span>
+  (<span class="str">'UBL-0001'</span>,<span class="str">'Rua das Acacias, 123 Tibery'</span>, <span class="str">'11111111-0000-0000-0000-000000000001'</span>,<span class="str">'residencial'</span>),
+  (<span class="str">'UBL-0002'</span>,<span class="str">'Av Joao Naves de Avila, 456'</span>, <span class="str">'11111111-0000-0000-0000-000000000001'</span>,<span class="str">'residencial'</span>),
+  (<span class="str">'UBL-0003'</span>,<span class="str">'Rua Olegario Maciel, 78 Centro'</span>, <span class="str">'11111111-0000-0000-0000-000000000002'</span>,<span class="str">'comercial'</span>),
+  (<span class="str">'UBL-0004'</span>,<span class="str">'Rua Tupinambas, 22 Roosevelt'</span>, <span class="str">'11111111-0000-0000-0000-000000000001'</span>,<span class="str">'residencial'</span>),
+  (<span class="str">'UBL-0005'</span>,<span class="str">'Av Rondon Pacheco, 2800 Saraiva'</span>, <span class="str">'11111111-0000-0000-0000-000000000002'</span>,<span class="str">'residencial'</span>),
+  (<span class="str">'UBL-0006'</span>,<span class="str">'Rua Goias, 510 Centro'</span>, <span class="str">'11111111-0000-0000-0000-000000000002'</span>,<span class="str">'comercial'</span>),
+  (<span class="str">'UBL-0007'</span>,<span class="str">'Rua Ceara, 33 Bairro Cazeca'</span>, <span class="str">'11111111-0000-0000-0000-000000000001'</span>,<span class="str">'residencial'</span>),
+  (<span class="str">'UBL-0008'</span>,<span class="str">'Rua Para, 88 Osvaldo Rezende'</span>, <span class="str">'11111111-0000-0000-0000-000000000001'</span>,<span class="str">'residencial'</span>),
+  (<span class="str">'UBL-0009'</span>,<span class="str">'Av Afonso Pena, 1200 Karaiba'</span>, <span class="str">'11111111-0000-0000-0000-000000000002'</span>,<span class="str">'residencial'</span>),
+  (<span class="str">'UBL-0010'</span>,<span class="str">'Rua Espirito Santo, 55 Bairro Brasil'</span>,<span class="str">'11111111-0000-0000-0000-000000000001'</span>,<span class="str">'terreno'</span>);</pre>
+</section>
+
+<section class="section" id="sec3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div>
+      <div class="section-title">App Mobile &mdash; Expo React Native</div>
+      <div class="section-desc">C&oacute;digo completo das telas do agente de campo. TypeScript + Supabase + MMKV offline.</div>
+    </div>
+  </div>
+<div class="file-badge">&#128230; app/package.json</div>
+<pre>{
+  <span class="str">"name"</span>: <span class="str">"zoonoseapp"</span>,  <span class="str">"version"</span>: <span class="str">"1.0.0"</span>,
+  <span class="str">"main"</span>: <span class="str">"expo-router/entry"</span>,
+  <span class="str">"scripts"</span>: {
+    <span class="str">"start"</span>: <span class="str">"expo start"</span>,
+    <span class="str">"android"</span>: <span class="str">"expo run:android"</span>,
+    <span class="str">"build:apk"</span>: <span class="str">"eas build --platform android --profile preview"</span>
+  },
+  <span class="str">"dependencies"</span>: {
+    <span class="str">"expo"</span>: <span class="str">"~51.0.0"</span>,
+    <span class="str">"@supabase/supabase-js"</span>: <span class="str">"^2.43.0"</span>,
+    <span class="str">"react-native-mmkv"</span>: <span class="str">"^2.12.0"</span>,
+    <span class="str">"expo-image-picker"</span>: <span class="str">"~15.0.7"</span>,
+    <span class="str">"expo-camera"</span>: <span class="str">"~15.0.15"</span>,
+    <span class="str">"@react-native-community/netinfo"</span>: <span class="str">"11.3.1"</span>,
+    <span class="str">"@react-navigation/native"</span>: <span class="str">"^6.1.17"</span>,
+    <span class="str">"@react-navigation/native-stack"</span>: <span class="str">"^6.9.26"</span>,
+    <span class="str">"react-native-safe-area-context"</span>: <span class="str">"4.10.1"</span>,
+    <span class="str">"react-native-screens"</span>: <span class="str">"3.31.1"</span>
+  }
+}</pre>
+<div class="file-badge">&#128196; app/src/lib/supabase.ts</div>
+<pre><span class="kw">import</span> { createClient } <span class="kw">from</span> <span class="str">'@supabase/supabase-js'</span>
+<span class="kw">import</span> { MMKV } <span class="kw">from</span> <span class="str">'react-native-mmkv'</span>
+
+<span class="kw">const</span> storage = <span class="kw">new</span> <span class="fn">MMKV</span>()
+<span class="kw">const</span> supabaseMMKVAdapter = {
+  getItem:    (key: <span class="type">string</span>) =&gt; storage.<span class="fn">getString</span>(key) ?? <span class="kw">null</span>,
+  setItem:    (key: <span class="type">string</span>, value: <span class="type">string</span>) =&gt; storage.<span class="fn">set</span>(key, value),
+  removeItem: (key: <span class="type">string</span>) =&gt; storage.<span class="fn">delete</span>(key),
+}
+
+<span class="kw">export const</span> supabase = <span class="fn">createClient</span>(
+  process.env.EXPO_PUBLIC_SUPABASE_URL!,
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!,
+  { auth: { storage: supabaseMMKVAdapter, autoRefreshToken: <span class="kw">true</span>,
+      persistSession: <span class="kw">true</span>, detectSessionInUrl: <span class="kw">false</span> } }
+)</pre>
+<div class="file-badge">&#128196; app/src/lib/mmkv.ts</div>
+<pre><span class="kw">import</span> { MMKV } <span class="kw">from</span> <span class="str">'react-native-mmkv'</span>
+<span class="kw">export const</span> storage = <span class="kw">new</span> <span class="fn">MMKV</span>()
+
+<span class="kw">export const</span> offlineQueue = {
+  getAll: (): <span class="type">PendingVisit</span>[] =&gt; {
+    <span class="kw">const</span> raw = storage.<span class="fn">getString</span>(<span class="str">'offline_queue'</span>)
+    <span class="kw">return</span> raw ? <span class="fn">JSON.parse</span>(raw) : []
+  },
+  add: (visit: <span class="type">PendingVisit</span>) =&gt; {
+    <span class="kw">const</span> q = offlineQueue.<span class="fn">getAll</span>(); q.<span class="fn">push</span>(visit)
+    storage.<span class="fn">set</span>(<span class="str">'offline_queue'</span>, <span class="fn">JSON.stringify</span>(q))
+  },
+  remove: (id: <span class="type">string</span>) =&gt; {
+    storage.<span class="fn">set</span>(<span class="str">'offline_queue'</span>,
+      <span class="fn">JSON.stringify</span>(offlineQueue.<span class="fn">getAll</span>().<span class="fn">filter</span>(v =&gt; v.localId !== id)))
+  },
+  clear: () =&gt; storage.<span class="fn">delete</span>(<span class="str">'offline_queue'</span>),
+}
+
+<span class="kw">interface</span> <span class="type">PendingVisit</span> {
+  localId: <span class="type">string</span>; property_id: <span class="type">string</span>; agent_id: <span class="type">string</span>
+  status: <span class="type">string</span>; notes?: <span class="type">string</span>; visited_at: <span class="type">string</span>; photoUri?: <span class="type">string</span>
+}</pre>
+<div class="file-badge">&#128196; app/src/types/index.ts</div>
+<pre><span class="kw">export type</span> <span class="type">Role</span> = <span class="str">'agent'</span> | <span class="str">'coordinator'</span> | <span class="str">'manager'</span> | <span class="str">'admin'</span>
+
+<span class="kw">export type</span> <span class="type">VisitStatus</span> =
+  | <span class="str">'visitado_sem_foco'</span> | <span class="str">'visitado_com_achado'</span> | <span class="str">'fechado'</span>
+  | <span class="str">'recusado'</span> | <span class="str">'nao_localizado'</span> | <span class="str">'pendente_revisao'</span>
+
+<span class="kw">export interface</span> <span class="type">Profile</span> {
+  id: <span class="type">string</span>; name: <span class="type">string</span>; role: <span class="type">Role</span>
+  sector_id: <span class="type">string</span> | <span class="kw">null</span>; active: <span class="type">boolean</span>; created_at: <span class="type">string</span>
+}
+
+<span class="kw">export interface</span> <span class="type">Property</span> {
+  id: <span class="type">string</span>; code: <span class="type">string</span>; address: <span class="type">string</span>; sector_id: <span class="type">string</span>
+  type: <span class="str">'residencial'</span> | <span class="str">'comercial'</span> | <span class="str">'terreno'</span> | <span class="str">'especial'</span>
+  lat?: <span class="type">number</span>; lng?: <span class="type">number</span>; active: <span class="type">boolean</span>
+}
+
+<span class="kw">export interface</span> <span class="type">Visit</span> {
+  id: <span class="type">string</span>; property_id: <span class="type">string</span>; agent_id: <span class="type">string</span>
+  status: <span class="type">VisitStatus</span>; notes?: <span class="type">string</span>
+  visited_at: <span class="type">string</span>; synced_at?: <span class="type">string</span>; created_at: <span class="type">string</span>
+}
+
+<span class="kw">export const</span> STATUS_CONFIG: <span class="type">Record</span>&lt;<span class="type">VisitStatus</span>, { label: <span class="type">string</span>; color: <span class="type">string</span>; bg: <span class="type">string</span> }&gt; = {
+  visitado_sem_foco:   { label: <span class="str">'Sem Foco'</span>,      color: <span class="str">'#10b981'</span>, bg: <span class="str">'rgba(16,185,129,0.15)'</span> },
+  visitado_com_achado: { label: <span class="str">'Com Achado'</span>,     color: <span class="str">'#ef4444'</span>, bg: <span class="str">'rgba(239,68,68,0.15)'</span> },
+  fechado:             { label: <span class="str">'Fechado'</span>,         color: <span class="str">'#94a3b8'</span>, bg: <span class="str">'rgba(148,163,184,0.15)'</span> },
+  recusado:            { label: <span class="str">'Recusado'</span>,        color: <span class="str">'#f97316'</span>, bg: <span class="str">'rgba(249,115,22,0.15)'</span> },
+  nao_localizado:      { label: <span class="str">'Nao Localizado'</span>,  color: <span class="str">'#f59e0b'</span>, bg: <span class="str">'rgba(245,158,11,0.15)'</span> },
+  pendente_revisao:    { label: <span class="str">'Pend. Revisao'</span>,   color: <span class="str">'#3b82f6'</span>, bg: <span class="str">'rgba(59,130,246,0.15)'</span> },
+}</pre>
+<div class="file-badge">&#128196; app/src/hooks/useOfflineSync.ts</div>
+<pre><span class="kw">import</span> { useEffect, useCallback } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> NetInfo <span class="kw">from</span> <span class="str">'@react-native-community/netinfo'</span>
+<span class="kw">import</span> { supabase } <span class="kw">from</span> <span class="str">'../lib/supabase'</span>
+<span class="kw">import</span> { offlineQueue } <span class="kw">from</span> <span class="str">'../lib/mmkv'</span>
+
+<span class="kw">export function</span> <span class="fn">useOfflineSync</span>() {
+  <span class="kw">const</span> syncPending = <span class="fn">useCallback</span>(<span class="kw">async</span> () =&gt; {
+    <span class="kw">const</span> queue = offlineQueue.<span class="fn">getAll</span>()
+    <span class="kw">if</span> (queue.length === 0) <span class="kw">return</span>
+    <span class="kw">for</span> (<span class="kw">const</span> item <span class="kw">of</span> queue) {
+      <span class="kw">try</span> {
+        <span class="kw">const</span> { error } = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="str">'visits'</span>).<span class="fn">insert</span>({
+          ...item, synced_at: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+        })
+        <span class="kw">if</span> (!error) offlineQueue.<span class="fn">remove</span>(item.localId)
+      } <span class="kw">catch</span> (e) { console.<span class="fn">warn</span>(<span class="str">'Sync falhou'</span>, item.localId, e) }
+    }
+  }, [])
+
+  <span class="fn">useEffect</span>(() =&gt; {
+    <span class="kw">const</span> unsub = NetInfo.<span class="fn">addEventListener</span>(s =&gt; { <span class="kw">if</span> (s.isConnected) <span class="fn">syncPending</span>() })
+    <span class="kw">return</span> unsub
+  }, [syncPending])
+
+  <span class="kw">return</span> { syncPending }
+}</pre>
+<div class="file-badge">&#128196; app/src/hooks/useAuth.ts</div>
+<pre><span class="kw">import</span> { useState, useEffect } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { supabase } <span class="kw">from</span> <span class="str">'../lib/supabase'</span>
+<span class="kw">import</span> { Profile } <span class="kw">from</span> <span class="str">'../types'</span>
+
+<span class="kw">export function</span> <span class="fn">useAuth</span>() {
+  <span class="kw">const</span> [profile, setProfile] = <span class="fn">useState</span>&lt;<span class="type">Profile</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">true</span>)
+
+  <span class="fn">useEffect</span>(() =&gt; {
+    <span class="kw">const</span> { data: { subscription } } = supabase.auth.<span class="fn">onAuthStateChange</span>(<span class="kw">async</span> (_e, session) =&gt; {
+      <span class="kw">if</span> (session?.user) {
+        <span class="kw">const</span> { data } = <span class="kw">await</span> supabase
+          .<span class="fn">from</span>(<span class="str">'profiles'</span>).<span class="fn">select</span>(<span class="str">'*'</span>).<span class="fn">eq</span>(<span class="str">'id'</span>, session.user.id).<span class="fn">single</span>()
+        <span class="fn">setProfile</span>(data)
+      } <span class="kw">else</span> { <span class="fn">setProfile</span>(<span class="kw">null</span>) }
+      <span class="fn">setLoading</span>(<span class="kw">false</span>)
+    })
+    <span class="kw">return</span> () =&gt; subscription.<span class="fn">unsubscribe</span>()
+  }, [])
+
+  <span class="kw">const</span> signIn = <span class="kw">async</span> (email: <span class="type">string</span>, password: <span class="type">string</span>) =&gt; {
+    <span class="kw">const</span> { error } = <span class="kw">await</span> supabase.auth.<span class="fn">signInWithPassword</span>({ email, password })
+    <span class="kw">return</span> { error }
+  }
+  <span class="kw">const</span> signOut = <span class="kw">async</span> () =&gt; { <span class="kw">await</span> supabase.auth.<span class="fn">signOut</span>() }
+  <span class="kw">return</span> { profile, loading, signIn, signOut }
+}</pre>
+<div class="file-badge">&#128196; app/src/navigation/AppNavigator.tsx</div>
+<pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { NavigationContainer } <span class="kw">from</span> <span class="str">'@react-navigation/native'</span>
+<span class="kw">import</span> { createNativeStackNavigator } <span class="kw">from</span> <span class="str">'@react-navigation/native-stack'</span>
+<span class="kw">import</span> { useAuth } <span class="kw">from</span> <span class="str">'../hooks/useAuth'</span>
+<span class="kw">import</span> LoginScreen <span class="kw">from</span> <span class="str">'../screens/LoginScreen'</span>
+<span class="kw">import</span> HomeScreen <span class="kw">from</span> <span class="str">'../screens/HomeScreen'</span>
+<span class="kw">import</span> PropertyDetailScreen <span class="kw">from</span> <span class="str">'../screens/PropertyDetailScreen'</span>
+<span class="kw">import</span> RegisterVisitScreen <span class="kw">from</span> <span class="str">'../screens/RegisterVisitScreen'</span>
+<span class="kw">import</span> ConfirmVisitScreen <span class="kw">from</span> <span class="str">'../screens/ConfirmVisitScreen'</span>
+<span class="kw">import</span> HistoryScreen <span class="kw">from</span> <span class="str">'../screens/HistoryScreen'</span>
+<span class="kw">import</span> SyncStatusScreen <span class="kw">from</span> <span class="str">'../screens/SyncStatusScreen'</span>
+<span class="kw">import</span> SettingsScreen <span class="kw">from</span> <span class="str">'../screens/SettingsScreen'</span>
+
+<span class="kw">export type</span> <span class="type">RootStackParamList</span> = {
+  Login: <span class="kw">undefined</span>; Home: <span class="kw">undefined</span>
+  PropertyDetail: { propertyId: <span class="type">string</span> }
+  RegisterVisit: { propertyId: <span class="type">string</span>; propertyCode: <span class="type">string</span> }
+  ConfirmVisit: { visitData: <span class="type">any</span> }
+  History: <span class="kw">undefined</span>; SyncStatus: <span class="kw">undefined</span>; Settings: <span class="kw">undefined</span>
+}
+
+<span class="kw">const</span> Stack = <span class="fn">createNativeStackNavigator</span>&lt;<span class="type">RootStackParamList</span>&gt;()
+
+<span class="kw">export default function</span> <span class="fn">AppNavigator</span>() {
+  <span class="kw">const</span> { profile, loading } = <span class="fn">useAuth</span>()
+  <span class="kw">if</span> (loading) <span class="kw">return null</span>
+  <span class="kw">return</span> (
+    &lt;NavigationContainer&gt;
+      &lt;Stack.Navigator screenOptions={{
+          headerStyle: { backgroundColor: <span class="str">'#111d35'</span> },
+          headerTintColor: <span class="str">'#e2e8f0'</span>,
+          contentStyle: { backgroundColor: <span class="str">'#0a1628'</span> } }}&gt;
+        {!profile ? (
+          &lt;Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} /&gt;
+        ) : (
+          &lt;&gt;
+            &lt;Stack.Screen name="Home" component={HomeScreen} options={{ title: "Buscar Imovel" }} /&gt;
+            &lt;Stack.Screen name="PropertyDetail" component={PropertyDetailScreen} options={{ title: "Imovel" }} /&gt;
+            &lt;Stack.Screen name="RegisterVisit" component={RegisterVisitScreen} options={{ title: "Registrar Visita" }} /&gt;
+            &lt;Stack.Screen name="ConfirmVisit" component={ConfirmVisitScreen} options={{ title: "Confirmar" }} /&gt;
+            &lt;Stack.Screen name="History" component={HistoryScreen} options={{ title: "Meu Historico" }} /&gt;
+            &lt;Stack.Screen name="SyncStatus" component={SyncStatusScreen} options={{ title: "Sincronizacao" }} /&gt;
+            &lt;Stack.Screen name="Settings" component={SettingsScreen} options={{ title: "Configuracoes" }} /&gt;
+          &lt;/&gt;
+        )}
+      &lt;/Stack.Navigator&gt;
+    &lt;/NavigationContainer&gt;
+  )
+}</pre>
+<div class="file-badge">&#128196; app/src/screens/LoginScreen.tsx</div>
+<pre><span class="kw">import</span> React, { useState } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet, Alert } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { useAuth } <span class="kw">from</span> <span class="str">'../hooks/useAuth'</span>
+
+<span class="kw">export default function</span> <span class="fn">LoginScreen</span>() {
+  <span class="kw">const</span> [email, setEmail] = <span class="fn">useState</span>(<span class="str">''</span>)
+  <span class="kw">const</span> [password, setPassword] = <span class="fn">useState</span>(<span class="str">''</span>)
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">false</span>)
+  <span class="kw">const</span> { signIn } = <span class="fn">useAuth</span>()
+
+  <span class="kw">const</span> handleLogin = <span class="kw">async</span> () =&gt; {
+    <span class="kw">if</span> (!email || !password) { Alert.<span class="fn">alert</span>(<span class="str">'Erro'</span>, <span class="str">'Preencha e-mail e senha.'</span>); <span class="kw">return</span> }
+    <span class="fn">setLoading</span>(<span class="kw">true</span>)
+    <span class="kw">const</span> { error } = <span class="kw">await</span> <span class="fn">signIn</span>(email, password)
+    <span class="fn">setLoading</span>(<span class="kw">false</span>)
+    <span class="kw">if</span> (error) Alert.<span class="fn">alert</span>(<span class="str">'Erro de login'</span>, error.message)
+  }
+
+  <span class="kw">return</span> (
+    &lt;View style={s.container}&gt;
+      &lt;View style={s.card}&gt;
+        &lt;View style={s.logo}&gt;&lt;Text style={s.logoText}&gt;Z&lt;/Text&gt;&lt;/View&gt;
+        &lt;Text style={s.title}&gt;ZoonoseApp&lt;/Text&gt;
+        &lt;Text style={s.subtitle}&gt;Vigilancia Territorial&lt;/Text&gt;
+        &lt;TextInput style={s.input} placeholder="E-mail" placeholderTextColor="#64748b"
+          value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" /&gt;
+        &lt;TextInput style={s.input} placeholder="Senha" placeholderTextColor="#64748b"
+          value={password} onChangeText={setPassword} secureTextEntry /&gt;
+        &lt;TouchableOpacity style={s.btn} onPress={handleLogin} disabled={loading}&gt;
+          {loading ? &lt;ActivityIndicator color="#fff" /&gt; : &lt;Text style={s.btnText}&gt;Entrar&lt;/Text&gt;}
+        &lt;/TouchableOpacity&gt;
+      &lt;/View&gt;
+    &lt;/View&gt;
+  )
+}
+
+<span class="kw">const</span> s = StyleSheet.<span class="fn">create</span>({
+  container: { flex: 1, backgroundColor: <span class="str">'#0a1628'</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, padding: 24 },
+  card:      { width: <span class="str">'100%'</span>, maxWidth: 360, backgroundColor: <span class="str">'#111d35'</span>, borderRadius: 16,
+               padding: 28, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span>, alignItems: <span class="str">'center'</span> },
+  logo:      { width: 56, height: 56, borderRadius: 14, backgroundColor: <span class="str">'#3b82f6'</span>,
+               alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, marginBottom: 16 },
+  logoText:  { color: <span class="str">'#fff'</span>, fontWeight: <span class="str">'800'</span>, fontSize: 22 },
+  title:     { color: <span class="str">'#e2e8f0'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 22, marginBottom: 4 },
+  subtitle:  { color: <span class="str">'#94a3b8'</span>, fontSize: 13, marginBottom: 28 },
+  input:     { width: <span class="str">'100%'</span>, backgroundColor: <span class="str">'#0a1628'</span>, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span>,
+               borderRadius: 10, padding: 14, color: <span class="str">'#e2e8f0'</span>, fontSize: 14, marginBottom: 12 },
+  btn:       { width: <span class="str">'100%'</span>, backgroundColor: <span class="str">'#3b82f6'</span>, borderRadius: 10,
+               padding: 16, alignItems: <span class="str">'center'</span>, marginTop: 8 },
+  btnText:   { color: <span class="str">'#fff'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 15 },
+})</pre>
+<div class="file-badge">&#128196; app/src/screens/HomeScreen.tsx</div>
+<pre><span class="kw">import</span> React, { useState, useEffect } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { useNavigation } <span class="kw">from</span> <span class="str">'@react-navigation/native'</span>
+<span class="kw">import</span> { supabase } <span class="kw">from</span> <span class="str">'../lib/supabase'</span>
+<span class="kw">import</span> { offlineQueue } <span class="kw">from</span> <span class="str">'../lib/mmkv'</span>
+<span class="kw">import</span> { Property } <span class="kw">from</span> <span class="str">'../types'</span>
+
+<span class="kw">export default function</span> <span class="fn">HomeScreen</span>() {
+  <span class="kw">const</span> nav = <span class="fn">useNavigation</span>()
+  <span class="kw">const</span> [query, setQuery] = <span class="fn">useState</span>(<span class="str">''</span>)
+  <span class="kw">const</span> [properties, setProperties] = <span class="fn">useState</span>&lt;<span class="type">Property</span>[]&gt;([])
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">false</span>)
+  <span class="kw">const</span> pendingCount = offlineQueue.<span class="fn">getAll</span>().length
+
+  <span class="kw">const</span> search = <span class="kw">async</span> (q: <span class="type">string</span>) =&gt; {
+    <span class="kw">if</span> (q.length &lt; 2) { <span class="fn">setProperties</span>([]); <span class="kw">return</span> }
+    <span class="fn">setLoading</span>(<span class="kw">true</span>)
+    <span class="kw">const</span> { data } = <span class="kw">await</span> supabase
+      .<span class="fn">from</span>(<span class="str">'properties'</span>).<span class="fn">select</span>(<span class="str">'*'</span>)
+      .<span class="fn">or</span>(`code.ilike.%${q}%,address.ilike.%${q}%`)
+      .<span class="fn">eq</span>(<span class="str">'active'</span>, <span class="kw">true</span>).<span class="fn">limit</span>(20)
+    <span class="fn">setProperties</span>(data ?? [])
+    <span class="fn">setLoading</span>(<span class="kw">false</span>)
+  }
+
+  <span class="fn">useEffect</span>(() =&gt; { <span class="fn">search</span>(query) }, [query])
+
+  <span class="kw">return</span> (
+    &lt;View style={s.container}&gt;
+      {pendingCount &gt; 0 &amp;&amp; (
+        &lt;TouchableOpacity style={s.syncBanner}
+          onPress={() =&gt; nav.navigate(<span class="str">'SyncStatus'</span> as any)}&gt;
+          &lt;Text style={s.syncBannerText}&gt;&#9889; {pendingCount} visita(s) pendente(s) de sync&lt;/Text&gt;
+        &lt;/TouchableOpacity&gt;
+      )}
+      &lt;TextInput style={s.search} placeholder="Buscar por codigo ou endereco..."
+        placeholderTextColor="#64748b" value={query} onChangeText={setQuery} /&gt;
+      {loading &amp;&amp; &lt;ActivityIndicator color="#3b82f6" style={{ marginTop: 16 }} /&gt;}
+      &lt;FlatList data={properties} keyExtractor={p =&gt; p.id}
+        renderItem={({ item }) =&gt; (
+          &lt;TouchableOpacity style={s.item}
+            onPress={() =&gt; nav.navigate(<span class="str">'PropertyDetail'</span> as any, { propertyId: item.id })}&gt;
+            &lt;Text style={s.itemCode}&gt;{item.code}&lt;/Text&gt;
+            &lt;Text style={s.itemAddress} numberOfLines={1}&gt;{item.address}&lt;/Text&gt;
+          &lt;/TouchableOpacity&gt;
+        )} /&gt;
+    &lt;/View&gt;
+  )
+}
+
+<span class="kw">const</span> s = StyleSheet.<span class="fn">create</span>({
+  container:      { flex: 1, backgroundColor: <span class="str">'#0a1628'</span>, padding: 16 },
+  syncBanner:     { backgroundColor: <span class="str">'rgba(59,130,246,0.15)'</span>, borderWidth: 1, borderColor: <span class="str">'#3b82f6'</span>,
+                    borderRadius: 10, padding: 12, marginBottom: 12, alignItems: <span class="str">'center'</span> },
+  syncBannerText: { color: <span class="str">'#60a5fa'</span>, fontWeight: <span class="str">'600'</span>, fontSize: 13 },
+  search:         { backgroundColor: <span class="str">'#111d35'</span>, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span>,
+                    borderRadius: 10, padding: 14, color: <span class="str">'#e2e8f0'</span>, marginBottom: 12 },
+  item:           { flexDirection: <span class="str">'row'</span>, backgroundColor: <span class="str">'#111d35'</span>, borderRadius: 10,
+                    padding: 14, marginBottom: 8, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span>, gap: 12 },
+  itemCode:       { color: <span class="str">'#60a5fa'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 12, minWidth: 72 },
+  itemAddress:    { color: <span class="str">'#e2e8f0'</span>, flex: 1, fontSize: 13 },
+})</pre>
+<div class="file-badge">&#128196; app/src/screens/RegisterVisitScreen.tsx</div>
+<pre><span class="kw">import</span> React, { useState } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, TouchableOpacity, TextInput, ScrollView, Alert, ActivityIndicator } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { useRoute, useNavigation } <span class="kw">from</span> <span class="str">'@react-navigation/native'</span>
+<span class="kw">import</span> NetInfo <span class="kw">from</span> <span class="str">'@react-native-community/netinfo'</span>
+<span class="kw">import</span> * <span class="kw">as</span> ImagePicker <span class="kw">from</span> <span class="str">'expo-image-picker'</span>
+<span class="kw">import</span> { supabase } <span class="kw">from</span> <span class="str">'../lib/supabase'</span>
+<span class="kw">import</span> { offlineQueue } <span class="kw">from</span> <span class="str">'../lib/mmkv'</span>
+<span class="kw">import</span> { useAuth } <span class="kw">from</span> <span class="str">'../hooks/useAuth'</span>
+<span class="kw">import</span> { VisitStatus, STATUS_CONFIG } <span class="kw">from</span> <span class="str">'../types'</span>
+
+<span class="kw">export default function</span> <span class="fn">RegisterVisitScreen</span>() {
+  <span class="kw">const</span> route = <span class="fn">useRoute</span>() <span class="kw">as</span> any
+  <span class="kw">const</span> nav = <span class="fn">useNavigation</span>()
+  <span class="kw">const</span> { profile } = <span class="fn">useAuth</span>()
+  <span class="kw">const</span> [selectedStatus, setSelectedStatus] = <span class="fn">useState</span>&lt;<span class="type">VisitStatus</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">const</span> [notes, setNotes] = <span class="fn">useState</span>(<span class="str">''</span>)
+  <span class="kw">const</span> [photoUri, setPhotoUri] = <span class="fn">useState</span>&lt;<span class="type">string</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">const</span> [saving, setSaving] = <span class="fn">useState</span>(<span class="kw">false</span>)
+
+  <span class="kw">const</span> pickPhoto = <span class="kw">async</span> () =&gt; {
+    <span class="kw">const</span> result = <span class="kw">await</span> ImagePicker.<span class="fn">launchCameraAsync</span>({ quality: 0.6 })
+    <span class="kw">if</span> (!result.canceled) <span class="fn">setPhotoUri</span>(result.assets[0].uri)
+  }
+
+  <span class="kw">const</span> handleSave = <span class="kw">async</span> () =&gt; {
+    <span class="kw">if</span> (!selectedStatus) { Alert.<span class="fn">alert</span>(<span class="str">'Selecione o status'</span>); <span class="kw">return</span> }
+    <span class="kw">if</span> (!profile) <span class="kw">return</span>
+    <span class="fn">setSaving</span>(<span class="kw">true</span>)
+    <span class="kw">const</span> state = <span class="kw">await</span> NetInfo.<span class="fn">fetch</span>()
+    <span class="kw">const</span> visitData = {
+      property_id: route.params.propertyId,
+      agent_id: profile.id, status: selectedStatus,
+      notes: notes || <span class="kw">undefined</span>,
+      visited_at: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+    }
+    <span class="kw">if</span> (state.isConnected) {
+      <span class="kw">const</span> { error } = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="str">'visits'</span>).<span class="fn">insert</span>({
+        ...visitData, synced_at: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>()
+      })
+      <span class="kw">if</span> (error) { Alert.<span class="fn">alert</span>(<span class="str">'Erro'</span>, error.message); <span class="fn">setSaving</span>(<span class="kw">false</span>); <span class="kw">return</span> }
+    } <span class="kw">else</span> {
+      offlineQueue.<span class="fn">add</span>({ ...visitData, localId: <span class="fn">Date.now</span>().<span class="fn">toString</span>(), photoUri: photoUri ?? <span class="kw">undefined</span> })
+    }
+    <span class="fn">setSaving</span>(<span class="kw">false</span>)
+    nav.<span class="fn">navigate</span>(<span class="str">'ConfirmVisit'</span> as any, { visitData: { ...visitData, offline: !state.isConnected } })
+  }
+
+  <span class="kw">return</span> (
+    &lt;ScrollView style={{ flex: 1, backgroundColor: <span class="str">'#0a1628'</span> }}
+      contentContainerStyle={{ padding: 16, paddingBottom: 40 }}&gt;
+      &lt;Text style={{ color: <span class="str">'#94a3b8'</span> }}&gt;
+        Imovel: &lt;Text style={{ color: <span class="str">'#60a5fa'</span> }}&gt;{route.params?.propertyCode}&lt;/Text&gt;
+      &lt;/Text&gt;
+      &lt;Text style={{ color: <span class="str">'#94a3b8'</span>, marginTop: 20, marginBottom: 10, fontWeight: <span class="str">'700'</span> }}&gt;
+        STATUS DA VISITA
+      &lt;/Text&gt;
+      &lt;View style={{ flexDirection: <span class="str">'row'</span>, flexWrap: <span class="str">'wrap'</span>, gap: 8, marginBottom: 20 }}&gt;
+        {(Object.entries(STATUS_CONFIG) as [VisitStatus, any][]).map(([key, cfg]) =&gt; (
+          &lt;TouchableOpacity key={key}
+            style={{ borderWidth: 2, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 10,
+              minWidth: <span class="str">'47%'</span>, borderColor: cfg.color,
+              backgroundColor: selectedStatus === key ? cfg.bg : <span class="str">'transparent'</span> }}
+            onPress={() =&gt; setSelectedStatus(key)}&gt;
+            &lt;Text style={{ color: cfg.color, fontWeight: <span class="str">'700'</span>, textAlign: <span class="str">'center'</span> }}&gt;{cfg.label}&lt;/Text&gt;
+          &lt;/TouchableOpacity&gt;
+        ))}
+      &lt;/View&gt;
+      &lt;TextInput
+        style={{ backgroundColor: <span class="str">'#111d35'</span>, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span>,
+          borderRadius: 10, padding: 14, color: <span class="str">'#e2e8f0'</span>, marginBottom: 16 }}
+        placeholder="Nota opcional..." placeholderTextColor="#64748b"
+        value={notes} onChangeText={setNotes} multiline numberOfLines={3} /&gt;
+      &lt;TouchableOpacity
+        style={{ backgroundColor: <span class="str">'#111d35'</span>, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span>,
+          borderRadius: 10, padding: 14, alignItems: <span class="str">'center'</span>, marginBottom: 20 }}
+        onPress={pickPhoto}&gt;
+        &lt;Text style={{ color: <span class="str">'#94a3b8'</span> }}&gt;
+          {photoUri ? <span class="str">'Foto capturada'</span> : <span class="str">'Tirar foto (opcional)'</span>}
+        &lt;/Text&gt;
+      &lt;/TouchableOpacity&gt;
+      &lt;TouchableOpacity
+        style={{ backgroundColor: <span class="str">'#3b82f6'</span>, borderRadius: 10, padding: 16,
+          alignItems: <span class="str">'center'</span>, opacity: saving ? 0.6 : 1 }}
+        onPress={handleSave} disabled={saving}&gt;
+        {saving
+          ? &lt;ActivityIndicator color="#fff" /&gt;
+          : &lt;Text style={{ color: <span class="str">'#fff'</span>, fontWeight: <span class="str">'700'</span> }}&gt;Confirmar visita&lt;/Text&gt;}
+      &lt;/TouchableOpacity&gt;
+    &lt;/ScrollView&gt;
+  )
+}</pre>
+
+</section>
+
+<section class="section" id="sec4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div>
+      <div class="section-title">Painel Web &mdash; Next.js + Tailwind</div>
+      <div class="section-desc">Dashboard do coordenador. Deploy na Vercel. M&eacute;tricas de cobertura, pend&ecirc;ncias e reincid&ecirc;ncias.</div>
+    </div>
+  </div>
+<div class="file-badge">&#128230; web/package.json</div>
+<pre>{
+  <span class="str">"name"</span>: <span class="str">"zoonoseapp-web"</span>, <span class="str">"version"</span>: <span class="str">"1.0.0"</span>,
+  <span class="str">"scripts"</span>: { <span class="str">"dev"</span>: <span class="str">"next dev"</span>, <span class="str">"build"</span>: <span class="str">"next build"</span>, <span class="str">"start"</span>: <span class="str">"next start"</span> },
+  <span class="str">"dependencies"</span>: {
+    <span class="str">"next"</span>: <span class="str">"14.2.0"</span>,  <span class="str">"react"</span>: <span class="str">"^18"</span>,
+    <span class="str">"@supabase/supabase-js"</span>: <span class="str">"^2.43.0"</span>,
+    <span class="str">"@supabase/ssr"</span>: <span class="str">"^0.3.0"</span>,
+    <span class="str">"tailwindcss"</span>: <span class="str">"^3.4.0"</span>,
+    <span class="str">"autoprefixer"</span>: <span class="str">"^10"</span>, <span class="str">"postcss"</span>: <span class="str">"^8"</span>
+  },
+  <span class="str">"devDependencies"</span>: { <span class="str">"@types/react"</span>: <span class="str">"^18"</span>, <span class="str">"typescript"</span>: <span class="str">"^5"</span> }
+}</pre>
+<div class="file-badge">&#128196; web/lib/supabase.ts</div>
+<pre><span class="kw">import</span> { createBrowserClient } <span class="kw">from</span> <span class="str">'@supabase/ssr'</span>
+
+<span class="kw">export function</span> <span class="fn">createClient</span>() {
+  <span class="kw">return</span> <span class="fn">createBrowserClient</span>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}</pre>
+<div class="file-badge">&#128196; web/app/dashboard/page.tsx</div>
+<pre><span class="kw">import</span> { createClient } <span class="kw">from</span> <span class="str">'@/lib/supabase'</span>
+<span class="kw">import</span> MetricCard <span class="kw">from</span> <span class="str">'@/components/MetricCard'</span>
+
+<span class="kw">async function</span> <span class="fn">getMetrics</span>() {
+  <span class="kw">const</span> supabase = <span class="fn">createClient</span>()
+  <span class="kw">const</span> today = <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>().<span class="fn">split</span>(<span class="str">'T'</span>)[0]
+
+  <span class="kw">const</span> [
+    { count: total }, { count: visitedToday },
+    { count: withFocus }, { count: closed }
+  ] = <span class="kw">await</span> Promise.<span class="fn">all</span>([
+    supabase.<span class="fn">from</span>(<span class="str">'properties'</span>).<span class="fn">select</span>(<span class="str">'*'</span>, { count: <span class="str">'exact'</span>, head: <span class="kw">true</span> }).<span class="fn">eq</span>(<span class="str">'active'</span>, <span class="kw">true</span>),
+    supabase.<span class="fn">from</span>(<span class="str">'visits'</span>).<span class="fn">select</span>(<span class="str">'*'</span>, { count: <span class="str">'exact'</span>, head: <span class="kw">true</span> }).<span class="fn">gte</span>(<span class="str">'visited_at'</span>, today),
+    supabase.<span class="fn">from</span>(<span class="str">'visits'</span>).<span class="fn">select</span>(<span class="str">'*'</span>, { count: <span class="str">'exact'</span>, head: <span class="kw">true</span> })
+      .<span class="fn">eq</span>(<span class="str">'status'</span>, <span class="str">'visitado_com_achado'</span>).<span class="fn">gte</span>(<span class="str">'visited_at'</span>, today),
+    supabase.<span class="fn">from</span>(<span class="str">'visits'</span>).<span class="fn">select</span>(<span class="str">'*'</span>, { count: <span class="str">'exact'</span>, head: <span class="kw">true</span> })
+      .<span class="fn">eq</span>(<span class="str">'status'</span>, <span class="str">'fechado'</span>).<span class="fn">gte</span>(<span class="str">'visited_at'</span>, today),
+  ])
+
+  <span class="kw">const</span> coverage = total && visitedToday ? <span class="fn">Math.round</span>((visitedToday / total) * 100) : 0
+  <span class="kw">return</span> { total: total ?? 0, visitedToday: visitedToday ?? 0,
+             withFocus: withFocus ?? 0, closed: closed ?? 0, coverage }
+}
+
+<span class="kw">export default async function</span> <span class="fn">DashboardPage</span>() {
+  <span class="kw">const</span> m = <span class="kw">await</span> <span class="fn">getMetrics</span>()
+  <span class="kw">return</span> (
+    &lt;div className="p-6 space-y-6"&gt;
+      &lt;div&gt;
+        &lt;h1 className="text-2xl font-bold text-white"&gt;Dashboard&lt;/h1&gt;
+        &lt;p className="text-slate-400 text-sm mt-1"&gt;Visao geral de hoje&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div className="grid grid-cols-2 md:grid-cols-4 gap-4"&gt;
+        &lt;MetricCard label="Imoveis totais" value={m.total.toString()} color="blue" /&gt;
+        &lt;MetricCard label="Cobertura hoje" value={`${m.coverage}%`} color="green" /&gt;
+        &lt;MetricCard label="Com achado" value={m.withFocus.toString()} color="red" /&gt;
+        &lt;MetricCard label="Fechados" value={m.closed.toString()} color="gray" /&gt;
+      &lt;/div&gt;
+      &lt;div className="flex gap-3"&gt;
+        &lt;a href="/dashboard/imoveis"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700"&gt;
+          Ver im&oacute;veis
+        &lt;/a&gt;
+        &lt;a href="/api/export?days=30"
+          className="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-semibold hover:bg-slate-600"&gt;
+          Exportar CSV
+        &lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+<div class="file-badge">&#128196; web/components/MetricCard.tsx</div>
+<pre><span class="kw">interface</span> <span class="type">Props</span> {
+  label: <span class="type">string</span>; value: <span class="type">string</span>
+  color: <span class="str">'blue'</span> | <span class="str">'green'</span> | <span class="str">'red'</span> | <span class="str">'gray'</span> | <span class="str">'yellow'</span>
+}
+
+<span class="kw">const</span> colors = {
+  blue:   <span class="str">'text-blue-400  border-blue-500/30  bg-blue-500/10'</span>,
+  green:  <span class="str">'text-green-400 border-green-500/30 bg-green-500/10'</span>,
+  red:    <span class="str">'text-red-400   border-red-500/30   bg-red-500/10'</span>,
+  yellow: <span class="str">'text-yellow-400 border-yellow-500/30 bg-yellow-500/10'</span>,
+  gray:   <span class="str">'text-slate-400 border-slate-600 bg-slate-800/50'</span>,
+}
+
+<span class="kw">export default function</span> <span class="fn">MetricCard</span>({ label, value, color }: <span class="type">Props</span>) {
+  <span class="kw">return</span> (
+    &lt;div className={`rounded-xl border p-4 ${colors[color]}`}&gt;
+      &lt;div className="text-3xl font-extrabold mb-1"&gt;{value}&lt;/div&gt;
+      &lt;div className="text-xs uppercase tracking-wide opacity-70"&gt;{label}&lt;/div&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+<div class="file-badge">&#128196; web/app/api/export/route.ts</div>
+<pre><span class="kw">import</span> { NextRequest, NextResponse } <span class="kw">from</span> <span class="str">'next/server'</span>
+<span class="kw">import</span> { createClient } <span class="kw">from</span> <span class="str">'@/lib/supabase'</span>
+
+<span class="kw">export async function</span> <span class="fn">GET</span>(req: <span class="type">NextRequest</span>) {
+  <span class="kw">const</span> supabase = <span class="fn">createClient</span>()
+  <span class="kw">const</span> days = req.nextUrl.searchParams.<span class="fn">get</span>(<span class="str">'days'</span>) ?? <span class="str">'30'</span>
+  <span class="kw">const</span> since = <span class="kw">new</span> <span class="fn">Date</span>()
+  since.<span class="fn">setDate</span>(since.<span class="fn">getDate</span>() - parseInt(days))
+
+  <span class="kw">const</span> { data, error } = <span class="kw">await</span> supabase
+    .<span class="fn">from</span>(<span class="str">'visits'</span>)
+    .<span class="fn">select</span>(<span class="str">'visited_at, status, notes, properties(code, address, type), profiles(name)'</span>)
+    .<span class="fn">gte</span>(<span class="str">'visited_at'</span>, since.<span class="fn">toISOString</span>())
+    .<span class="fn">order</span>(<span class="str">'visited_at'</span>, { ascending: <span class="kw">false</span> })
+
+  <span class="kw">if</span> (error) <span class="kw">return</span> NextResponse.<span class="fn">json</span>({ error: error.message }, { status: 500 })
+
+  <span class="kw">const</span> header = <span class="str">'Data,Hora,Codigo,Endereco,Tipo,Status,Agente,Nota\n'</span>
+  <span class="kw">const</span> rows = (data ?? []).<span class="fn">map</span>((v: any) =&gt; {
+    <span class="kw">const</span> d = <span class="kw">new</span> <span class="fn">Date</span>(v.visited_at)
+    <span class="kw">return</span> [
+      d.<span class="fn">toLocaleDateString</span>(<span class="str">'pt-BR'</span>),
+      d.<span class="fn">toLocaleTimeString</span>(<span class="str">'pt-BR'</span>, { hour: <span class="str">'2-digit'</span>, minute: <span class="str">'2-digit'</span> }),
+      v.properties?.code ?? <span class="str">''</span>,
+      `"${v.properties?.address ?? ''}"`,
+      v.properties?.type ?? <span class="str">''</span>, v.status,
+      v.profiles?.name ?? <span class="str">''</span>,
+      `"${(v.notes ?? '').replace(/"/g, '""')}"`,
+    ].<span class="fn">join</span>(<span class="str">','</span>)
+  }).<span class="fn">join</span>(<span class="str">'\n'</span>)
+
+  <span class="kw">return</span> <span class="kw">new</span> <span class="fn">NextResponse</span>(header + rows, {
+    headers: {
+      <span class="str">"Content-Type"</span>: <span class="str">'text/csv; charset=utf-8'</span>,
+      <span class="str">"Content-Disposition"</span>: `attachment; filename="visitas_${days}dias.csv"`,
+    },
+  })
+}</pre>
+
+</section>
+
+<section class="section" id="sec5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div>
+      <div class="section-title">Configura&ccedil;&otilde;es e Deploy</div>
+      <div class="section-desc">Vari&aacute;veis de ambiente, app.json, eas.json e checklist de setup.</div>
+    </div>
+  </div>
+<div class="file-badge">&#128196; app/.env</div>
+<pre>EXPO_PUBLIC_SUPABASE_URL=https://SEU_PROJETO.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJ...sua_anon_key</pre>
+<div class="file-badge">&#128196; app/app.json</div>
+<pre>{
+  <span class="str">"expo"</span>: {
+    <span class="str">"name"</span>: <span class="str">"ZoonoseApp"</span>,
+    <span class="str">"slug"</span>: <span class="str">"zoonoseapp"</span>,
+    <span class="str">"version"</span>: <span class="str">"1.0.0"</span>,
+    <span class="str">"orientation"</span>: <span class="str">"portrait"</span>,
+    <span class="str">"icon"</span>: <span class="str">"./assets/icon.png"</span>,
+    <span class="str">"splash"</span>: { <span class="str">"backgroundColor"</span>: <span class="str">"#0a1628"</span> },
+    <span class="str">"android"</span>: {
+      <span class="str">"adaptiveIcon"</span>: { <span class="str">"backgroundColor"</span>: <span class="str">"#0a1628"</span> },
+      <span class="str">"package"</span>: <span class="str">"br.com.zoonoseapp"</span>
+    },
+    <span class="str">"plugins"</span>: [
+      [<span class="str">"expo-image-picker"</span>, { <span class="str">"photosPermission"</span>: <span class="str">"Necessario para fotos de evidencia."</span> }],
+      [<span class="str">"expo-camera"</span>, { <span class="str">"cameraPermission"</span>: <span class="str">"Necessario para fotografar evidencias."</span> }]
+    ]
+  }
+}</pre>
+<div class="file-badge">&#128196; app/eas.json</div>
+<pre>{
+  <span class="str">"cli"</span>: { <span class="str">"version"</span>: <span class="str">">= 12.0.0"</span> },
+  <span class="str">"build"</span>: {
+    <span class="str">"development"</span>: {
+      <span class="str">"developmentClient"</span>: <span class="kw">true</span>,
+      <span class="str">"distribution"</span>: <span class="str">"internal"</span>
+    },
+    <span class="str">"preview"</span>: {
+      <span class="str">"android"</span>: { <span class="str">"buildType"</span>: <span class="str">"apk"</span>, <span class="str">"distribution"</span>: <span class="str">"internal"</span> }
+    },
+    <span class="str">"production"</span>: {
+      <span class="str">"android"</span>: { <span class="str">"buildType"</span>: <span class="str">"aab"</span> }
+    }
+  }
+}</pre>
+<div class="file-badge">&#128196; web/.env.local</div>
+<pre>NEXT_PUBLIC_SUPABASE_URL=https://SEU_PROJETO.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...sua_anon_key
+SUPABASE_SERVICE_ROLE_KEY=eyJ...service_role_key</pre>
+
+  <p style="color:#94a3b8;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-top:28px;margin-bottom:12px">Checklist de Setup</p>
+  <ol class="checklist">
+    <li>Criar conta no Supabase (supabase.com) &mdash; plano Free</li>
+    <li>Criar novo projeto &rarr; copiar URL e anon key</li>
+    <li>Abrir SQL Editor &rarr; colar e rodar <code>001_schema.sql</code></li>
+    <li>Rodar <code>002_indexes.sql</code> se houver</li>
+    <li>Criar usu&aacute;rios no Supabase Auth &rarr; Authentication &rarr; Users</li>
+    <li>Rodar <code>003_seed.sql</code> (setores e im&oacute;veis de demo)</li>
+    <li>No app/: copiar <code>.env.example</code> &rarr; <code>.env</code> &rarr; preencher URL e key</li>
+    <li><code>npm install &amp;&amp; npx expo start</code></li>
+    <li>Testar login no Expo Go (Android)</li>
+    <li>No web/: copiar <code>.env.example</code> &rarr; <code>.env.local</code> &rarr; preencher</li>
+    <li><code>npm install &amp;&amp; npm run dev</code> &rarr; abrir localhost:3000</li>
+    <li>Para gerar APK: <code>eas login</code> &rarr; <code>eas build --platform android --profile preview</code></li>
+  </ol>
+</section>
+
+<section class="section" id="sec6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div>
+      <div class="section-title">Import de Im&oacute;veis via CSV</div>
+      <div class="section-desc">Script Node.js para importar planilha. Formato: <code>codigo,endereco,setor_nome,tipo</code></div>
+    </div>
+  </div>
+<div class="file-badge">&#128196; scripts/import-imoveis.js</div>
+<pre><span class="cmt">// USO: node import-imoveis.js imoveis.csv</span>
+<span class="cmt">// Formato: codigo,endereco,setor_nome,tipo</span>
+<span class="cmt">// Requer: npm install @supabase/supabase-js csv-parse dotenv</span>
+
+<span class="fn">require</span>(<span class="str">'dotenv'</span>).<span class="fn">config</span>({ path: <span class="str">'../app/.env'</span> })
+<span class="kw">const</span> { createClient } = <span class="fn">require</span>(<span class="str">'@supabase/supabase-js'</span>)
+<span class="kw">const</span> { parse } = <span class="fn">require</span>(<span class="str">'csv-parse/sync'</span>)
+<span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">'fs'</span>)
+
+<span class="kw">const</span> supabase = <span class="fn">createClient</span>(
+  process.env.EXPO_PUBLIC_SUPABASE_URL,
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY
+)
+
+<span class="kw">async function</span> <span class="fn">main</span>() {
+  <span class="kw">const</span> file = process.argv[2]
+  <span class="kw">if</span> (!file) { console.<span class="fn">error</span>(<span class="str">'Informe o arquivo CSV'</span>); process.<span class="fn">exit</span>(1) }
+
+  <span class="kw">const</span> content = fs.<span class="fn">readFileSync</span>(file, <span class="str">'utf8'</span>)
+  <span class="kw">const</span> records = <span class="fn">parse</span>(content, { columns: <span class="kw">true</span>, skip_empty_lines: <span class="kw">true</span> })
+
+  <span class="kw">const</span> { data: sectors } = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="str">'sectors'</span>).<span class="fn">select</span>(<span class="str">'id, name'</span>)
+  <span class="kw">const</span> sectorMap = Object.<span class="fn">fromEntries</span>(sectors.<span class="fn">map</span>(s =&gt; [s.name.<span class="fn">toLowerCase</span>(), s.id]))
+
+  <span class="kw">const</span> properties = records
+    .<span class="fn">map</span>(r =&gt; ({
+      code:      r.codigo?.<span class="fn">trim</span>(),
+      address:   r.endereco?.<span class="fn">trim</span>(),
+      sector_id: sectorMap[r.setor_nome?.<span class="fn">trim</span>().<span class="fn">toLowerCase</span>()],
+      type:      r.tipo?.<span class="fn">trim</span>() || <span class="str">'residencial'</span>,
+    }))
+    .<span class="fn">filter</span>(p =&gt; p.code &amp;&amp; p.address)
+
+  console.<span class="fn">log</span>(`Importando ${properties.length} imoveis...`)
+
+  <span class="kw">const</span> { error } = <span class="kw">await</span> supabase
+    .<span class="fn">from</span>(<span class="str">'properties'</span>)
+    .<span class="fn">upsert</span>(properties, { onConflict: <span class="str">'code'</span> })
+
+  <span class="kw">if</span> (error) { console.<span class="fn">error</span>(<span class="str">'Erro:'</span>, error.message); process.<span class="fn">exit</span>(1) }
+  console.<span class="fn">log</span>(`OK: ${properties.length} imoveis importados com sucesso.`)
+}
+
+<span class="fn">main</span>()</pre>
+
+  <p style="color:#94a3b8;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-top:24px;margin-bottom:8px">Exemplo de CSV</p>
+<div class="file-badge">&#128196; imoveis.csv</div>
+<pre>codigo,endereco,setor_nome,tipo
+UBL-0001,Rua das Acacias 123 Tibery,Setor Norte,residencial
+UBL-0002,Av Joao Naves de Avila 456 Santa Monica,Setor Norte,residencial
+UBL-0003,Rua Olegario Maciel 78 Centro,Setor Sul,comercial</pre>
+
+</section>
+
+
+<!-- Additional screens and detail code -->
+
+<div class="file-badge">&#128196; app/src/screens/PropertyDetailScreen.tsx</div>
+<pre><span class="kw">import</span> React, { useEffect, useState } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { useRoute, useNavigation, RouteProp } <span class="kw">from</span> <span class="str">'@react-navigation/native'</span>
+<span class="kw">import</span> { supabase } <span class="kw">from</span> <span class="str">'../lib/supabase'</span>
+<span class="kw">import</span> { Property, Visit, STATUS_CONFIG } <span class="kw">from</span> <span class="str">'../types'</span>
+<span class="kw">import</span> { RootStackParamList } <span class="kw">from</span> <span class="str">'../navigation/AppNavigator'</span>
+
+<span class="kw">type</span> RouteType = <span class="type">RouteProp</span>&lt;<span class="type">RootStackParamList</span>, <span class="str">'PropertyDetail'</span>&gt;
+
+<span class="kw">export default function</span> <span class="fn">PropertyDetailScreen</span>() {
+  <span class="kw">const</span> route = <span class="fn">useRoute</span>&lt;<span class="type">RouteType</span>&gt;()
+  <span class="kw">const</span> nav = <span class="fn">useNavigation</span>()
+  <span class="kw">const</span> [property, setProperty] = <span class="fn">useState</span>&lt;<span class="type">Property</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">const</span> [lastVisit, setLastVisit] = <span class="fn">useState</span>&lt;<span class="type">Visit</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">true</span>)
+
+  <span class="fn">useEffect</span>(() =&gt; {
+    <span class="kw">async function</span> <span class="fn">load</span>() {
+      <span class="kw">const</span> [{ data: prop }, { data: visits }] = <span class="kw">await</span> Promise.<span class="fn">all</span>([
+        supabase.<span class="fn">from</span>(<span class="str">'properties'</span>).<span class="fn">select</span>(<span class="str">'*'</span>).<span class="fn">eq</span>(<span class="str">'id'</span>, route.params.propertyId).<span class="fn">single</span>(),
+        supabase.<span class="fn">from</span>(<span class="str">'visits'</span>).<span class="fn">select</span>(<span class="str">'*, profiles(name)'</span>)
+          .<span class="fn">eq</span>(<span class="str">'property_id'</span>, route.params.propertyId)
+          .<span class="fn">order</span>(<span class="str">'visited_at'</span>, { ascending: <span class="kw">false</span> }).<span class="fn">limit</span>(1),
+      ])
+      <span class="fn">setProperty</span>(prop)
+      <span class="fn">setLastVisit</span>(visits?.[0] ?? <span class="kw">null</span>)
+      <span class="fn">setLoading</span>(<span class="kw">false</span>)
+    }
+    <span class="fn">load</span>()
+  }, [route.params.propertyId])
+
+  <span class="kw">if</span> (loading) <span class="kw">return</span> &lt;ActivityIndicator color="#3b82f6" style={{ flex: 1 }} /&gt;
+  <span class="kw">if</span> (!property) <span class="kw">return</span> <span class="kw">null</span>
+
+  <span class="kw">const</span> statusCfg = lastVisit ? STATUS_CONFIG[lastVisit.status] : <span class="kw">null</span>
+
+  <span class="kw">return</span> (
+    &lt;ScrollView style={s.container} contentContainerStyle={{ padding: 20 }}&gt;
+      &lt;View style={s.card}&gt;
+        &lt;Text style={s.codeLabel}&gt;C&oacute;digo&lt;/Text&gt;
+        &lt;Text style={s.code}&gt;{property.code}&lt;/Text&gt;
+        &lt;Text style={s.addressLabel}&gt;Endere&ccedil;o&lt;/Text&gt;
+        &lt;Text style={s.address}&gt;{property.address}&lt;/Text&gt;
+        &lt;View style={s.row}&gt;
+          &lt;View style={s.chip}&gt;&lt;Text style={s.chipText}&gt;{property.type}&lt;/Text&gt;&lt;/View&gt;
+          {statusCfg &amp;&amp; (
+            &lt;View style={[s.chip, { borderColor: statusCfg.color, backgroundColor: statusCfg.bg }]}&gt;
+              &lt;Text style={[s.chipText, { color: statusCfg.color }]}&gt;{statusCfg.label}&lt;/Text&gt;
+            &lt;/View&gt;
+          )}
+        &lt;/View&gt;
+      &lt;/View&gt;
+
+      {lastVisit &amp;&amp; (
+        &lt;View style={s.card}&gt;
+          &lt;Text style={s.sectionLabel}&gt;&Uacute;ltima visita&lt;/Text&gt;
+          &lt;Text style={s.visitDate}&gt;
+            {new Date(lastVisit.visited_at).toLocaleDateString('pt-BR')}
+          &lt;/Text&gt;
+          {lastVisit.notes &amp;&amp; &lt;Text style={s.notes}&gt;{lastVisit.notes}&lt;/Text&gt;}
+        &lt;/View&gt;
+      )}
+
+      &lt;TouchableOpacity style={s.btn}
+        onPress={() =&gt; nav.navigate('RegisterVisit' as any, {
+          propertyId: property.id, propertyCode: property.code
+        })}&gt;
+        &lt;Text style={s.btnText}&gt;Registrar nova visita&lt;/Text&gt;
+      &lt;/TouchableOpacity&gt;
+    &lt;/ScrollView&gt;
+  )
+}
+
+<span class="kw">const</span> s = StyleSheet.<span class="fn">create</span>({
+  container:    { flex: 1, backgroundColor: <span class="str">'#0a1628'</span> },
+  card:         { backgroundColor: <span class="str">'#111d35'</span>, borderRadius: 12, padding: 16, marginBottom: 16,
+                  borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span> },
+  codeLabel:    { color: <span class="str">'#94a3b8'</span>, fontSize: 10, fontWeight: <span class="str">'700'</span>, textTransform: <span class="str">'uppercase'</span>, letterSpacing: 1, marginBottom: 4 },
+  code:         { color: <span class="str">'#60a5fa'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 20, fontFamily: <span class="str">'monospace'</span>, marginBottom: 12 },
+  addressLabel: { color: <span class="str">'#94a3b8'</span>, fontSize: 10, fontWeight: <span class="str">'700'</span>, textTransform: <span class="str">'uppercase'</span>, letterSpacing: 1, marginBottom: 4 },
+  address:      { color: <span class="str">'#e2e8f0'</span>, fontSize: 14, marginBottom: 12 },
+  row:          { flexDirection: <span class="str">'row'</span>, gap: 8 },
+  chip:         { borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span>, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 },
+  chipText:     { color: <span class="str">'#94a3b8'</span>, fontSize: 12, fontWeight: <span class="str">'600'</span> },
+  sectionLabel: { color: <span class="str">'#94a3b8'</span>, fontSize: 10, fontWeight: <span class="str">'700'</span>, textTransform: <span class="str">'uppercase'</span>, letterSpacing: 1, marginBottom: 8 },
+  visitDate:    { color: <span class="str">'#e2e8f0'</span>, fontSize: 15, fontWeight: <span class="str">'600'</span> },
+  notes:        { color: <span class="str">'#94a3b8'</span>, fontSize: 13, marginTop: 6 },
+  btn:          { backgroundColor: <span class="str">'#3b82f6'</span>, borderRadius: 10, padding: 16, alignItems: <span class="str">'center'</span>, marginTop: 8 },
+  btnText:      { color: <span class="str">'#fff'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 15 },
+})</pre>
+
+<div class="file-badge">&#128196; app/src/screens/ConfirmVisitScreen.tsx</div>
+<pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, TouchableOpacity, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { useRoute, useNavigation } <span class="kw">from</span> <span class="str">'@react-navigation/native'</span>
+<span class="kw">import</span> { STATUS_CONFIG } <span class="kw">from</span> <span class="str">'../types'</span>
+
+<span class="kw">export default function</span> <span class="fn">ConfirmVisitScreen</span>() {
+  <span class="kw">const</span> route = <span class="fn">useRoute</span>() <span class="kw">as</span> any
+  <span class="kw">const</span> nav = <span class="fn">useNavigation</span>()
+  <span class="kw">const</span> { visitData } = route.params
+  <span class="kw">const</span> cfg = STATUS_CONFIG[visitData.status as keyof typeof STATUS_CONFIG]
+
+  <span class="kw">return</span> (
+    &lt;View style={s.container}&gt;
+      &lt;View style={s.icon}&gt;&lt;Text style={s.iconText}&gt;&#10003;&lt;/Text&gt;&lt;/View&gt;
+      &lt;Text style={s.title}&gt;Visita registrada!&lt;/Text&gt;
+      {visitData.offline &amp;&amp; (
+        &lt;View style={s.offlineBadge}&gt;
+          &lt;Text style={s.offlineText}&gt;Salvo offline &mdash; ser&aacute; sincronizado automaticamente&lt;/Text&gt;
+        &lt;/View&gt;
+      )}
+      &lt;View style={[s.statusCard, { borderColor: cfg?.color }]}&gt;
+        &lt;Text style={[s.statusText, { color: cfg?.color }]}&gt;{cfg?.label ?? visitData.status}&lt;/Text&gt;
+      &lt;/View&gt;
+      &lt;Text style={s.date}&gt;
+        {new Date(visitData.visited_at).toLocaleString('pt-BR')}
+      &lt;/Text&gt;
+      &lt;TouchableOpacity style={s.btn} onPress={() =&gt; nav.navigate('Home' as any)}&gt;
+        &lt;Text style={s.btnText}&gt;Voltar ao in&iacute;cio&lt;/Text&gt;
+      &lt;/TouchableOpacity&gt;
+    &lt;/View&gt;
+  )
+}
+
+<span class="kw">const</span> s = StyleSheet.<span class="fn">create</span>({
+  container:    { flex: 1, backgroundColor: <span class="str">'#0a1628'</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, padding: 32 },
+  icon:         { width: 72, height: 72, borderRadius: 36, backgroundColor: <span class="str">'#10b981'</span>,
+                  alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, marginBottom: 20 },
+  iconText:     { color: <span class="str">'#fff'</span>, fontSize: 32, fontWeight: <span class="str">'800'</span> },
+  title:        { color: <span class="str">'#e2e8f0'</span>, fontSize: 22, fontWeight: <span class="str">'700'</span>, marginBottom: 20 },
+  offlineBadge: { backgroundColor: <span class="str">'rgba(59,130,246,0.15)'</span>, borderWidth: 1, borderColor: <span class="str">'#3b82f6'</span>,
+                  borderRadius: 8, padding: 10, marginBottom: 16 },
+  offlineText:  { color: <span class="str">'#60a5fa'</span>, fontSize: 13, textAlign: <span class="str">'center'</span> },
+  statusCard:   { borderWidth: 2, borderRadius: 12, paddingHorizontal: 24, paddingVertical: 12, marginBottom: 16 },
+  statusText:   { fontWeight: <span class="str">'700'</span>, fontSize: 16 },
+  date:         { color: <span class="str">'#94a3b8'</span>, fontSize: 13, marginBottom: 32 },
+  btn:          { width: <span class="str">'100%'</span>, backgroundColor: <span class="str">'#3b82f6'</span>, borderRadius: 10, padding: 16, alignItems: <span class="str">'center'</span> },
+  btnText:      { color: <span class="str">'#fff'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 15 },
+})</pre>
+
+<div class="file-badge">&#128196; app/src/screens/HistoryScreen.tsx</div>
+<pre><span class="kw">import</span> React, { useEffect, useState } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, FlatList, StyleSheet, ActivityIndicator } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { supabase } <span class="kw">from</span> <span class="str">'../lib/supabase'</span>
+<span class="kw">import</span> { useAuth } <span class="kw">from</span> <span class="str">'../hooks/useAuth'</span>
+<span class="kw">import</span> { Visit, STATUS_CONFIG } <span class="kw">from</span> <span class="str">'../types'</span>
+
+<span class="kw">export default function</span> <span class="fn">HistoryScreen</span>() {
+  <span class="kw">const</span> { profile } = <span class="fn">useAuth</span>()
+  <span class="kw">const</span> [visits, setVisits] = <span class="fn">useState</span>&lt;<span class="type">Visit</span>[]&gt;([])
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">true</span>)
+
+  <span class="fn">useEffect</span>(() =&gt; {
+    <span class="kw">if</span> (!profile) <span class="kw">return</span>
+    supabase
+      .<span class="fn">from</span>(<span class="str">'visits'</span>)
+      .<span class="fn">select</span>(<span class="str">'*, properties(code, address)'</span>)
+      .<span class="fn">eq</span>(<span class="str">'agent_id'</span>, profile.id)
+      .<span class="fn">order</span>(<span class="str">'visited_at'</span>, { ascending: <span class="kw">false</span> })
+      .<span class="fn">limit</span>(50)
+      .<span class="fn">then</span>(({ data }) =&gt; { <span class="fn">setVisits</span>(data ?? []); <span class="fn">setLoading</span>(<span class="kw">false</span>) })
+  }, [profile])
+
+  <span class="kw">if</span> (loading) <span class="kw">return</span> &lt;ActivityIndicator color="#3b82f6" style={{ flex: 1 }} /&gt;
+
+  <span class="kw">return</span> (
+    &lt;FlatList
+      style={{ flex: 1, backgroundColor: <span class="str">'#0a1628'</span> }}
+      contentContainerStyle={{ padding: 16 }}
+      data={visits}
+      keyExtractor={v =&gt; v.id}
+      ListEmptyComponent={&lt;Text style={{ color: <span class="str">'#94a3b8'</span>, textAlign: <span class="str">'center'</span>, marginTop: 40 }}&gt;Nenhuma visita registrada.&lt;/Text&gt;}
+      renderItem={({ item }) =&gt; {
+        <span class="kw">const</span> cfg = STATUS_CONFIG[item.status]
+        <span class="kw">const</span> prop = (item <span class="kw">as</span> any).properties
+        <span class="kw">return</span> (
+          &lt;View style={s.item}&gt;
+            &lt;View style={[s.statusDot, { backgroundColor: cfg.color }]} /&gt;
+            &lt;View style={{ flex: 1 }}&gt;
+              &lt;Text style={s.code}&gt;{prop?.code ?? item.property_id.slice(0,8)}&lt;/Text&gt;
+              &lt;Text style={s.address} numberOfLines={1}&gt;{prop?.address ?? '-'}&lt;/Text&gt;
+            &lt;/View&gt;
+            &lt;View&gt;
+              &lt;Text style={[s.status, { color: cfg.color }]}&gt;{cfg.label}&lt;/Text&gt;
+              &lt;Text style={s.date}&gt;
+                {new Date(item.visited_at).toLocaleDateString('pt-BR')}
+              &lt;/Text&gt;
+            &lt;/View&gt;
+          &lt;/View&gt;
+        )
+      }}
+    /&gt;
+  )
+}
+
+<span class="kw">const</span> s = StyleSheet.<span class="fn">create</span>({
+  item:      { flexDirection: <span class="str">'row'</span>, alignItems: <span class="str">'center'</span>, backgroundColor: <span class="str">'#111d35'</span>,
+               borderRadius: 10, padding: 14, marginBottom: 8, gap: 12,
+               borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span> },
+  statusDot: { width: 10, height: 10, borderRadius: 5, flexShrink: 0 },
+  code:      { color: <span class="str">'#60a5fa'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 12, marginBottom: 2 },
+  address:   { color: <span class="str">'#e2e8f0'</span>, fontSize: 13 },
+  status:    { fontSize: 11, fontWeight: <span class="str">'700'</span>, textAlign: <span class="str">'right'</span>, marginBottom: 2 },
+  date:      { color: <span class="str">'#94a3b8'</span>, fontSize: 11, textAlign: <span class="str">'right'</span> },
+})</pre>
+
+<div class="file-badge">&#128196; app/src/screens/SyncStatusScreen.tsx</div>
+<pre><span class="kw">import</span> React, { useState } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, TouchableOpacity, FlatList, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { offlineQueue } <span class="kw">from</span> <span class="str">'../lib/mmkv'</span>
+<span class="kw">import</span> { useOfflineSync } <span class="kw">from</span> <span class="str">'../hooks/useOfflineSync'</span>
+
+<span class="kw">export default function</span> <span class="fn">SyncStatusScreen</span>() {
+  <span class="kw">const</span> [queue, setQueue] = <span class="fn">useState</span>(offlineQueue.<span class="fn">getAll</span>())
+  <span class="kw">const</span> { syncPending } = <span class="fn">useOfflineSync</span>()
+
+  <span class="kw">const</span> handleSync = <span class="kw">async</span> () =&gt; {
+    <span class="kw">await</span> <span class="fn">syncPending</span>()
+    <span class="fn">setQueue</span>(offlineQueue.<span class="fn">getAll</span>())
+  }
+
+  <span class="kw">return</span> (
+    &lt;View style={s.container}&gt;
+      &lt;View style={s.header}&gt;
+        &lt;Text style={s.title}&gt;{queue.length} pendente(s)&lt;/Text&gt;
+        &lt;TouchableOpacity style={s.syncBtn} onPress={handleSync}&gt;
+          &lt;Text style={s.syncBtnText}&gt;Sincronizar agora&lt;/Text&gt;
+        &lt;/TouchableOpacity&gt;
+      &lt;/View&gt;
+      &lt;FlatList
+        data={queue}
+        keyExtractor={i =&gt; i.localId}
+        ListEmptyComponent={
+          &lt;Text style={s.empty}&gt;Nenhum dado pendente de sincroniza&ccedil;&atilde;o.&lt;/Text&gt;
+        }
+        renderItem={({ item }) =&gt; (
+          &lt;View style={s.item}&gt;
+            &lt;Text style={s.itemId}&gt;{item.property_id.slice(0,8)}&lt;/Text&gt;
+            &lt;Text style={s.itemStatus}&gt;{item.status}&lt;/Text&gt;
+            &lt;Text style={s.itemDate}&gt;
+              {new Date(item.visited_at).toLocaleDateString('pt-BR')}
+            &lt;/Text&gt;
+          &lt;/View&gt;
+        )}
+      /&gt;
+    &lt;/View&gt;
+  )
+}
+
+<span class="kw">const</span> s = StyleSheet.<span class="fn">create</span>({
+  container: { flex: 1, backgroundColor: <span class="str">'#0a1628'</span>, padding: 16 },
+  header:    { flexDirection: <span class="str">'row'</span>, justifyContent: <span class="str">'space-between'</span>, alignItems: <span class="str">'center'</span>, marginBottom: 16 },
+  title:     { color: <span class="str">'#e2e8f0'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 16 },
+  syncBtn:   { backgroundColor: <span class="str">'#3b82f6'</span>, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 },
+  syncBtnText: { color: <span class="str">'#fff'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 13 },
+  empty:     { color: <span class="str">'#94a3b8'</span>, textAlign: <span class="str">'center'</span>, marginTop: 40 },
+  item:      { flexDirection: <span class="str">'row'</span>, justifyContent: <span class="str">'space-between'</span>, backgroundColor: <span class="str">'#111d35'</span>,
+               borderRadius: 10, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span> },
+  itemId:    { color: <span class="str">'#60a5fa'</span>, fontFamily: <span class="str">'monospace'</span>, fontSize: 12 },
+  itemStatus: { color: <span class="str">'#e2e8f0'</span>, fontSize: 12 },
+  itemDate:  { color: <span class="str">'#94a3b8'</span>, fontSize: 12 },
+})</pre>
+
+<div class="file-badge">&#128196; app/src/screens/SettingsScreen.tsx</div>
+<pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { View, Text, TouchableOpacity, StyleSheet, Alert } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="kw">import</span> { useAuth } <span class="kw">from</span> <span class="str">'../hooks/useAuth'</span>
+<span class="kw">import</span> { offlineQueue } <span class="kw">from</span> <span class="str">'../lib/mmkv'</span>
+
+<span class="kw">export default function</span> <span class="fn">SettingsScreen</span>() {
+  <span class="kw">const</span> { profile, signOut } = <span class="fn">useAuth</span>()
+
+  <span class="kw">const</span> handleClearQueue = () =&gt;
+    Alert.<span class="fn">alert</span>(<span class="str">'Limpar fila'</span>, <span class="str">'Excluir visitas offline nao sincronizadas?'</span>, [
+      { text: <span class="str">'Cancelar'</span>, style: <span class="str">'cancel'</span> },
+      { text: <span class="str">'Excluir'</span>, style: <span class="str">'destructive'</span>,
+        onPress: () =&gt; offlineQueue.<span class="fn">clear</span>() },
+    ])
+
+  <span class="kw">return</span> (
+    &lt;View style={s.container}&gt;
+      &lt;View style={s.profile}&gt;
+        &lt;View style={s.avatar}&gt;&lt;Text style={s.avatarText}&gt;{profile?.name?.[0]?.toUpperCase()}&lt;/Text&gt;&lt;/View&gt;
+        &lt;View&gt;
+          &lt;Text style={s.name}&gt;{profile?.name}&lt;/Text&gt;
+          &lt;Text style={s.role}&gt;{profile?.role}&lt;/Text&gt;
+        &lt;/View&gt;
+      &lt;/View&gt;
+
+      &lt;TouchableOpacity style={s.item} onPress={handleClearQueue}&gt;
+        &lt;Text style={s.itemText}&gt;Limpar fila offline&lt;/Text&gt;
+        &lt;Text style={s.arrow}&gt;&rsaquo;&lt;/Text&gt;
+      &lt;/TouchableOpacity&gt;
+
+      &lt;TouchableOpacity style={[s.item, s.danger]} onPress={signOut}&gt;
+        &lt;Text style={[s.itemText, { color: <span class="str">'#ef4444'</span> }]}&gt;Sair da conta&lt;/Text&gt;
+        &lt;Text style={[s.arrow, { color: <span class="str">'#ef4444'</span> }]}&gt;&rsaquo;&lt;/Text&gt;
+      &lt;/TouchableOpacity&gt;
+    &lt;/View&gt;
+  )
+}
+
+<span class="kw">const</span> s = StyleSheet.<span class="fn">create</span>({
+  container: { flex: 1, backgroundColor: <span class="str">'#0a1628'</span>, padding: 20 },
+  profile:   { flexDirection: <span class="str">'row'</span>, alignItems: <span class="str">'center'</span>, gap: 14, backgroundColor: <span class="str">'#111d35'</span>,
+               borderRadius: 12, padding: 16, marginBottom: 24, borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span> },
+  avatar:    { width: 48, height: 48, borderRadius: 24, backgroundColor: <span class="str">'#3b82f6'</span>,
+               alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span> },
+  avatarText: { color: <span class="str">'#fff'</span>, fontWeight: <span class="str">'800'</span>, fontSize: 18 },
+  name:      { color: <span class="str">'#e2e8f0'</span>, fontWeight: <span class="str">'700'</span>, fontSize: 15 },
+  role:      { color: <span class="str">'#94a3b8'</span>, fontSize: 12, marginTop: 2 },
+  item:      { flexDirection: <span class="str">'row'</span>, justifyContent: <span class="str">'space-between'</span>, alignItems: <span class="str">'center'</span>,
+               backgroundColor: <span class="str">'#111d35'</span>, borderRadius: 10, padding: 16, marginBottom: 8,
+               borderWidth: 1, borderColor: <span class="str">'#1e3a5f'</span> },
+  itemText:  { color: <span class="str">'#e2e8f0'</span>, fontSize: 14 },
+  arrow:     { color: <span class="str">'#94a3b8'</span>, fontSize: 18 },
+  danger:    { borderColor: <span class="str">'rgba(239,68,68,0.3)'</span> },
+})</pre>
+
+</main>
+</div>
+<footer id="footer">
+  ZoonoseApp &mdash; Scaffold MVP v1.0 &mdash; Mar&ccedil;o 2026 &mdash; Stack: Expo + Supabase + Next.js
+</footer>
+</body>
+</html>

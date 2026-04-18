@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MVP Plano CTO &mdash; ZoonoseApp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a1628;--surface:#111d35;--border:#1e3a5f;
+  --blue:#3b82f6;--green:#10b981;--red:#ef4444;
+  --orange:#f97316;--yellow:#f59e0b;
+  --text:#e2e8f0;--muted:#94a3b8;--radius:12px
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+header{position:sticky;top:0;z-index:100;background:rgba(10,22,40,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+.hbrand{display:flex;align-items:center;gap:12px}
+.hlogo{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
+.htitle{font-weight:700;font-size:15px}
+.hsub{font-size:11px;color:var(--muted)}
+.hbadge{background:var(--blue);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.hero{background:linear-gradient(135deg,#0a1628 0%,#0f2040 50%,#0a1628 100%);border-bottom:1px solid var(--border);padding:72px 32px 56px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,0.07) 0%,transparent 70%);pointer-events:none}
+.hero-tag{display:inline-block;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);color:var(--blue);font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;margin-bottom:20px;letter-spacing:1px;text-transform:uppercase}
+.hero h1{font-size:clamp(26px,5vw,50px);font-weight:800;line-height:1.15;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,var(--blue) 55%,var(--green) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;color:var(--muted);max-width:620px;margin:0 auto 32px}
+.hero-meta{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap}
+.hmi{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.hmd{width:8px;height:8px;border-radius:50%}
+.container{max-width:1100px;margin:0 auto;padding:0 32px}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;margin:48px 0}
+.toc-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:18px}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.toc-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1px solid transparent;transition:all 0.15s;color:var(--text);font-size:13px}
+.toc-item:hover{background:rgba(59,130,246,0.08);border-color:var(--border);text-decoration:none;color:var(--blue)}
+.toc-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);font-weight:700;min-width:26px}
+.block{margin-bottom:72px}
+.block-header{display:flex;align-items:flex-start;gap:18px;margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.bnum{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;min-width:52px}
+.bht h2{font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px}
+.bht p{font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:14px}
+.callout{border-radius:10px;padding:16px 18px;margin:14px 0;border-left:4px solid}
+.callout.green{border-color:var(--green);background:rgba(16,185,129,0.07)}
+.callout.blue{border-color:var(--blue);background:rgba(59,130,246,0.07)}
+.callout.red{border-color:var(--red);background:rgba(239,68,68,0.07)}
+.callout.yellow{border-color:var(--yellow);background:rgba(245,158,11,0.07)}
+.callout-title{font-weight:700;font-size:13px;margin-bottom:5px}
+.callout.green .callout-title{color:var(--green)}
+.callout.blue .callout-title{color:var(--blue)}
+.callout.red .callout-title{color:var(--red)}
+.callout.yellow .callout-title{color:var(--yellow)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+thead th{background:rgba(30,58,95,0.55);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+tbody td{padding:9px 12px;border-bottom:1px solid rgba(30,58,95,0.35);color:var(--text);vertical-align:top}
+tbody tr:hover td{background:rgba(30,58,95,0.25)}
+tbody tr:last-child td{border-bottom:none}
+pre{background:#0f172a;border:1px solid var(--border);border-radius:10px;padding:18px 22px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75;color:#e2e8f0;margin:14px 0}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(30,58,95,0.55);padding:2px 6px;border-radius:4px;color:#7dd3fc}
+pre code{background:none;padding:0;color:inherit}
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:0.3px;white-space:nowrap}
+.badge.critico{background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.4)}
+.badge.alto{background:rgba(249,115,22,0.2);color:#fb923c;border:1px solid rgba(249,115,22,0.4)}
+.badge.medio{background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)}
+.badge.baixo{background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4)}
+.badge.p0{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.4)}
+.badge.p1{background:rgba(59,130,246,0.18);color:#60a5fa;border:1px solid rgba(59,130,246,0.4)}
+.badge.sim{background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.4)}
+.badge.nao{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.4)}
+.badge.parcial{background:rgba(245,158,11,0.18);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin:14px 0}
+@media(max-width:800px){.grid2,.grid3{grid-template-columns:1fr}.hero{padding:44px 18px 40px}.container{padding:0 16px}.bnum{font-size:26px}}
+.step{display:flex;gap:18px;margin-bottom:20px;align-items:flex-start}
+.step-n{width:38px;height:38px;min-width:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff}
+.step-b h3{font-size:14px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.step-b p{font-size:13px;color:var(--muted);line-height:1.6}
+.highlight-box{background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(16,185,129,0.06));border:1px solid rgba(59,130,246,0.3);border-radius:var(--radius);padding:28px 32px;margin:20px 0;text-align:center}
+.highlight-box blockquote{font-size:17px;font-weight:600;color:var(--text);line-height:1.55;font-style:italic;margin-bottom:10px}
+.highlight-box cite{font-size:12px;color:var(--muted)}
+.no-card{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.22);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.no-card-title{font-size:13px;font-weight:700;color:#f87171;margin-bottom:3px}
+.no-card p{font-size:12px;color:var(--muted);line-height:1.5}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center}
+.metric-val{font-size:30px;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.metric-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
+.prompt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.prompt-card-title{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:28px;text-align:center;color:var(--muted);font-size:13px;margin-top:72px}
+.footer-logo{font-weight:800;font-size:18px;background:linear-gradient(135deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hbrand">
+    <div class="hlogo">Z</div>
+    <div>
+      <div class="htitle">ZoonoseApp</div>
+      <div class="hsub">Plano CTO &mdash; MVP Completo</div>
+    </div>
+  </div>
+  <div class="hbadge">v1.0 &mdash; Mar&ccedil;o 2026</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Documento T&eacute;cnico Estrat&eacute;gico</div>
+  <h1>Plano CTO: MVP<br>ZoonoseApp</h1>
+  <p class="hero-sub">Tudo que os founders precisam saber para contratar, executar e demonstrar o MVP em 4&ndash;8 semanas. Stack, modelagem, backlog, cronograma, o que fazer sozinhos e o que terceirizar.</p>
+  <div class="hero-meta">
+    <div class="hmi"><div class="hmd" style="background:var(--green)"></div>Stack: Expo + Supabase + Next.js</div>
+    <div class="hmi"><div class="hmd" style="background:var(--blue)"></div>Prazo: 4&ndash;8 semanas</div>
+    <div class="hmi"><div class="hmd" style="background:var(--yellow)"></div>Budget: R$ 8.000&ndash;15.000</div>
+    <div class="hmi"><div class="hmd" style="background:var(--orange)"></div>14 blocos estrat&eacute;gicos</div>
+  </div>
+</section>
+
+<!-- CONTAINER START -->
+<div class="container">
+
+<!-- TOC -->
+<nav class="toc">
+  <div class="toc-title">&#128196; &Iacute;ndice &mdash; 14 Blocos</div>
+  <div class="toc-grid">
+    <a class="toc-item" href="#b01"><span class="toc-num">01</span>Decis&atilde;o Central da Stack</a>
+    <a class="toc-item" href="#b02"><span class="toc-num">02</span>Defini&ccedil;&atilde;o do MVP</a>
+    <a class="toc-item" href="#b03"><span class="toc-num">03</span>Arquitetura do MVP</a>
+    <a class="toc-item" href="#b04"><span class="toc-num">04</span>Modelagem do Sistema</a>
+    <a class="toc-item" href="#b05"><span class="toc-num">05</span>Fluxos e Telas</a>
+    <a class="toc-item" href="#b06"><span class="toc-num">06</span>Passo a Passo de Execu&ccedil;&atilde;o</a>
+    <a class="toc-item" href="#b07"><span class="toc-num">07</span>Backlog T&eacute;cnico At&ocirc;mico</a>
+    <a class="toc-item" href="#b08"><span class="toc-num">08</span>O que Founders Fazem Sozinhos</a>
+    <a class="toc-item" href="#b09"><span class="toc-num">09</span>O que Vale Terceirizar</a>
+    <a class="toc-item" href="#b10"><span class="toc-num">10</span>Cronograma</a>
+    <a class="toc-item" href="#b11"><span class="toc-num">11</span>Prompts para Subagentes</a>
+    <a class="toc-item" href="#b12"><span class="toc-num">12</span>Crit&eacute;rios de Demo</a>
+    <a class="toc-item" href="#b13"><span class="toc-num">13</span>O que N&Atilde;O Fazer Agora</a>
+    <a class="toc-item" href="#b14"><span class="toc-num">14</span>Recomenda&ccedil;&atilde;o Final</a>
+  </div>
+</nav>
+
+<!-- BLOCO 01 -->
+<section class="block" id="b01">
+  <div class="block-header">
+    <div class="bnum">01</div>
+    <div class="bht">
+      <h2>Decis&atilde;o Central da Stack</h2>
+      <p>A stack escolhida, o que &eacute; software, o que &eacute; manual no in&iacute;cio e o que fica completamente fora do MVP.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Stack Escolhida</div>
+    <div class="grid3">
+      <div class="metric-card">
+        <div class="metric-val">Expo</div>
+        <div class="metric-label">App do Agente (Android)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">Supabase</div>
+        <div class="metric-label">Banco + Auth + Storage</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">Next.js</div>
+        <div class="metric-label">Painel Coordenador (Web)</div>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>&#128187; &Eacute; SOFTWARE</th>
+        <th>&#9998; &Eacute; MANUAL no in&iacute;cio</th>
+        <th>&#10060; FICA FORA agora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Login / autenti&ccedil;&atilde;o por e-mail e senha</td>
+        <td>Seed de im&oacute;veis (importar CSV manualmente)</td>
+        <td>Mapas e heatmaps de densidade</td>
+      </tr>
+      <tr>
+        <td>Cadastro e listagem de im&oacute;veis</td>
+        <td>Notifica&ccedil;&otilde;es (WhatsApp manual)</td>
+        <td>Roteiriza&ccedil;&atilde;o de visitas</td>
+      </tr>
+      <tr>
+        <td>Registro de visita com 6 status</td>
+        <td>Relat&oacute;rios (exportar CSV + abrir no Sheets)</td>
+        <td>App iOS</td>
+      </tr>
+      <tr>
+        <td>Foto / evid&ecirc;ncia por visita</td>
+        <td>Onboarding de agentes ao vivo</td>
+        <td>Push notifications autom&aacute;ticas</td>
+      </tr>
+      <tr>
+        <td>Modo offline + sincroniza&ccedil;&atilde;o autom&aacute;tica</td>
+        <td>Cobran&ccedil;a via invoice manual (Stripe depois)</td>
+        <td>Multi-tenant (m&uacute;ltiplas prefeituras)</td>
+      </tr>
+      <tr>
+        <td>Painel de cobertura e pend&ecirc;ncias</td>
+        <td>&mdash;</td>
+        <td>IA, analytics avan&ccedil;ados, billing integrado</td>
+      </tr>
+      <tr>
+        <td>Exporta&ccedil;&atilde;o CSV</td>
+        <td>&mdash;</td>
+        <td>&mdash;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <div class="callout-title">&#9200; Menor Caminho Estimado at&eacute; Demo</div>
+    <p>Schema: 1 dia &rarr; Scaffold + auth: 1 dia &rarr; App do agente (8 telas): 2 semanas &rarr; Painel coordenador: 1 semana &rarr; Seed + demo: 3 dias</p>
+    <p style="margin-top:8px"><strong style="color:var(--green)">Total: 4&ndash;5 semanas com um dev dedicado.</strong></p>
+  </div>
+</section>
+
+<!-- BLOCO 02 -->
+<section class="block" id="b02">
+  <div class="block-header">
+    <div class="bnum">02</div>
+    <div class="bht">
+      <h2>Defini&ccedil;&atilde;o do MVP</h2>
+      <p>O que entra, o que adiamos e o que cortamos completamente. Cada decis&atilde;o justificada.</p>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">Crit&eacute;rio de Corte</div>
+    <p>"Se n&atilde;o ajuda a prefeitura a entender o valor em 20 minutos de demo, n&atilde;o entra."</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9989; Funcionalidades Indispens&aacute;veis (11 itens)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Funcionalidade</th>
+          <th>Motivo de Entrar</th>
+          <th>Dificuldade</th>
+          <th>Founders Fazem?</th>
+          <th>Terceirizar?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Login e-mail/senha</td>
+          <td>Primeiro passo de qualquer demo. Sem isso, nada funciona.</td>
+          <td><span class="badge baixo">Baixo</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Perfis por role (agente, coordenador, admin)</td>
+          <td>Mostra que o sistema &eacute; multi-usu&aacute;rio e seguro por design.</td>
+          <td><span class="badge medio">M&eacute;dio</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Cadastro de im&oacute;vel via CSV</td>
+          <td>Prefeitura j&aacute; tem planilha. Importar &eacute; o que valida integra&ccedil;&atilde;o.</td>
+          <td><span class="badge baixo">Baixo</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge parcial">Parcial</span></td>
+        </tr>
+        <tr>
+          <td>Registro de visita com 6 status</td>
+          <td>N&uacute;cleo do produto. Sem registro de visita n&atilde;o h&aacute; ZoonoseApp.</td>
+          <td><span class="badge medio">M&eacute;dio</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Foto / evid&ecirc;ncia</td>
+          <td>Prova para coordenador. Diferencial vs. papel.</td>
+          <td><span class="badge medio">M&eacute;dio</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td><strong>Offline + sync</strong> <span class="badge critico">MAIOR RISCO</span></td>
+          <td>Agentes trabalham sem internet. Sem isso o app n&atilde;o &eacute; us&aacute;vel no campo.</td>
+          <td><span class="badge critico">Cr&iacute;tico</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Hist&oacute;rico do im&oacute;vel</td>
+          <td>Mostra reincid&ecirc;ncia. Argumento forte para prefeitura.</td>
+          <td><span class="badge baixo">Baixo</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Painel do coordenador</td>
+          <td>A "tela de WOW" da demo. Cobertura + pend&ecirc;ncias em tempo real.</td>
+          <td><span class="badge alto">Alto</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Exporta&ccedil;&atilde;o CSV</td>
+          <td>Prefeitura quer dados no Excel. CSV &eacute; o m&iacute;nimo para isso.</td>
+          <td><span class="badge baixo">Baixo</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge parcial">Parcial</span></td>
+        </tr>
+        <tr>
+          <td>Admin criar usu&aacute;rios</td>
+          <td>Para o piloto real, o coordenador precisa adicionar agentes.</td>
+          <td><span class="badge baixo">Baixo</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Seed de dados de demo</td>
+          <td>Demo sem dados parece prot&oacute;tipo. Dados reais de Uberl&acirc;ndia convencem.</td>
+          <td><span class="badge baixo">Baixo</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">&#9203; Adiados para V2</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+        <li style="padding:8px 12px;background:rgba(30,58,95,0.4);border-radius:8px;font-size:13px">&#128205; Mapa e heatmap de ocorr&ecirc;ncias</li>
+        <li style="padding:8px 12px;background:rgba(30,58,95,0.4);border-radius:8px;font-size:13px">&#128276; Push notifications autom&aacute;ticas</li>
+        <li style="padding:8px 12px;background:rgba(30,58,95,0.4);border-radius:8px;font-size:13px">&#128663; Roteiriza&ccedil;&atilde;o de visitas</li>
+        <li style="padding:8px 12px;background:rgba(30,58,95,0.4);border-radius:8px;font-size:13px">&#128196; Relat&oacute;rios PDF autom&aacute;ticos</li>
+        <li style="padding:8px 12px;background:rgba(30,58,95,0.4);border-radius:8px;font-size:13px">&#127827; App iOS (App Store)</li>
+        <li style="padding:8px 12px;background:rgba(30,58,95,0.4);border-radius:8px;font-size:13px">&#127970; Multi-tenant (v&aacute;rias prefeituras)</li>
+      </ul>
+    </div>
+    <div class="callout red" style="margin:0;height:fit-content">
+      <div class="callout-title">&#10060; Cortado Definitivamente do MVP</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px">
+        <li>IA e machine learning</li>
+        <li>Analytics avan&ccedil;ados (dashboards complexos)</li>
+        <li>Billing integrado (Stripe, pagamentos)</li>
+        <li>Auditoria autom&aacute;tica de campo</li>
+        <li>Integra&ccedil;&atilde;o com sistemas legados municipais</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BLOCO 03 -->
+<section class="block" id="b03">
+  <div class="block-header">
+    <div class="bnum">03</div>
+    <div class="bht">
+      <h2>Arquitetura do MVP</h2>
+      <p>10 camadas, por que cada uma foi escolhida e qual o trade-off aceito.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Camada</th>
+        <th>Ferramenta</th>
+        <th>Por que Escolhida</th>
+        <th>Alternativa</th>
+        <th>Trade-off Aceito</th>
+        <th>Dificuldade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>App do Agente</strong></td>
+        <td>Expo (React Native)</td>
+        <td>Android first, TypeScript, comunidade enorme, EAS Build para APK sem Mac</td>
+        <td>Flutter</td>
+        <td>Bundle maior, JS bridge overhead</td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Painel Coordenador</strong></td>
+        <td>Next.js + Tailwind CSS</td>
+        <td>SSR opcional, Vercel deploy em 1 clique, ecossistema React compartilhado com Expo</td>
+        <td>Vite + React</td>
+        <td>Overhead Next.js para app simples</td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Banco de Dados</strong></td>
+        <td>Supabase PostgreSQL</td>
+        <td>SQL real, RLS nativo, interface visual, plano free gen&eacute;roso para MVP</td>
+        <td>Firebase Firestore</td>
+        <td>Vendor lock-in leve no Supabase</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Autentica&ccedil;&atilde;o</strong></td>
+        <td>Supabase Auth</td>
+        <td>Zero config, JWT nativo, integrado com RLS, e-mail/senha pronto</td>
+        <td>Auth0, Clerk</td>
+        <td>Customiza&ccedil;&atilde;o limitada de UI</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Storage de Fotos</strong></td>
+        <td>Supabase Storage</td>
+        <td>Integrado ao mesmo projeto, URLs p&uacute;blicas ou privadas, policies via SQL</td>
+        <td>Cloudinary, S3</td>
+        <td>Limita&ccedil;&atilde;o de 1GB no plano free</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Offline / Sync</strong></td>
+        <td>MMKV + fila local</td>
+        <td>MMKV &eacute; o storage mais r&aacute;pido para React Native, fila simples de opera&ccedil;&otilde;es pendentes</td>
+        <td>WatermelonDB, SQLite</td>
+        <td>Sem conflict resolution avan&ccedil;ado</td>
+        <td><span class="badge critico">Cr&iacute;tico</span></td>
+      </tr>
+      <tr>
+        <td><strong>Hist&oacute;rico do Im&oacute;vel</strong></td>
+        <td>Tabela visits (FK property)</td>
+        <td>Query SQL simples, sem complexidade adicional, join nativo</td>
+        <td>Tabela separada de audit</td>
+        <td>Hist&oacute;rico s&oacute; de visitas, n&atilde;o de altera&ccedil;&otilde;es de campo</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Exporta&ccedil;&atilde;o</strong></td>
+        <td>Query SQL + CSV no servidor</td>
+        <td>Simples, confi&aacute;vel, abre no Excel sem problemas de encoding</td>
+        <td>Biblioteca CSV no client</td>
+        <td>N&atilde;o &eacute; real-time, gera sob demanda</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Controle de Acesso</strong></td>
+        <td>Supabase RLS</td>
+        <td>Policies no banco, impossib&iacute;vel bypass pelo client, sem middleware extra</td>
+        <td>Middleware Node.js</td>
+        <td>Curva de aprendizado SQL policies</td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Build APK</strong></td>
+        <td>EAS Build (Expo)</td>
+        <td>Build na nuvem, n&atilde;o precisa de Mac nem Android Studio, APK em 20 min</td>
+        <td>Build local</td>
+        <td>Depend&ecirc;ncia do servi&ccedil;o Expo cloud</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- BLOCO 04 -->
+<section class="block" id="b04">
+  <div class="block-header">
+    <div class="bnum">04</div>
+    <div class="bht">
+      <h2>Modelagem do Sistema</h2>
+      <p>6 entidades, SQL completo e tabela de permiss&otilde;es por role.</p>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">6 Entidades do MVP</div>
+    <p><code>profiles</code> &nbsp;&mdash;&nbsp; <code>sectors</code> &nbsp;&mdash;&nbsp; <code>properties</code> &nbsp;&mdash;&nbsp; <code>visits</code> &nbsp;&mdash;&nbsp; <code>evidences</code> &nbsp;&mdash;&nbsp; <code>activity_logs</code></p>
+  </div>
+
+<pre><code>-- ========================================
+-- ZOONOSEAPP MVP &mdash; SCHEMA COMPLETO
+-- ========================================
+
+-- 1. SETORES (bairros / regi&otilde;es de cobertura)
+CREATE TABLE sectors (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  municipality TEXT NOT NULL DEFAULT 'Uberl&acirc;ndia',
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. PERFIS DE USU&Aacute;RIO (extende auth.users)
+CREATE TABLE profiles (
+  id         UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  name       TEXT NOT NULL,
+  role       TEXT NOT NULL CHECK (role IN ('agent','coordinator','manager','admin')),
+  sector_id  UUID REFERENCES sectors(id),
+  active     BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. IM&Oacute;VEIS
+CREATE TABLE properties (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code       TEXT UNIQUE NOT NULL,   -- ex: UBL-0042
+  address    TEXT NOT NULL,
+  sector_id  UUID REFERENCES sectors(id),
+  type       TEXT DEFAULT 'residencial'
+               CHECK (type IN ('residencial','comercial','terreno','especial')),
+  lat        DOUBLE PRECISION,
+  lng        DOUBLE PRECISION,
+  active     BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. VISITAS
+CREATE TABLE visits (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  property_id UUID NOT NULL REFERENCES properties(id),
+  agent_id    UUID NOT NULL REFERENCES profiles(id),
+  status      TEXT NOT NULL CHECK (status IN (
+                'visitado_sem_foco',
+                'visitado_com_achado',
+                'fechado',
+                'recusado',
+                'nao_localizado',
+                'pendente_revisao'
+              )),
+  notes       TEXT,
+  visited_at  TIMESTAMPTZ NOT NULL,
+  synced_at   TIMESTAMPTZ,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 5. EVID&Ecirc;NCIAS (fotos por visita)
+CREATE TABLE evidences (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  visit_id     UUID NOT NULL REFERENCES visits(id) ON DELETE CASCADE,
+  storage_path TEXT NOT NULL,  -- caminho no Supabase Storage
+  created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 6. LOGS DE ATIVIDADE
+CREATE TABLE activity_logs (
+  id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id   UUID REFERENCES profiles(id),
+  action    TEXT NOT NULL,   -- ex: 'create_visit', 'export_csv'
+  entity    TEXT NOT NULL,   -- ex: 'visits', 'properties'
+  entity_id UUID,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ========================================
+-- RLS POLICIES (Row Level Security)
+-- ========================================
+
+ALTER TABLE visits ENABLE ROW LEVEL SECURITY;
+
+-- Agentes v&ecirc;em apenas suas pr&oacute;prias visitas
+CREATE POLICY "agents_own_visits" ON visits
+  FOR ALL USING (
+    agent_id = auth.uid()
+    OR EXISTS (
+      SELECT 1 FROM profiles p
+      WHERE p.id = auth.uid()
+        AND p.role IN ('coordinator','manager','admin')
+    )
+  );
+
+-- Agentes criam apenas visitas com seu pr&oacute;prio ID
+CREATE POLICY "agents_insert_own" ON visits
+  FOR INSERT WITH CHECK (agent_id = auth.uid());
+
+-- INDEX para performance
+CREATE INDEX idx_visits_property  ON visits(property_id);
+CREATE INDEX idx_visits_agent     ON visits(agent_id);
+CREATE INDEX idx_visits_status    ON visits(status);
+CREATE INDEX idx_properties_code  ON properties(code);
+CREATE INDEX idx_properties_sector ON properties(sector_id);
+</code></pre>
+
+  <div class="card">
+    <div class="card-title">Permiss&otilde;es por Role</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Permiss&atilde;o</th>
+          <th>Agent</th>
+          <th>Coordinator</th>
+          <th>Manager</th>
+          <th>Admin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>V&ecirc; suas pr&oacute;prias visitas</td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Cria / registra visita</td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>V&ecirc; painel de cobertura</td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Exporta CSV</td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Gerencia usu&aacute;rios</td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge parcial">Parcial</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+        <tr>
+          <td>Importa im&oacute;veis CSV</td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge nao">N&atilde;o</span></td>
+          <td><span class="badge sim">Sim</span></td>
+          <td><span class="badge sim">Sim</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- BLOCO 05 -->
+<section class="block" id="b05">
+  <div class="block-header">
+    <div class="bnum">05</div>
+    <div class="bht">
+      <h2>Fluxos e Telas</h2>
+      <p>App do agente (Android) e painel do coordenador (Web). Cada tela com suas a&ccedil;&otilde;es.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">&#128241; App do Agente &mdash; 8 Telas</div>
+
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b">
+          <h3>Login</h3>
+          <p>Campo e-mail + senha. Bot&atilde;o "Entrar". Erro inline se credenciais inv&aacute;lidas. Token JWT salvo no MMKV. Redireciona para Home.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b">
+          <h3>Home / Busca de Im&oacute;vel</h3>
+          <p>Campo de busca por c&oacute;digo ou endere&ccedil;o. Lista de im&oacute;veis do setor do agente. Badge de status da &uacute;ltima visita. Busca funciona offline (cache MMKV).</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b">
+          <h3>Detalhe do Im&oacute;vel</h3>
+          <p>C&oacute;digo, endere&ccedil;o, tipo. &Uacute;ltimas 5 visitas com status e data. Bot&atilde;o "Registrar Visita" em destaque.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b">
+          <h3>Registrar Visita</h3>
+          <p>6 bot&otilde;es de status (cores diferentes). Campo de nota opcional. Bot&atilde;o de c&acirc;mera para foto. Confirma&ccedil;&atilde;o antes de salvar.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b">
+          <h3>Confirma&ccedil;&atilde;o de Visita</h3>
+          <p>Resumo: im&oacute;vel, status selecionado, nota, foto (thumbnail). Bot&otilde;es "Confirmar" e "Editar". Salva localmente, enfileira sync.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">6</div>
+        <div class="step-b">
+          <h3>Hist&oacute;rico Pessoal</h3>
+          <p>Lista das visitas do agente (hoje, &uacute;ltimos 7 dias). Filtro por status. Contador de visitas realizadas.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">7</div>
+        <div class="step-b">
+          <h3>Status de Sync</h3>
+          <p>N&uacute;mero de visitas pendentes de envio. Bot&atilde;o "Sincronizar agora". Indicador visual: verde (sincronizado) / amarelo (pendente) / vermelho (erro).</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">8</div>
+        <div class="step-b">
+          <h3>Configura&ccedil;&otilde;es</h3>
+          <p>Nome do agente, setor, vers&atilde;o do app. Bot&atilde;o "Sair". Limpar cache local.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title">&#128187; Painel do Coordenador &mdash; 5 Telas</div>
+        <div class="step">
+          <div class="step-n">1</div>
+          <div class="step-b">
+            <h3>Dashboard Principal</h3>
+            <p>M&eacute;tricas: total im&oacute;veis, % visitados hoje, achados, recusas, pend&ecirc;ncias. Tabela de agentes ativos com contagem.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">2</div>
+          <div class="step-b">
+            <h3>Lista de Im&oacute;veis</h3>
+            <p>Tabela filtr&aacute;vel por setor e status. Coluna com &uacute;ltima visita e agente. Bot&atilde;o exportar CSV.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">3</div>
+          <div class="step-b">
+            <h3>Detalhe do Im&oacute;vel (Web)</h3>
+            <p>Hist&oacute;rico completo de visitas com fotos. Timeline visual por data.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">4</div>
+          <div class="step-b">
+            <h3>Lista de Agentes</h3>
+            <p>Agentes por setor. Visitas realizadas hoje e no per&iacute;odo. Status online/offline.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">5</div>
+          <div class="step-b">
+            <h3>Exporta&ccedil;&atilde;o</h3>
+            <p>Filtros: per&iacute;odo, setor, status. Download CSV. Nome do arquivo com data.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">&#9881; Admin &mdash; 3 Telas</div>
+        <div class="step">
+          <div class="step-n">A</div>
+          <div class="step-b">
+            <h3>Criar Usu&aacute;rio</h3>
+            <p>Formul&aacute;rio: nome, e-mail, senha tempor&aacute;ria, role, setor. Confirma&ccedil;&atilde;o por e-mail autom&aacute;tica via Supabase Auth.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">B</div>
+          <div class="step-b">
+            <h3>Gerenciar Setores</h3>
+            <p>Criar e editar setores. Associar im&oacute;veis a setor por CSV.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">C</div>
+          <div class="step-b">
+            <h3>Import CSV Im&oacute;veis</h3>
+            <p>Upload de planilha. Preview das primeiras 5 linhas. Confirmar import. Log de erros por linha.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout yellow">
+    <div class="callout-title">&#128336; Fluxo Cr&iacute;tico do MVP (caminho feliz)</div>
+    <p>Login &rarr; Buscar im&oacute;vel por c&oacute;digo &rarr; Ver detalhe + hist&oacute;rico &rarr; Registrar visita &rarr; Selecionar 1 dos 6 status &rarr; Tirar foto &rarr; Adicionar nota &rarr; Confirmar &rarr; Salvar localmente &rarr; App sincroniza automaticamente ao conectar &rarr; Coordenador v&ecirc; no painel.</p>
+  </div>
+</section>
+
+<!-- BLOCO 06 -->
+<section class="block" id="b06">
+  <div class="block-header">
+    <div class="bnum">06</div>
+    <div class="bht">
+      <h2>Passo a Passo de Execu&ccedil;&atilde;o</h2>
+      <p>6 fases do zero ao APK de demo, com estimativas reais de tempo.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Fase</th>
+        <th>Dura&ccedil;&atilde;o</th>
+        <th>Atividades</th>
+        <th>Entregável</th>
+        <th>Risco</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Fase 0</strong><br><span style="font-size:12px;color:var(--muted)">Defini&ccedil;&atilde;o</span></td>
+        <td>3 dias</td>
+        <td>Criar projeto Supabase, rodar migrations SQL, criar 4 usu&aacute;rios de teste (admin, coord, 2 agentes), importar 50 im&oacute;veis seed de Uberl&acirc;ndia, criar reposit&oacute;rios no GitHub</td>
+        <td>Banco rodando, usu&aacute;rios ativos, im&oacute;veis importados</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Fase 1</strong><br><span style="font-size:12px;color:var(--muted)">Scaffold + Auth</span></td>
+        <td>3 dias</td>
+        <td>Expo create-app, instalar depend&ecirc;ncias (supabase-js, MMKV, React Navigation), tela de Login funcional, navega&ccedil;&atilde;o por role (agente v&ecirc; app, coord v&ecirc; rota do painel)</td>
+        <td>Login funcionando no celular, navega&ccedil;&atilde;o por role</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Fase 2</strong><br><span style="font-size:12px;color:var(--muted)">App do Agente</span></td>
+        <td>7 dias</td>
+        <td>8 telas do app, integra&ccedil;&atilde;o c&acirc;mera, MMKV offline storage, fila de sync, upload de fotos para Supabase Storage, testes em modo avi&atilde;o</td>
+        <td>APK de teste com todas as telas funcionando offline</td>
+        <td><span class="badge critico">RISCO ALTO</span></td>
+      </tr>
+      <tr>
+        <td><strong>Fase 3</strong><br><span style="font-size:12px;color:var(--muted)">Painel Coordenador</span></td>
+        <td>5 dias</td>
+        <td>Next.js setup, integra&ccedil;&atilde;o Supabase, dashboard com m&eacute;tricas, lista de im&oacute;veis filtr&aacute;vel, detalhe com hist&oacute;rico, exporta&ccedil;&atilde;o CSV, deploy Vercel</td>
+        <td>Painel acess&iacute;vel via URL p&uacute;blica</td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Fase 4</strong><br><span style="font-size:12px;color:var(--muted)">QA + Seed</span></td>
+        <td>4 dias</td>
+        <td>Seed SQL 200 visitas distribu&iacute;das em 30 dias com status variados, APK build via EAS, QA manual completo (10 visitas reais, offline, sync, CSV), corre&ccedil;&otilde;es de bugs</td>
+        <td>APK final assinado, painel com dados realistas</td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Fase 5</strong><br><span style="font-size:12px;color:var(--muted)">Demo / Piloto</span></td>
+        <td>1 dia</td>
+        <td>Roteiro de demo (20 min), 2 celulares Android com APK instalado, painel aberto no notebook, usu&aacute;rios de demo criados, backup em v&iacute;deo gravado</td>
+        <td>Demo pronta para apresentar &agrave; prefeitura</td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout red">
+    <div class="callout-title">&#9888; Caminho Cr&iacute;tico</div>
+    <p><strong>T09 (offline + sync) &eacute; a maior trava do projeto.</strong> Se o dev travar nessa tarefa, toda a Fase 2 atrasa. Plano B: sync manual por bot&atilde;o "Enviar visitas" &mdash; o agente pressiona quando tiver Wi-Fi. Remove a complexidade de sync autom&aacute;tico e ainda &eacute; us&aacute;vel para demo.</p>
+  </div>
+</section>
+
+<!-- BLOCO 07 -->
+<section class="block" id="b07">
+  <div class="block-header">
+    <div class="bnum">07</div>
+    <div class="bht">
+      <h2>Backlog T&eacute;cnico At&ocirc;mico</h2>
+      <p>20 tasks com ID, descri&ccedil;&atilde;o, prioridade, horas e crit&eacute;rio de aceite. Total: ~82 horas.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Task</th>
+        <th>Descri&ccedil;&atilde;o</th>
+        <th>Prio</th>
+        <th>Horas</th>
+        <th>Deps</th>
+        <th>Crit&eacute;rio de Aceite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>T01</code></td>
+        <td>Setup Supabase</td>
+        <td>Criar projeto, rodar 6 migrations, configurar RLS, criar 4 usu&aacute;rios de teste</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>4h</td>
+        <td>&mdash;</td>
+        <td>Login funciona, RLS bloqueia acesso cruzado</td>
+      </tr>
+      <tr>
+        <td><code>T02</code></td>
+        <td>Expo scaffold</td>
+        <td>create-expo-app, instalar supabase-js, react-navigation, MMKV, EAS config</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>3h</td>
+        <td>T01</td>
+        <td>App abre no Android sem erros</td>
+      </tr>
+      <tr>
+        <td><code>T03</code></td>
+        <td>Tela Login</td>
+        <td>Form e-mail/senha, chamar supabase.auth.signIn, salvar token MMKV, navegar por role</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>4h</td>
+        <td>T01, T02</td>
+        <td>Login v&aacute;lido redireciona, inv&aacute;lido mostra erro inline</td>
+      </tr>
+      <tr>
+        <td><code>T04</code></td>
+        <td>Import CSV im&oacute;veis</td>
+        <td>Script Node.js que l&ecirc; CSV e faz bulk insert em properties via Supabase API</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>3h</td>
+        <td>T01</td>
+        <td>50 im&oacute;veis importados sem erro, c&oacute;digos &uacute;nicos</td>
+      </tr>
+      <tr>
+        <td><code>T05</code></td>
+        <td>Busca im&oacute;vel</td>
+        <td>Tela Home com campo de busca, lista por setor do agente, funciona com dados em cache</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>5h</td>
+        <td>T03, T04</td>
+        <td>Busca retorna resultados em &lt;500ms offline</td>
+      </tr>
+      <tr>
+        <td><code>T06</code></td>
+        <td>Detalhe im&oacute;vel</td>
+        <td>Tela com dados do im&oacute;vel e &uacute;ltimas 5 visitas com status e data</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>4h</td>
+        <td>T05</td>
+        <td>Hist&oacute;rico exibe data, status e agente corretamente</td>
+      </tr>
+      <tr>
+        <td><code>T07</code></td>
+        <td>Registro visita</td>
+        <td>6 bot&otilde;es de status, campo nota, confirma&ccedil;&atilde;o, salva no banco ou fila offline</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>6h</td>
+        <td>T06, T09</td>
+        <td>Visita salva com status, agent_id, property_id e visited_at corretos</td>
+      </tr>
+      <tr>
+        <td><code>T08</code></td>
+        <td>C&acirc;mera + foto</td>
+        <td>expo-image-picker, comprimir imagem, salvar path local, upload para Supabase Storage no sync</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>5h</td>
+        <td>T07</td>
+        <td>Foto aparece no detalhe da visita no painel web</td>
+      </tr>
+      <tr>
+        <td><code>T09</code></td>
+        <td>Offline + sync <span class="badge critico">CRITICO</span></td>
+        <td>MMKV queue, detectar conex&atilde;o via NetInfo, sync autom&aacute;tico ao reconectar, resolver duplicatas por ID</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>8h</td>
+        <td>T02</td>
+        <td>Visita registrada sem internet aparece no painel ap&oacute;s reconex&atilde;o</td>
+      </tr>
+      <tr>
+        <td><code>T10</code></td>
+        <td>Setup Next.js</td>
+        <td>create-next-app, Tailwind, supabase-js, layout base, autentica&ccedil;&atilde;o coordenador</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>4h</td>
+        <td>T01</td>
+        <td>Painel abre em localhost, login funciona para role coordinator</td>
+      </tr>
+      <tr>
+        <td><code>T11</code></td>
+        <td>Dashboard m&eacute;tricas</td>
+        <td>Cards: total im&oacute;veis, visitados hoje, com achado, pend&ecirc;ncias, recusados. Query SQL agregada.</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>8h</td>
+        <td>T10, T16</td>
+        <td>N&uacute;meros batem com dados do banco, atualiza em tempo real via Supabase Realtime</td>
+      </tr>
+      <tr>
+        <td><code>T12</code></td>
+        <td>Lista im&oacute;veis web</td>
+        <td>Tabela com filtro por setor e status, pagina&ccedil;&atilde;o, &uacute;ltima visita</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>5h</td>
+        <td>T10</td>
+        <td>Filtro por setor exibe apenas im&oacute;veis do setor selecionado</td>
+      </tr>
+      <tr>
+        <td><code>T13</code></td>
+        <td>Lista agentes</td>
+        <td>Tabela agentes com visitas hoje e no per&iacute;odo, agrupado por setor</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>4h</td>
+        <td>T10</td>
+        <td>Contagem de visitas por agente bate com banco</td>
+      </tr>
+      <tr>
+        <td><code>T14</code></td>
+        <td>Exporta&ccedil;&atilde;o CSV</td>
+        <td>Endpoint API Next.js, query com filtros, retorna CSV com headers corretos e encoding UTF-8</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>3h</td>
+        <td>T10</td>
+        <td>CSV abre no Excel com acentos corretos, dados completos</td>
+      </tr>
+      <tr>
+        <td><code>T15</code></td>
+        <td>Admin criar usu&aacute;rio</td>
+        <td>Formul&aacute;rio no painel, chama supabase.auth.admin.createUser via service key</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>3h</td>
+        <td>T10</td>
+        <td>Novo agente consegue fazer login no app mobile</td>
+      </tr>
+      <tr>
+        <td><code>T16</code></td>
+        <td>Seed data completo</td>
+        <td>SQL INSERT 200 visitas distribu&iacute;das em 30 dias, 5 agentes, status variados, notas reais</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>4h</td>
+        <td>T04</td>
+        <td>Dashboard mostra m&eacute;tricas realistas para demo</td>
+      </tr>
+      <tr>
+        <td><code>T17</code></td>
+        <td>APK build EAS</td>
+        <td>eas build --platform android --profile preview, testar APK no celular f&iacute;sico</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>2h</td>
+        <td>T07, T08, T09</td>
+        <td>APK instala sem erro e app funciona em modo offline</td>
+      </tr>
+      <tr>
+        <td><code>T18</code></td>
+        <td>Detalhe im&oacute;vel web</td>
+        <td>P&aacute;gina com timeline de visitas, fotos, agentes e notas. Navegavel da lista.</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>4h</td>
+        <td>T12</td>
+        <td>Fotos carregam corretamente do Supabase Storage</td>
+      </tr>
+      <tr>
+        <td><code>T19</code></td>
+        <td>QA manual</td>
+        <td>20 visitas reais, teste offline (modo avi&atilde;o), sync, export CSV no Excel, teste em 2 celulares diferentes</td>
+        <td><span class="badge p0">P0</span></td>
+        <td>4h</td>
+        <td>T17</td>
+        <td>Zero crash, sync funciona, CSV abre correto</td>
+      </tr>
+      <tr>
+        <td><code>T20</code></td>
+        <td>Deploy Vercel</td>
+        <td>Conectar reposit&oacute;rio, configurar env vars (SUPABASE_URL, ANON_KEY), testar URL de produ&ccedil;&atilde;o</td>
+        <td><span class="badge p1">P1</span></td>
+        <td>1h</td>
+        <td>T11</td>
+        <td>Painel acess&iacute;vel em URL p&uacute;blica, login funciona</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <div class="callout-title">Total estimado</div>
+    <p><strong>~82 horas de desenvolvimento</strong> &mdash; equivalente a ~2,5 semanas de dev full-time (32h/semana) ou 4&ndash;5 semanas part-time (20h/semana). Tasks P0 = 41h, tasks P1 = 41h.</p>
+  </div>
+</section>
+
+<!-- BLOCO 08 -->
+<section class="block" id="b08">
+  <div class="block-header">
+    <div class="bnum">08</div>
+    <div class="bht">
+      <h2>O que Founders Fazem Sozinhos</h2>
+      <p>12 tarefas que n&atilde;o precisam de dev, com ferramentas espec&iacute;ficas e tempo estimado.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tarefa</th>
+        <th>Como Fazer (ferramenta espec&iacute;fica)</th>
+        <th>Tempo</th>
+        <th>Dificuldade</th>
+        <th>Risco</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Seed data im&oacute;veis</strong></td>
+        <td>ChatGPT: "Gere um CSV com 50 im&oacute;veis de Uberl&acirc;ndia-MG, colunas: codigo, endereco, setor, tipo. Setores: Norte, Sul, Leste, Centro."</td>
+        <td>2h</td>
+        <td><span class="badge baixo">1/5</span></td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Wireframes das telas</strong></td>
+        <td>Claude: "Descreva o layout mobile da tela de registro de visita com 6 status coloridos, campo de nota e bot&atilde;o de c&acirc;mera. Use Tailwind classes." Copiar para Excalidraw ou Figma.</td>
+        <td>3h</td>
+        <td><span class="badge baixo">2/5</span></td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Textos do app</strong></td>
+        <td>Google Doc com todas as labels, bot&otilde;es, mensagens de erro, mensagens de sucesso e telas vazias. Entregar pro dev como "strings.md".</td>
+        <td>3h</td>
+        <td><span class="badge baixo">2/5</span></td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Roteiro de demo</strong></td>
+        <td>Documento de 1 p&aacute;gina: passo a passo do que mostrar, ordem das telas, frases de transi&ccedil;&atilde;o, perguntas esperadas da prefeitura com respostas.</td>
+        <td>2h</td>
+        <td><span class="badge baixo">1/5</span></td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Manual do agente</strong></td>
+        <td>Canva: PDF de 1 p&aacute;gina com screenshots das telas + descri&ccedil;&atilde;o dos 6 status com exemplos reais (o que &eacute; "achado", o que &eacute; "recusa").</td>
+        <td>3h</td>
+        <td><span class="badge baixo">2/5</span></td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>QA manual</strong></td>
+        <td>Registrar 10 visitas reais no app, ligar modo avi&atilde;o, registrar mais 5, reconectar e verificar sync. Exportar CSV e abrir no Excel. Anotar bugs num Google Sheet.</td>
+        <td>4h</td>
+        <td><span class="badge medio">2/5</span></td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Proposta comercial</strong></td>
+        <td>Adaptar o Doss&ocirc; v2 para o porte da prefeitura-alvo. Focar em: problema que resolve, m&eacute;tricas do piloto, condi&ccedil;&otilde;es do termo de coopera&ccedil;&atilde;o, sem promessa de funcionalidades futuras.</td>
+        <td>3h</td>
+        <td><span class="badge medio">3/5</span></td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Gest&atilde;o do backlog</strong></td>
+        <td>Notion ou Trello: criar tasks T01&ndash;T20 como cards, priorizar P0 no topo, check di&aacute;rio de 30 min com o dev para mover tasks. Sem reuni&otilde;es longas.</td>
+        <td>1h/semana</td>
+        <td><span class="badge baixo">2/5</span></td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Seed SQL de visitas</strong></td>
+        <td>Claude: "Gere um SQL INSERT para 200 visitas na tabela visits, distribu&iacute;das em 30 dias, com property_ids UUID da lista abaixo, status variados (70% sem_foco, 15% com_achado, 10% fechado, 5% recusado), notas em portugu&ecirc;s."</td>
+        <td>2h</td>
+        <td><span class="badge baixo">2/5</span></td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Comunica&ccedil;&atilde;o com prefeitura</strong></td>
+        <td>Agendar reuni&atilde;o de 30 min (e-mail + WhatsApp), apresentar proposta de piloto com 1 setor, ~200 im&oacute;veis, 2&ndash;3 agentes, 30 dias. Pedir termo de coopera&ccedil;&atilde;o, n&atilde;o contrato pago. N&atilde;o prometer o que n&atilde;o est&aacute; pronto.</td>
+        <td>Cont&iacute;nuo</td>
+        <td><span class="badge medio">3/5</span></td>
+        <td><span class="badge critico">ALTO</span></td>
+      </tr>
+      <tr>
+        <td><strong>Planilha CSV im&oacute;veis</strong></td>
+        <td>Google Sheets: criar planilha com colunas exatas (codigo, endereco, setor, tipo). Preencher com dados reais ou gerados. Exportar como CSV UTF-8. Passar pro dev com script T04.</td>
+        <td>2h</td>
+        <td><span class="badge baixo">1/5</span></td>
+        <td><span class="badge baixo">Baixo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Definir setores piloto</strong></td>
+        <td>Junto com a prefeitura: escolher 1 bairro com ~200 im&oacute;veis, 2&ndash;3 agentes conhecidos, &aacute;rea com hist&oacute;rico de dengue (mais impactante para demo). Documentar o setor escolhido.</td>
+        <td>2h</td>
+        <td><span class="badge baixo">2/5</span></td>
+        <td><span class="badge medio">M&eacute;dio</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- BLOCO 09 -->
+<section class="block" id="b09">
+  <div class="block-header">
+    <div class="bnum">09</div>
+    <div class="bht">
+      <h2>O que Vale Terceirizar</h2>
+      <p>O que contratar, por que, qual perfil buscar e como estruturar milestones.</p>
+    </div>
+  </div>
+
+  <div class="callout yellow">
+    <div class="callout-title">&#128176; Budget e Perfil</div>
+    <p><strong>Budget: R$ 8.000&ndash;15.000</strong> por projeto (4&ndash;5 semanas). Perfil ideal: freelancer React Native + Supabase, portf&oacute;lio B2B publicado no GitHub, dispon&iacute;vel por projeto (n&atilde;o CLT). Aceita pagar por milestone, n&atilde;o por hora.</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>O que Terceirizar</th>
+        <th>Por que N&atilde;o Fazer Sozinho</th>
+        <th>Perfil Necess&aacute;rio</th>
+        <th>Formato</th>
+        <th>Risco se Founders Tentarem</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Setup Supabase + modelagem</strong> (T01)</td>
+        <td>RLS policies erradas criam brechas de seguran&ccedil;a silenciosas</td>
+        <td>Full-stack com Supabase ou PostgreSQL</td>
+        <td>Task &uacute;nica, 4h</td>
+        <td><span class="badge alto">Alto &mdash; dados vazam entre usu&aacute;rios</span></td>
+      </tr>
+      <tr>
+        <td><strong>App agente telas core</strong> (T03&ndash;T07)</td>
+        <td>React Native tem quirks de navega&ccedil;&atilde;o e estado que s&atilde;o lentos de aprender</td>
+        <td>React Native 2+ anos de experi&ecirc;ncia</td>
+        <td>Milestone M1</td>
+        <td><span class="badge critico">Cr&iacute;tico &mdash; pode levar 10x mais tempo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Offline + sync</strong> (T09)</td>
+        <td>Conflict resolution, filas, NetInfo, retry logic &mdash; n&atilde;o &eacute; trivial</td>
+        <td>Experi&ecirc;ncia espec&iacute;fica com MMKV ou WatermelonDB</td>
+        <td>Task dedicada, 8h</td>
+        <td><span class="badge critico">Cr&iacute;tico &mdash; app n&atilde;o funciona no campo sem isso</span></td>
+      </tr>
+      <tr>
+        <td><strong>Painel coordenador</strong> (T10&ndash;T14)</td>
+        <td>Next.js + Supabase Realtime + queries agregadas requerem experi&ecirc;ncia</td>
+        <td>Full-stack Next.js + SQL</td>
+        <td>Milestone M2</td>
+        <td><span class="badge medio">M&eacute;dio &mdash; painel funciona mas sem qualidade</span></td>
+      </tr>
+      <tr>
+        <td><strong>Auth + RLS completo</strong></td>
+        <td>JWT, cookies, session management, policies por role &mdash; &aacute;rea de seguran&ccedil;a</td>
+        <td>Full-stack com Supabase Auth</td>
+        <td>Incluso no M1</td>
+        <td><span class="badge alto">Alto &mdash; brechas de acesso entre roles</span></td>
+      </tr>
+      <tr>
+        <td><strong>Upload de foto + Storage</strong> (T08)</td>
+        <td>Compresso, permiss&otilde;es da c&acirc;mera Android, upload com retry</td>
+        <td>React Native com expo-image-picker</td>
+        <td>Incluso no M1</td>
+        <td><span class="badge medio">M&eacute;dio &mdash; fotos n&atilde;o aparecem ou sem compressa&atilde;o</span></td>
+      </tr>
+      <tr>
+        <td><strong>Build APK EAS</strong> (T17)</td>
+        <td>Configura&ccedil;&atilde;o de certificate, signing, eas.json &mdash; 1h se sabe, 4h se n&atilde;o sabe</td>
+        <td>Qualquer dev Expo experiente</td>
+        <td>Task final, 2h</td>
+        <td><span class="badge baixo">Baixo &mdash; s&oacute; perde tempo</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout blue">
+    <div class="callout-title">Como Contratar Certo</div>
+    <p><strong>1.</strong> Exigir portf&oacute;lio publicado com pelo menos 1 app React Native no GitHub ou Play Store.<br>
+    <strong>2.</strong> Teste t&eacute;cnico de 2 horas: "Crie uma tela de login com Expo + Supabase Auth que salva o token no MMKV."<br>
+    <strong>3.</strong> Pagar por milestone, nunca por hora:<br>
+    &nbsp;&nbsp;&bull; M1 (R$ 5.000): Scaffold + auth + 8 telas app agente com offline<br>
+    &nbsp;&nbsp;&bull; M2 (R$ 4.000): Painel coordenador + export CSV + deploy Vercel<br>
+    &nbsp;&nbsp;&bull; M3 (R$ 1.000&ndash;2.000): APK EAS + QA + corre&ccedil;&otilde;es<br>
+    <strong>4.</strong> Check di&aacute;rio de 30 min via WhatsApp. Sem reuni&otilde;o, s&oacute; status + bloqueios.</p>
+  </div>
+</section>
+
+<!-- BLOCO 10 -->
+<section class="block" id="b10">
+  <div class="block-header">
+    <div class="bnum">10</div>
+    <div class="bht">
+      <h2>Cronograma</h2>
+      <p>3 cen&aacute;rios realistas baseados na disponibilidade do dev e no caminho cr&iacute;tico.</p>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card" style="border-color:var(--green)">
+      <div class="card-title" style="color:var(--green)">Cen&aacute;rio Realista</div>
+      <div style="font-size:28px;font-weight:800;color:var(--green);margin-bottom:8px">8 semanas</div>
+      <p style="font-size:13px;color:var(--muted)">Dev part-time, 4h/dia, 20h/semana. Sem imprevistos cr&iacute;ticos. Recomendado para primeiro projeto com dev novo.</p>
+    </div>
+    <div class="card" style="border-color:var(--blue)">
+      <div class="card-title" style="color:var(--blue)">Cen&aacute;rio Acelerado</div>
+      <div style="font-size:28px;font-weight:800;color:var(--blue);margin-bottom:8px">4 semanas</div>
+      <p style="font-size:13px;color:var(--muted)">Dev full-time, 8h/dia, 40h/semana. Dev experiente com Expo + Supabase. Poss&iacute;vel, exige foco total.</p>
+    </div>
+    <div class="card" style="border-color:var(--yellow)">
+      <div class="card-title" style="color:var(--yellow)">Cen&aacute;rio Conservador</div>
+      <div style="font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:8px">12 semanas</div>
+      <p style="font-size:13px;color:var(--muted)">Dev part-time com imprevistos. T09 (offline) travou 1 semana, 1 retrabalho de design. Realidade para a maioria.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Semana</th>
+        <th>Realista (8 sem)</th>
+        <th>Acelerado (4 sem)</th>
+        <th>Conservador (12 sem)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Semana 1</strong></td>
+        <td>T01 + T02 + T03 &mdash; Supabase, scaffold, login</td>
+        <td>T01 + T02 + T03 + T04 + T05</td>
+        <td>T01 + T02 &mdash; Setup apenas</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 2</strong></td>
+        <td>T04 + T05 + T06 &mdash; Im&oacute;veis, busca, detalhe</td>
+        <td>T06 + T07 + T08 &mdash; Visita + foto</td>
+        <td>T03 + T04 &mdash; Login + import CSV</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 3</strong></td>
+        <td>T07 + T08 &mdash; Registro visita + foto</td>
+        <td>T09 + T10 &mdash; Offline + scaffold Next.js</td>
+        <td>T05 + T06 + T07 &mdash; Busca + detalhe + visita</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 4</strong></td>
+        <td>T09 &mdash; Offline + sync (semana cr&iacute;tica)</td>
+        <td>T11 + T12 + T14 &mdash; Dashboard + CSV</td>
+        <td>T08 + T09 &mdash; Foto + offline (semana pesada)</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 5</strong></td>
+        <td>T10 + T11 &mdash; Next.js + dashboard</td>
+        <td>T15 + T16 + T17 &mdash; Admin + seed + APK</td>
+        <td>Buffer / corre&ccedil;&otilde;es T09</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 6</strong></td>
+        <td>T12 + T13 + T14 + T15 &mdash; Listas + CSV + admin</td>
+        <td>T19 + T20 &mdash; QA + deploy (DEMO PRONTA)</td>
+        <td>T10 + T11 &mdash; Next.js + dashboard</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 7</strong></td>
+        <td>T16 + T17 + T18 &mdash; Seed + APK + detalhe</td>
+        <td>&mdash;</td>
+        <td>T12 + T13 + T14 + T15 &mdash; Listas + CSV</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 8</strong></td>
+        <td>T19 + T20 &mdash; QA + deploy (DEMO PRONTA)</td>
+        <td>&mdash;</td>
+        <td>T16 + T17 + T18 &mdash; Seed + APK + detalhe</td>
+      </tr>
+      <tr>
+        <td><strong>Semanas 9&ndash;12</strong></td>
+        <td>&mdash;</td>
+        <td>&mdash;</td>
+        <td>T19 + T20 + QA + corre&ccedil;&otilde;es (DEMO PRONTA)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout red">
+    <div class="callout-title">&#9888; Caminho Cr&iacute;tico</div>
+    <p>T09 (offline/sync) &rarr; T11 (dashboard) &rarr; T16 (seed) &rarr; T19 (QA) &rarr; T20 (deploy). Qualquer atraso em T09 propaga para tudo. <strong>Plano B imediato:</strong> se T09 n&atilde;o ficar pronto em 8 horas, mudar para sync manual por bot&atilde;o. Isso resolve o bloqueio e ainda &eacute; demonstr&aacute;vel.</p>
+  </div>
+</section>
+
+<!-- BLOCO 11 -->
+<section class="block" id="b11">
+  <div class="block-header">
+    <div class="bnum">11</div>
+    <div class="bht">
+      <h2>Prompts para Subagentes</h2>
+      <p>7 prompts prontos para usar no Claude, ChatGPT ou Cursor para acelerar a execu&ccedil;&atilde;o.</p>
+    </div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">&#128202; 1. Modelagem do Banco (Supabase Schema Completo)</div>
+<pre><code>Voc&ecirc; &eacute; um engenheiro de banco de dados especialista em Supabase e PostgreSQL.
+
+Crie o schema SQL completo para o ZoonoseApp MVP com as seguintes especifica&ccedil;&otilde;es:
+- 6 tabelas: profiles, sectors, properties, visits, evidences, activity_logs
+- profiles extende auth.users via FK
+- visits tem 6 status: visitado_sem_foco, visitado_com_achado, fechado, recusado, nao_localizado, pendente_revisao
+- RLS habilitado em todas as tabelas
+- Policy: agentes veem apenas suas pr&oacute;prias visitas, coordinators/managers/admins veem todas
+- Indexes de performance nas colunas mais consultadas
+- DEFAULT para municipality = 'Uberl&acirc;ndia'
+- Inclua seed SQL com 4 usu&aacute;rios de teste e 2 setores
+
+Retorne o SQL completo pronto para rodar no Supabase SQL Editor.</code></pre>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">&#128241; 2. UI/UX das 8 Telas Mobile</div>
+<pre><code>Voc&ecirc; &eacute; um designer de produto especialista em apps mobile B2G (governo).
+
+Descreva o layout detalhado das 8 telas do app do agente do ZoonoseApp:
+1. Login, 2. Home/Busca Im&oacute;vel, 3. Detalhe Im&oacute;vel, 4. Registrar Visita,
+5. Confirma&ccedil;&atilde;o, 6. Hist&oacute;rico Pessoal, 7. Status Sync, 8. Configura&ccedil;&otilde;es
+
+Para cada tela, especifique:
+- Componentes React Native (FlatList, TextInput, TouchableOpacity, etc.)
+- Layout e hierarquia visual
+- Cores e estados (hover, disabled, loading)
+- Casos de erro e telas vazias
+
+O app usa tema escuro, fundo #0a1628, azul #3b82f6, verde #10b981.
+A tela 4 (Registrar Visita) tem os 6 status como bot&otilde;es grandes coloridos.
+
+Retorne em formato de especifica&ccedil;&atilde;o t&eacute;cnica para o desenvolvedor.</code></pre>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">&#128274; 3. App Agente &mdash; Tela de Registro com Offline</div>
+<pre><code>Voc&ecirc; &eacute; um desenvolvedor React Native especialista em Expo e Supabase.
+
+Implemente a tela "Registrar Visita" do ZoonoseApp com:
+- 6 bot&otilde;es de status: visitado_sem_foco, visitado_com_achado, fechado, recusado, nao_localizado, pendente_revisao
+- Cada status com cor espec&iacute;fica (verde, vermelho, cinza, laranja, amarelo, azul)
+- Campo de nota opcional (TextInput multiline)
+- Bot&atilde;o de c&acirc;mera usando expo-image-picker
+- Ao confirmar: salvar no MMKV (offline) OU inserir direto no Supabase se online
+- Fila de opera&ccedil;&otilde;es pendentes no MMKV, sync autom&aacute;tico ao detectar conex&atilde;o via @react-native-community/netinfo
+- TypeScript com tipos corretos para as entidades
+
+Retorne o c&oacute;digo completo do componente RegisterVisitScreen.tsx e o hook useOfflineSync.ts.</code></pre>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">&#128200; 4. Dashboard do Coordenador</div>
+<pre><code>Voc&ecirc; &eacute; um desenvolvedor Next.js + Supabase especialista em dashboards operacionais.
+
+Implemente o dashboard do coordenador do ZoonoseApp em Next.js 14 com App Router:
+- Cards de m&eacute;tricas: total de im&oacute;veis, % visitados hoje, visitados com achado, fechados/recusados, pend&ecirc;ncias
+- Tabela de agentes com visitas realizadas hoje e nos &uacute;ltimos 7 dias
+- Filtros por setor e per&iacute;odo (hoje, 7 dias, 30 dias)
+- Atualiza&ccedil;&atilde;o em tempo real via Supabase Realtime
+- Bot&atilde;o de exporta&ccedil;&atilde;o CSV (endpoint API Route)
+- Tailwind CSS com tema escuro (#0a1628)
+- Queries SQL otimizadas com GROUP BY e COUNT
+
+Retorne os arquivos: app/dashboard/page.tsx, components/MetricCard.tsx, app/api/export/route.ts</code></pre>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">&#9989; 5. QA Checklist Completo</div>
+<pre><code>Voc&ecirc; &eacute; um QA engineer especialista em apps mobile e sistemas offline-first.
+
+Crie um checklist completo de QA para o ZoonoseApp MVP cobrindo:
+
+FLUXOS CR&Iacute;TICOS:
+1. Login com credenciais v&aacute;lidas e inv&aacute;lidas
+2. Busca de im&oacute;vel por c&oacute;digo e endere&ccedil;o
+3. Registro de visita com cada um dos 6 status
+4. Captura de foto e verifica&ccedil;&atilde;o no painel web
+5. Modo offline: registrar 5 visitas sem internet, reconectar, verificar sync
+6. Exporta&ccedil;&atilde;o CSV e abertura no Excel com acentos corretos
+7. Permiss&otilde;es: agente n&atilde;o consegue acessar painel de coordenador
+8. RLS: agente A n&atilde;o v&ecirc; visitas do agente B
+
+Para cada item: passos, resultado esperado, resultado obtido, status (PASS/FAIL).
+Formato de planilha Google Sheets.</code></pre>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">&#128190; 6. Seed Data de Demo (200 visitas)</div>
+<pre><code>Voc&ecirc; &eacute; um engenheiro de dados especialista em SQL e PostgreSQL.
+
+Gere um SQL com INSERT de 200 visitas na tabela visits do ZoonoseApp com:
+- Distribu&iacute;das em 30 dias (de hoje para tr&aacute;s)
+- 5 agentes diferentes (UUIDs que vou fornecer)
+- 50 im&oacute;veis diferentes de Uberl&acirc;ndia-MG (UUIDs que vou fornecer)
+- Distribui&ccedil;&atilde;o de status: 65% visitado_sem_foco, 15% visitado_com_achado, 10% fechado, 5% recusado, 5% nao_localizado
+- Notas em portugu&ecirc;s realistas (ex: "Caixa d'&aacute;gua com larvas", "Imov&eacute;l vazio, quintal com entulho")
+- Concentra&ccedil;&atilde;o maior nas &uacute;ltimas 2 semanas (mais realista)
+- visited_at com hor&aacute;rios entre 07:00 e 17:00 (hor&aacute;rio de trabalho)
+
+Retorne o SQL completo pronto para rodar no Supabase SQL Editor.</code></pre>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">&#128196; 7. Documenta&ccedil;&atilde;o de Setup (README T&eacute;cnico)</div>
+<pre><code>Voc&ecirc; &eacute; um tech writer especialista em documenta&ccedil;&atilde;o de projetos open source.
+
+Crie o README.md t&eacute;cnico do ZoonoseApp MVP com:
+- Descri&ccedil;&atilde;o do projeto (1 par&aacute;grafo)
+- Arquitetura: diagrama em texto (Expo App + Next.js Painel &rarr; Supabase)
+- Pr&eacute;-requisitos: Node 20, Expo CLI, conta Supabase
+- Setup passo a passo:
+  1. Clonar reposit&oacute;rios (monorepo ou 2 repos)
+  2. Configurar .env com SUPABASE_URL e ANON_KEY
+  3. Rodar migrations SQL no Supabase Dashboard
+  4. npm install em /app e /web
+  5. npx expo start para o app
+  6. npm run dev para o painel
+  7. eas build para gerar APK
+- Estrutura de diret&oacute;rios comentada
+- Vari&aacute;veis de ambiente necess&aacute;rias
+- Como criar usu&aacute;rios de teste
+- Como importar im&oacute;veis via CSV
+
+Linguagem t&eacute;cnica mas acess&iacute;vel, em portugu&ecirc;s brasileiro.</code></pre>
+  </div>
+</section>
+
+<!-- BLOCO 12 -->
+<section class="block" id="b12">
+  <div class="block-header">
+    <div class="bnum">12</div>
+    <div class="bht">
+      <h2>Crit&eacute;rios de Demo para a Prefeitura</h2>
+      <p>Roteiro de 20 minutos, o que mostrar, o que n&atilde;o pode falhar e o que esconder.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Momento</th>
+        <th>Dura&ccedil;&atilde;o</th>
+        <th>O que Fazer</th>
+        <th>Script Sugerido</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Contexto</strong></td>
+        <td>2 min</td>
+        <td>Mostrar o painel web j&aacute; aberto com dados reais de Uberl&acirc;ndia. N&atilde;o come&ccedil;ar pelo app ainda.</td>
+        <td>"Veja que temos 50 im&oacute;veis do bairro X com 200 visitas nos &uacute;ltimos 30 dias. Esse &eacute; o tipo de visibilidade que voc&ecirc;s t&ecirc;riam em tempo real."</td>
+      </tr>
+      <tr>
+        <td><strong>2. App do Agente</strong></td>
+        <td>8 min</td>
+        <td>Pegar o celular, abrir o app, buscar im&oacute;vel UBL-0042, mostrar hist&oacute;rico, registrar uma visita AO VIVO com foto e nota. Ligar modo avi&atilde;o e registrar mais uma.</td>
+        <td>"O agente chega no im&oacute;vel, busca pelo c&oacute;digo, v&ecirc; que j&aacute; foi visitado em janeiro. Registra o status, tira uma foto da caixa d'&aacute;gua. Olha &mdash; at&eacute; sem internet funciona."</td>
+      </tr>
+      <tr>
+        <td><strong>3. Painel do Coordenador</strong></td>
+        <td>5 min</td>
+        <td>Voltar para o notebook. Mostrar que a visita registrada j&aacute; apareceu no painel (reconectar o celular antes). Clicar no agente, mostrar hist&oacute;rico. Exportar CSV e abrir no Excel.</td>
+        <td>"O coordenador viu agora mesmo que o agente Carlos registrou uma visita com achado. Clica aqui &mdash; v&ecirc; a foto. E eu posso exportar isso para o Excel em 2 segundos."</td>
+      </tr>
+      <tr>
+        <td><strong>4. Pergunta-Chave</strong></td>
+        <td>3 min</td>
+        <td>Perguntar ativamente: "Quais setores do munic&iacute;pio voc&ecirc;s gostariam de come&ccedil;ar? Quantos agentes s&atilde;o alocados por setor?" Anotar as respostas.</td>
+        <td>"Para um piloto, a gente precisaria de 1 setor, ~200 im&oacute;veis e 2 a 3 agentes por 30 dias. Qual &aacute;rea faria mais sentido come&ccedil;ar?"</td>
+      </tr>
+      <tr>
+        <td><strong>5. Pr&oacute;ximo Passo</strong></td>
+        <td>2 min</td>
+        <td>Propor termo de coopera&ccedil;&atilde;o (n&atilde;o contrato pago). Deixar APK instalado no celular do coordenador antes de sair.</td>
+        <td>"N&atilde;o estamos pedindo or&ccedil;amento agora. S&oacute; queremos um termo de coopera&ccedil;&atilde;o para validar com dados reais. Voc&ecirc;s ganham visibilidade, a gente ganha valida&ccedil;&atilde;o."</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="grid2">
+    <div class="callout green" style="margin:0">
+      <div class="callout-title">&#9989; O que Parece Sofisticado mas &Eacute; Simples</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px">
+        <li>&#8226; Dashboard com n&uacute;meros grandes &mdash; s&atilde;o 4 queries SQL com COUNT</li>
+        <li>&#8226; Visita em tempo real no painel &mdash; &eacute; Supabase Realtime (1 linha de c&oacute;digo)</li>
+        <li>&#8226; Foto no detalhe do im&oacute;vel &mdash; &eacute; uma URL p&uacute;blica do Supabase Storage</li>
+        <li>&#8226; Exporta&ccedil;&atilde;o CSV "completa" &mdash; &eacute; uma query SQL com download</li>
+        <li>&#8226; Modo offline &mdash; &eacute; MMKV + fila simples (com sync manual &eacute; ainda mais f&aacute;cil)</li>
+        <li>&#8226; Hist&oacute;rico do im&oacute;vel &mdash; &eacute; um JOIN com ORDER BY created_at</li>
+      </ul>
+    </div>
+    <div class="callout red" style="margin:0">
+      <div class="callout-title">&#10060; O que N&atilde;O Pode Falhar na Demo</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px">
+        <li>&#9888; Login &mdash; ensaiar at&eacute; ser autom&aacute;tico</li>
+        <li>&#9888; Foto &mdash; testar no celular que vai ser usado</li>
+        <li>&#9888; Sync offline &mdash; testar modo avi&atilde;o antes da reuni&atilde;o</li>
+        <li>&#9888; CSV abrindo no Excel &mdash; testar encoding com acentos</li>
+        <li>&#9888; Internet da sala da prefeitura &mdash; levar hotspot pr&oacute;prio</li>
+        <li>&#9888; Bateria dos celulares &mdash; chegar carregado, levar carregador</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout yellow">
+    <div class="callout-title">&#128065; O que ESCONDER na Demo</div>
+    <p>N&atilde;o mostrar: tela de admin de usu&aacute;rios (parece incompleta), import CSV (interface crua), configura&ccedil;&otilde;es do app (vers&atilde;o de dev vis&iacute;vel), qualquer loading de mais de 2 segundos (seed os dados antes). <strong>Dica de backup:</strong> gravar v&iacute;deo do fluxo completo funcionando. Se algo falhar na demo ao vivo, passar o celular e dizer "j&aacute; gravamos o fluxo aqui" e mostrar o v&iacute;deo.</p>
+  </div>
+</section>
+
+<!-- BLOCO 13 -->
+<section class="block" id="b13">
+  <div class="block-header">
+    <div class="bnum">13</div>
+    <div class="bht">
+      <h2>O que N&atilde;O Fazer Agora</h2>
+      <p>15 erros comuns de founders t&eacute;cnicos que atrasam o MVP sem adicionar valor real.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <div class="no-card">
+        <div class="no-card-title">1. Offline perfeito antes de validar ado&ccedil;&atilde;o</div>
+        <p>Conflict resolution distribu&iacute;do &eacute; engenharia de n&iacute;vel Notion/Linear. Para MVP, sync manual por bot&atilde;o &eacute; suficiente e demonstr&aacute;vel. Offline perfeito s&oacute; depois que a prefeitura assinar.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">2. Mapas e heatmaps</div>
+        <p>Bonito na apresenta&ccedil;&atilde;o, in&uacute;til sem dados reais de GPS coletados em campo. Adiciona 2 semanas de desenvolvimento e n&atilde;o muda a decis&atilde;o da prefeitura no piloto.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">3. App iOS agora</div>
+        <p>Prefeituras brasileiras usam Android. iOS exige Mac + Apple Developer Account ($99/ano) + processo de review. Adicione depois de ter contrato.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">4. Play Store antes do piloto</div>
+        <p>APK via link direto &eacute; mais r&aacute;pido, flex&iacute;vel e suficiente para piloto. Play Store tem review de 3&ndash;7 dias e requer conta de desenvolvedor. Publique s&oacute; na vers&atilde;o comercial.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">5. Notifica&ccedil;&otilde;es push</div>
+        <p>Requer Firebase Cloud Messaging, permiss&otilde;es do usu&aacute;rio, l&oacute;gica de gatilho. Para o piloto, o coordenador olha o painel. Push notification &eacute; conforto, n&atilde;o necessidade do MVP.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">6. Multi-tenant desde o in&iacute;cio</div>
+        <p>Adicionar organiza&ccedil;&atilde;o como camada de isolamento triplica a complexidade do schema e da RLS. Um cliente primeiro, depois multi-tenant. N&atilde;o tem como vender para 2 prefeituras ao mesmo tempo no piloto.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">7. Dashboard "bonito" com gr&aacute;ficos</div>
+        <p>Recharts, Chart.js, D3 &mdash; adicionam complexidade sem aumentar a decis&atilde;o da prefeitura. N&uacute;meros grandes em cards convencem mais que gr&aacute;ficos de linha em MVP. Gr&aacute;ficos depois de ter dados reais de 90 dias.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">8. Contratar designer antes de validar</div>
+        <p>Design system, biblioteca de componentes, Storybook &mdash; custo alto antes de saber se o produto tem ado&ccedil;&atilde;o. Use shadcn/ui ou Tailwind direto. Design profissional na vers&atilde;o paga.</p>
+      </div>
+    </div>
+    <div>
+      <div class="no-card">
+        <div class="no-card-title">9. Firebase em vez de Supabase</div>
+        <p>Firebase Firestore n&atilde;o tem SQL real, o que torna queries agregadas (m&eacute;tricas do dashboard) muito mais complexas. Supabase &eacute; PostgreSQL &mdash; qualquer dev conhece SQL. N&atilde;o mude a stack por prefer&ecirc;ncia.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">10. Backend customizado Node/Express</div>
+        <p>Supabase Edge Functions e RLS eliminam a necessidade de backend customizado para o MVP. Adicionar Express/NestJS &eacute; mais uma coisa para manter, testar e deployar. YAGNI.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">11. Montar time antes de ter cliente</div>
+        <p>Designer + product manager + segundo dev antes do primeiro contrato &eacute; burn de caixa sem retorno. Um dev freelancer por projeto &eacute; o modelo certo at&eacute; ter receita recorrente.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">12. Billing no sistema</div>
+        <p>Stripe, assinatura, pl&atilde;os, invoices dentro do produto &mdash; o piloto &eacute; gratuito por defini&ccedil;&atilde;o. Invoice manual via PDF ou Conta Azul at&eacute; ter 3 clientes pagantes. N&atilde;o construa billing antes de ter algu&eacute;m para cobrar.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">13. Reuni&otilde;es longas sem c&oacute;digo na tela</div>
+        <p>Qualquer reuni&atilde;o de mais de 30 minutos sobre o produto que n&atilde;o termina com uma decis&atilde;o ou uma tarefa &eacute; tempo perdido. Check di&aacute;rio de 15 min com o dev. Reuni&atilde;o semanal de 30 min de retrospectiva. Nada mais.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">14. Relat&oacute;rios PDF autom&aacute;ticos</div>
+        <p>Puppeteer, html-pdf, LaTeX &mdash; relat&oacute;rio PDF &eacute; V2. A prefeitura aceita CSV no Excel para o piloto. PDF bonito impressiona, mas n&atilde;o &eacute; crit&eacute;rio de aceite do piloto. Adicione quando pedirem.</p>
+      </div>
+      <div class="no-card">
+        <div class="no-card-title">15. Esperar o produto "estar pronto"</div>
+        <p>O produto nunca vai estar pronto. Demo com APK funcionando e 50 im&oacute;veis seed &eacute; suficiente para ter a primeira conversa real. A valida&ccedil;&atilde;o n&atilde;o acontece no Figma &mdash; acontece com um agente real em campo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOCO 14 -->
+<section class="block" id="b14">
+  <div class="block-header">
+    <div class="bnum">14</div>
+    <div class="bht">
+      <h2>Recomenda&ccedil;&atilde;o Final</h2>
+      <p>O caminho exato que eu faria como CTO tempor&aacute;rio desse produto.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <blockquote>"Se eu estivesse executando isso sozinho como CTO tempor&aacute;rio, eu faria exatamente assim:"</blockquote>
+    <cite>Plano baseado em produto B2G, MVP de 4&ndash;8 semanas, sem recursos de equipe grande.</cite>
+  </div>
+
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-b">
+      <h3>Semana 1 &mdash; Contratar e Ativar</h3>
+      <p>Contratar dev freelancer por R$ 10.000 em 3 milestones. Criar o projeto no Supabase e rodar o schema SQL completo no mesmo dia. Criar os 4 usu&aacute;rios de teste (admin, coordenador, 2 agentes). Importar 50 im&oacute;veis reais de Uberl&acirc;ndia. Antes do fim da semana: ver o login funcionando no celular do dev. Se n&atilde;o funcionar at&eacute; sexta, o dev est&aacute; com problema.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-b">
+      <h3>Semanas 2&ndash;3 &mdash; Paralelismo</h3>
+      <p>Check de 30 minutos por dia com o dev (WhatsApp). Enquanto o dev constr&oacute;i as telas: escrever todos os textos do app (labels, erros, mensagens de sucesso), criar o roteiro de demo de 20 minutos, escrever o manual do agente em PDF (1 p&aacute;gina, Canva), gerar seed de 200 visitas com SQL via Claude, preparar a proposta de piloto adaptada para a prefeitura-alvo. Nenhuma dessas tarefas precisa do dev. N&atilde;o deixe a semana passar sem produzir.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-b">
+      <h3>Semana 4 &mdash; QA Brutal</h3>
+      <p>Pegar 2 celulares Android. Instalar o APK nos dois. Registrar 20 visitas reais. Testar modo avi&atilde;o: desligar a internet, registrar 5 visitas, religar, verificar se sincronizou no painel. Exportar o CSV e abrir no Excel &mdash; verificar se os acentos est&atilde;o corretos. Mostrar para uma pessoa que nunca viu o produto (n&atilde;o pode ser o dev nem os founders). Observar o que ela trava. Corrigir. Gerar o APK final com EAS Build.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">4</div>
+    <div class="step-b">
+      <h3>Semana 5 &mdash; Demo e Piloto</h3>
+      <p>Agendar reuni&atilde;o de 30 minutos com a prefeitura amiga (a que j&aacute; demonstrou interesse). Chegar com o painel aberto, 2 celulares carregados, hotspot pr&oacute;prio e o v&iacute;deo de backup gravado. Mostrar o que tem. Ser honesto sobre o que ainda n&atilde;o est&aacute; pronto. Propor um piloto com termo de coopera&ccedil;&atilde;o &mdash; n&atilde;o contrato, n&atilde;o pagamento, s&oacute; dados reais. Deixar o APK instalado no celular do coordenador antes de sair.</p>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-title">&#127919; A &Uacute;nica Coisa que Importa</div>
+    <p style="font-size:15px;line-height:1.7">
+      <strong>Uma prefeitura disposta a assinar um termo de coopera&ccedil;&atilde;o.</strong> MVP n&atilde;o precisa estar perfeito &mdash; precisa ser honesto e criv&eacute;l. Menos promessa. Mais prova.
+    </p>
+    <p style="margin-top:12px;font-size:13px;color:var(--muted)">
+      Se a prefeitura n&atilde;o assinar depois da demo, o problema n&atilde;o &eacute; o produto &mdash; &eacute; o relacionamento ou a dor n&atilde;o &eacute; suficientemente urgente para aquela pessoa. Nesse caso: mude o interlocutor ou a prefeitura, n&atilde;o o produto.
+    </p>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <div class="card-title">Estrutura de Diret&oacute;rios do Projeto</div>
+<pre><code>zoonoseapp/
+├── app/                          # Expo React Native (agente)
+│   ├── src/
+│   │   ├── screens/
+│   │   │   ├── LoginScreen.tsx
+│   │   │   ├── HomeScreen.tsx
+│   │   │   ├── PropertyDetailScreen.tsx
+│   │   │   ├── RegisterVisitScreen.tsx
+│   │   │   ├── ConfirmVisitScreen.tsx
+│   │   │   ├── HistoryScreen.tsx
+│   │   │   ├── SyncStatusScreen.tsx
+│   │   │   └── SettingsScreen.tsx
+│   │   ├── hooks/
+│   │   │   ├── useOfflineSync.ts   # T09 - fila MMKV + sync
+│   │   │   ├── useAuth.ts
+│   │   │   └── useProperties.ts
+│   │   ├── lib/
+│   │   │   ├── supabase.ts         # client Supabase configurado
+│   │   │   └── mmkv.ts             # inst&acirc;ncia MMKV
+│   │   └── types/
+│   │       └── index.ts            # Visit, Property, Profile, etc.
+│   ├── app.json
+│   ├── eas.json
+│   └── package.json
+│
+├── web/                          # Next.js (painel coordenador)
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   └── login/page.tsx
+│   │   ├── dashboard/
+│   │   │   ├── page.tsx            # T11 - m&eacute;tricas
+│   │   │   ├── imoveis/page.tsx    # T12 - lista
+│   │   │   ├── agentes/page.tsx    # T13 - lista agentes
+│   │   │   └── imoveis/[id]/page.tsx # T18 - detalhe
+│   │   └── api/
+│   │       └── export/route.ts     # T14 - CSV download
+│   ├── components/
+│   │   ├── MetricCard.tsx
+│   │   ├── AgentTable.tsx
+│   │   └── PropertyTable.tsx
+│   ├── lib/
+│   │   └── supabase.ts
+│   └── package.json
+│
+├── supabase/
+│   ├── migrations/
+│   │   ├── 001_schema.sql          # 6 tabelas + RLS
+│   │   ├── 002_indexes.sql
+│   │   └── 003_seed.sql            # 50 im&oacute;veis + 200 visitas
+│   └── config.toml
+│
+└── scripts/
+    ├── import-imoveis.js           # T04 - CSV import
+    └── seed-visitas.sql            # T16 - 200 visitas demo
+</code></pre>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ZoonoseApp</div>
+  <p style="margin-bottom:8px">MVP Plano CTO &mdash; Documento de Execu&ccedil;&atilde;o</p>
+  <p style="font-size:12px;color:var(--muted)">Stack: Expo + Supabase + Next.js &nbsp;&bull;&nbsp; Prazo: 4&ndash;8 semanas &nbsp;&bull;&nbsp; Budget: R$ 8.000&ndash;15.000</p>
+  <p style="font-size:11px;color:var(--border);margin-top:12px">Gerado em Mar&ccedil;o 2026 &mdash; Ubel&acirc;ndia, MG</p>
+</footer>
+
+</div><!-- /container -->
+</body>
+</html>

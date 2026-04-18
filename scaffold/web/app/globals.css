@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media print {
+  /* Hide sidebar, header, buttons, and non-print elements */
+  nav, aside, header, button, select,
+  .print\\:hidden, [data-sidebar] {
+    display: none !important;
+  }
+
+  /* Show print-only elements */
+  .print\\:block {
+    display: block !important;
+  }
+
+  /* Full width for content */
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 8px !important;
+  }
+
+  /* Page break control */
+  .bg-white {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* Clean background */
+  body {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Ensure charts render */
+  .recharts-wrapper {
+    page-break-inside: avoid;
+  }
+
+  /* Remove rounded corners for cleaner print */
+  .rounded-xl, .rounded-2xl {
+    border-radius: 4px !important;
+  }
+
+  /* Table styling for print */
+  table {
+    font-size: 11px !important;
+  }
+}
+
+/* Toast animation */
+@keyframes slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
