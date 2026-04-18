@@ -9,19 +9,16 @@ export async function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getAll() {
-          return cookieStore.getAll()
+        get(name: string) {
+          return cookieStore.get(name)?.value
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setAll(cookiesToSet: any[]) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }: any) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // Server Component: cookies são somente-leitura aqui
-          }
+        set(name: string, value: string, options: any) {
+          cookieStore.set({ name, value, ...options })
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        remove(name: string, options: any) {
+          cookieStore.set({ name, value: '', ...options })
         },
       },
     }
