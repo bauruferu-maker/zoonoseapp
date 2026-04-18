@@ -9,16 +9,18 @@ export async function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setAll(cookiesToSet: any[]) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
+            cookiesToSet.forEach(({ name, value, options }: any) =>
               cookieStore.set(name, value, options)
             )
           } catch {
-            // Server Component — cookies são read-only aqui, ignorar
+            // Server Component: cookies são somente-leitura aqui
           }
         },
       },

@@ -4,7 +4,8 @@ import { createClient } from '../../../../lib/supabase-server'
 
 export const dynamic = 'force-dynamic'
 
-export default async function PropertyDetailPage({ params }: { params: { id: string } }) {
+export default async function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
   const {
     data: { user },
@@ -15,13 +16,13 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
   const { data: property } = await supabase
     .from('properties')
     .select('*, sectors(*)')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   const { data: visits } = await supabase
     .from('visits')
     .select('*')
-    .eq('property_id', params.id)
+    .eq('property_id', id)
     .order('visited_at', { ascending: false })
     .limit(10)
 
