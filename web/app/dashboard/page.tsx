@@ -9,10 +9,14 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const [{ data: stats }, { data: sectors }] = await Promise.all([
+  const [{ data: stats, error: statsError }, { data: sectors }] = await Promise.all([
     supabase.from('vw_sector_stats').select('*').order('day', { ascending: false }).limit(100),
     supabase.from('sectors').select('*'),
   ])
+
+  if (statsError) {
+    console.error('vw_sector_stats error:', statsError.message)
+  }
 
   return <DashboardClient stats={stats ?? []} sectors={sectors ?? []} />
 }

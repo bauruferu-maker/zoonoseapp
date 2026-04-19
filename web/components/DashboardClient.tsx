@@ -7,6 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 interface SectorStat {
   sector_id: string
   sector_name: string
+  sector_code: string | null
   day: string
   total_visits: number
   with_findings: number
@@ -19,7 +20,7 @@ interface SectorStat {
 interface Sector {
   id: string
   name: string
-  code: string
+  code: string | null
 }
 
 export default function DashboardClient({ stats, sectors }: { stats: SectorStat[]; sectors: Sector[] }) {
@@ -44,6 +45,15 @@ export default function DashboardClient({ stats, sectors }: { stats: SectorStat[
     Fechado: item.closed,
     Recusado: item.refused,
   }))
+
+  if (stats.length === 0 && sectors.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
+        <p className="text-2xl font-bold text-slate-500">Sem dados disponíveis</p>
+        <p className="text-sm text-slate-400">Nenhum dado de visitas foi encontrado. Verifique a conexão com o banco de dados ou aguarde a sincronização dos agentes.</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

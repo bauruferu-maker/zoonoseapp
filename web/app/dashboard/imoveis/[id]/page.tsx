@@ -21,7 +21,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
 
   const { data: visits } = await supabase
     .from('visits')
-    .select('*')
+    .select('id, status, visited_at, notes, agent_id, profiles(name)')
     .eq('property_id', id)
     .order('visited_at', { ascending: false })
     .limit(10)
@@ -66,12 +66,12 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
               <dd className="text-slate-900">{property.address ?? '—'}</dd>
             </div>
             <div>
-              <dt className="font-semibold text-slate-500 uppercase tracking-wide text-xs mb-1">Codigo</dt>
-              <dd className="text-slate-900">{property.code ?? '—'}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-slate-500 uppercase tracking-wide text-xs mb-1">Tipo</dt>
-              <dd className="text-slate-900">{property.type ?? '—'}</dd>
+              <dt className="font-semibold text-slate-500 uppercase tracking-wide text-xs mb-1">Criado em</dt>
+              <dd className="text-slate-900">
+                {property.created_at
+                  ? new Date(property.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                  : '—'}
+              </dd>
             </div>
             <div>
               <dt className="font-semibold text-slate-500 uppercase tracking-wide text-xs mb-1">Setor</dt>
@@ -113,11 +113,13 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
                   <tr key={visit.id} className="border-t border-slate-100">
                     <td className="px-5 py-4">
                       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                        visit.status === 'visited'
+                        visit.status === 'visitado_sem_foco' || visit.status === 'visited'
                           ? 'bg-emerald-50 text-emerald-700'
-                          : visit.status === 'closed'
+                          : visit.status === 'visitado_com_achado'
+                          ? 'bg-orange-50 text-orange-700'
+                          : visit.status === 'fechado' || visit.status === 'closed'
                           ? 'bg-slate-100 text-slate-600'
-                          : visit.status === 'refused'
+                          : visit.status === 'recusado' || visit.status === 'refused'
                           ? 'bg-red-50 text-red-700'
                           : 'bg-yellow-50 text-yellow-700'
                       }`}>
@@ -131,7 +133,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
                           })
                         : '—'}
                     </td>
-                    <td className="px-5 py-4 text-slate-600">{visit.agent_id ?? '—'}</td>
+                    <td className="px-5 py-4 text-slate-600">{(visit as any).profiles?.name ?? visit.agent_id ?? '—'}</td>
                     <td className="px-5 py-4 text-slate-600">{visit.notes ?? '—'}</td>
                   </tr>
                 ))}
