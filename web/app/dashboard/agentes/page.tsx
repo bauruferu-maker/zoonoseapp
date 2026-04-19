@@ -16,7 +16,7 @@ export default async function AgentsPage() {
   // returns pre-aggregated totals per agent. The .limit(1000) below prevents OOM
   // on serverless but will silently under-count on large datasets.
   const [{ data: agents }, { data: visits }] = await Promise.all([
-    supabase.from('profiles').select('id, name, email, role').order('name'),
+    supabase.from('profiles').select('id, name, role').order('name'),
     supabase.from('visits').select('agent_id, status').limit(1000),
   ])
 
@@ -47,7 +47,7 @@ export default async function AgentsPage() {
               <tr>
                 <th className="px-5 py-4 font-semibold">Nome</th>
                 <th className="px-5 py-4 font-semibold">Role</th>
-                <th className="px-5 py-4 font-semibold">Email</th>
+                <th className="px-5 py-4 font-semibold">Perfil</th>
                 <th className="px-5 py-4 font-semibold">Visitas</th>
                 <th className="px-5 py-4 font-semibold">Com achado</th>
               </tr>
@@ -59,7 +59,7 @@ export default async function AgentsPage() {
                   <tr key={agent.id} className="border-t border-slate-100">
                     <td className="px-5 py-4 font-medium text-slate-900">{agent.name}</td>
                     <td className="px-5 py-4 text-slate-600">{agent.role}</td>
-                    <td className="px-5 py-4 text-slate-600">{agent.email}</td>
+                    <td className="px-5 py-4 text-slate-600">{agent.id.slice(0, 8)}…</td>
                     <td className="px-5 py-4 text-slate-600">{agentStats.total}</td>
                     <td className="px-5 py-4 text-slate-600">{agentStats.findings}</td>
                   </tr>
