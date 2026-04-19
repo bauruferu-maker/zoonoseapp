@@ -7,10 +7,12 @@ export const dynamic = 'force-dynamic'
 interface CoverageRow {
   sector_id: string
   sector_name: string
-  sector_code: string | null
   total_properties: number
   visited_properties: number
   coverage_pct: number | null
+  pending_properties: number
+  focus_properties: number
+  closed_properties: number
 }
 
 export default async function QualityPage() {
@@ -18,7 +20,6 @@ export default async function QualityPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Role check: coordinator, manager, admin only
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
@@ -31,51 +32,17 @@ export default async function QualityPage() {
 
   const { data: coverage, error: coverageError } = await supabase
     .from('vw_sector_coverage')
-    .select('*')
+    .select('sector_id, sector_name, total_properties, visited_properties, coverage_pct, pending_properties, focus_properties, closed_properties')
 
-  // Fallback: calculate basic stats from properties + visits
-  let fallbackRows: CoverageRow[] = []
-  let usedFallback = false
+  const rows: CoverageRow[] = (coverage ?? []) as CoverageRow[]
 
-  if (coverageError || !coverage || coverage.length === 0) {
-    usedFallback = true
-    const [{ data: sectors }, { data: properties }, { data: visits }] = await Promise.all([
-      supabase.from('sectors').select('id, name, code').order('name'),
-      supabase.from('properties').select('id, sector_id'),
-      supabase.from('visits').select('property_id, status'),
-    ])
-
-    const visitedPropertyIds = new Set(
-      (visits ?? [])
-        .filter((v) => v.status !== 'pendente')
-        .map((v) => v.property_id)
-    )
-
-    fallbackRows = (sectors ?? []).map((sector) => {
-      const sectorProperties = (properties ?? []).filter((p) => p.sector_id === sector.id)
-      const visited = sectorProperties.filter((p) => visitedPropertyIds.has(p.id))
-      const pct = sectorProperties.length > 0
-        ? Math.round((visited.length / sectorProperties.length) * 100)
-        : 0
-      return {
-        sector_id: sector.id,
-        sector_name: sector.name,
-        sector_code: sector.code ?? null,
-        total_properties: sectorProperties.length,
-        visited_properties: visited.length,
-        coverage_pct: pct,
-      }
-    })
-  }
-
-  const rows: CoverageRow[] = usedFallback ? fallbackRows : (coverage as unknown as CoverageRow[])
-
-  // Compute summary stats
+  // Summary stats
   const totalProperties = rows.reduce((s, r) => s + (r.total_properties ?? 0), 0)
-  const totalVisited = rows.reduce((s, r) => s + (r.visited_properties ?? 0), 0)
-  const overallPct = totalProperties > 0 ? Math.round((totalVisited / totalProperties) * 100) : 0
-  const highCoverage = rows.filter((r) => (r.coverage_pct ?? 0) >= 80).length
-  const lowCoverage = rows.filter((r) => (r.coverage_pct ?? 0) < 50).length
+  const totalVisited   = rows.reduce((s, r) => s + (r.visited_properties ?? 0), 0)
+  const totalFocus     = rows.reduce((s, r) => s + (r.focus_properties ?? 0), 0)
+  const overallPct     = totalProperties > 0 ? Math.round((totalVisited / totalProperties) * 100) : 0
+  const highCoverage   = rows.filter((r) => (r.coverage_pct ?? 0) >= 80).length
+  const lowCoverage    = rows.filter((r) => (r.coverage_pct ?? 0) < 50).length
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-8">
@@ -91,9 +58,9 @@ export default async function QualityPage() {
           </Link>
         </div>
 
-        {usedFallback && (
-          <div className="mb-4 rounded-xl border border-yellow-200 bg-yellow-50 px-5 py-3 text-sm text-yellow-800">
-            A visao vw_sector_coverage nao esta disponivel. Dados calculados diretamente das tabelas.
+        {coverageError && (
+          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-5 py-3 text-sm text-red-800">
+            Erro ao carregar dados de cobertura: {coverageError.message}
           </div>
         )}
 
@@ -104,20 +71,22 @@ export default async function QualityPage() {
             <p className={`text-3xl font-black ${overallPct >= 80 ? 'text-emerald-700' : overallPct >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
               {overallPct}%
             </p>
+            <p className="text-xs text-slate-400 mt-1">{totalVisited} de {totalProperties} imóveis</p>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Total Imoveis</p>
-            <p className="text-3xl font-black text-slate-900">{totalProperties.toLocaleString('pt-BR')}</p>
+            <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Focos Ativos</p>
+            <p className="text-3xl font-black text-red-600">{totalFocus}</p>
+            <p className="text-xs text-slate-400 mt-1">imóveis com achado</p>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Setores Alta Cobertura</p>
+            <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Setores OK</p>
             <p className="text-3xl font-black text-emerald-700">{highCoverage}</p>
-            <p className="text-xs text-slate-400 mt-1">≥ 80%</p>
+            <p className="text-xs text-slate-400 mt-1">cobertura ≥ 80%</p>
           </div>
           <div className="rounded-2xl border border-red-100 bg-red-50 p-5">
-            <p className="text-xs uppercase tracking-wide text-red-400 mb-2">Setores Criticos</p>
+            <p className="text-xs uppercase tracking-wide text-red-400 mb-2">Setores Críticos</p>
             <p className="text-3xl font-black text-red-700">{lowCoverage}</p>
-            <p className="text-xs text-red-400 mt-1">{'< 50%'}</p>
+            <p className="text-xs text-red-400 mt-1">cobertura {'< 50%'}</p>
           </div>
         </div>
 
@@ -130,17 +99,18 @@ export default async function QualityPage() {
             <thead className="bg-slate-50 text-slate-500">
               <tr>
                 <th className="px-5 py-4 font-semibold">Setor</th>
-                <th className="px-5 py-4 font-semibold">Codigo</th>
                 <th className="px-5 py-4 font-semibold">Total</th>
                 <th className="px-5 py-4 font-semibold">Visitados</th>
+                <th className="px-5 py-4 font-semibold">Focos</th>
+                <th className="px-5 py-4 font-semibold">Pendentes</th>
                 <th className="px-5 py-4 font-semibold">Cobertura</th>
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-10 text-center text-slate-400">
-                    Nenhum dado de cobertura disponivel
+                  <td colSpan={6} className="px-5 py-10 text-center text-slate-400">
+                    Nenhum dado de cobertura disponível
                   </td>
                 </tr>
               ) : (
@@ -151,9 +121,18 @@ export default async function QualityPage() {
                     return (
                       <tr key={row.sector_id} className="border-t border-slate-100">
                         <td className="px-5 py-4 font-medium text-slate-900">{row.sector_name}</td>
-                        <td className="px-5 py-4 text-slate-600">{row.sector_code ?? '—'}</td>
-                        <td className="px-5 py-4 text-slate-600">{row.total_properties ?? '—'}</td>
-                        <td className="px-5 py-4 text-slate-600">{row.visited_properties ?? '—'}</td>
+                        <td className="px-5 py-4 text-slate-600">{row.total_properties}</td>
+                        <td className="px-5 py-4 text-slate-600">{row.visited_properties}</td>
+                        <td className="px-5 py-4">
+                          {row.focus_properties > 0 ? (
+                            <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold text-red-700">
+                              {row.focus_properties}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400">0</span>
+                          )}
+                        </td>
+                        <td className="px-5 py-4 text-slate-600">{row.pending_properties}</td>
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3">
                             <div className="w-28 bg-slate-100 rounded-full h-2.5 overflow-hidden">
@@ -167,7 +146,7 @@ export default async function QualityPage() {
                             </span>
                             {pct < 50 && (
                               <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700">
-                                Critico
+                                Crítico
                               </span>
                             )}
                           </div>
