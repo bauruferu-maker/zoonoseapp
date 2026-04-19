@@ -16,8 +16,20 @@ export async function GET() {
   }
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (!profile || !['coordinator', 'manager', 'admin'].includes(profile.role)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  // Role values in DB are English lowercase: 'admin', 'manager', 'coordinator', 'agent' (P018)
+  const allowedRoles = ['coordinator', 'manager', 'admin']
+  if (!profile) {
+    return NextResponse.json(
+      { error: 'Perfil de usuario nao encontrado. Contate o administrador.' },
+      { status: 403 }
+    )
+  }
+  if (!allowedRoles.includes(profile.role)) {
+    return NextResponse.json(
+      { error: `Acesso negado. Seu cargo (${profile.role}) nao tem permissao para exportar dados. Necessario: coordenador, gestor ou administrador.` },
+      { status: 403 }
+    )
   }
 
   const { data, error } = await supabase

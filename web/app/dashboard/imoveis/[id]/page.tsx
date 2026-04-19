@@ -4,6 +4,49 @@ import { createClient } from '../../../../lib/supabase-server'
 
 export const dynamic = 'force-dynamic'
 
+// Human-readable labels for visit status values stored in DB (P015)
+const STATUS_LABELS: Record<string, string> = {
+  visitado_sem_foco: 'Visitado sem achado',
+  visitado_com_achado: 'Visitado com achado',
+  recusado: 'Recusado',
+  fechado: 'Fechado',
+  pendente: 'Pendente',
+}
+
+const STATUS_COLORS: Record<string, string> = {
+  visitado_sem_foco: 'bg-emerald-50 text-emerald-700',
+  visitado_com_achado: 'bg-orange-50 text-orange-700',
+  recusado: 'bg-red-50 text-red-700',
+  fechado: 'bg-slate-100 text-slate-600',
+  pendente: 'bg-yellow-50 text-yellow-700',
+}
+
+interface SectorInfo {
+  id: string
+  name: string
+  code: string | null
+}
+
+interface PropertyRow {
+  id: string
+  address: string | null
+  owner_name: string | null
+  owner_phone: string | null
+  created_at: string | null
+  latitude: number | null
+  longitude: number | null
+  sectors: SectorInfo | null
+}
+
+interface VisitRow {
+  id: string
+  status: string
+  visited_at: string | null
+  notes: string | null
+  agent_id: string
+  profiles: { name: string } | null
+}
+
 export default async function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
@@ -13,18 +56,33 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
 
   if (!user) redirect('/login')
 
-  const { data: property } = await supabase
+  // Role check: coordinator, manager, admin (P002)
+  const { data: currentProfile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (!currentProfile || !['coordinator', 'manager', 'admin'].includes(currentProfile.role)) {
+    redirect('/dashboard?acesso=negado')
+  }
+
+  const { data: propertyRaw } = await supabase
     .from('properties')
     .select('*, sectors(*)')
     .eq('id', id)
     .single()
 
-  const { data: visits } = await supabase
+  const property = propertyRaw as PropertyRow | null
+
+  const { data: visitsRaw } = await supabase
     .from('visits')
     .select('id, status, visited_at, notes, agent_id, profiles(name)')
     .eq('property_id', id)
     .order('visited_at', { ascending: false })
     .limit(10)
+
+  const visits = (visitsRaw ?? []) as unknown as VisitRow[]
 
   if (!property) {
     return (
@@ -39,7 +97,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
     )
   }
 
-  const sector = (property as any).sectors
+  const sector = property.sectors
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-8">
@@ -109,21 +167,11 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
                 </tr>
               </thead>
               <tbody>
-                {visits.map((visit: any) => (
+                {visits.map((visit) => (
                   <tr key={visit.id} className="border-t border-slate-100">
                     <td className="px-5 py-4">
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                        visit.status === 'visitado_sem_foco' || visit.status === 'visited'
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : visit.status === 'visitado_com_achado'
-                          ? 'bg-orange-50 text-orange-700'
-                          : visit.status === 'fechado' || visit.status === 'closed'
-                          ? 'bg-slate-100 text-slate-600'
-                          : visit.status === 'recusado' || visit.status === 'refused'
-                          ? 'bg-red-50 text-red-700'
-                          : 'bg-yellow-50 text-yellow-700'
-                      }`}>
-                        {visit.status ?? '—'}
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLORS[visit.status] ?? 'bg-yellow-50 text-yellow-700'}`}>
+                        {STATUS_LABELS[visit.status] ?? visit.status ?? '—'}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-slate-600">
@@ -133,7 +181,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
                           })
                         : '—'}
                     </td>
-                    <td className="px-5 py-4 text-slate-600">{(visit as any).profiles?.name ?? visit.agent_id ?? '—'}</td>
+                    <td className="px-5 py-4 text-slate-600">{visit.profiles?.name ?? visit.agent_id ?? '—'}</td>
                     <td className="px-5 py-4 text-slate-600">{visit.notes ?? '—'}</td>
                   </tr>
                 ))}

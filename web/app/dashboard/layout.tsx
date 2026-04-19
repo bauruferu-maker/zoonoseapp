@@ -4,29 +4,42 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase-browser'
 import Sidebar from '../../components/Sidebar'
 
+// Note: Server-side protection is handled by middleware.ts (P001).
+// This layout keeps a client-side check as a secondary guard to avoid
+// flash-of-content on client transitions (P005, P032).
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [ready, setReady] = useState(false)
+  // Start with null (unknown) so we show a minimal skeleton instead of content flash
+  const [ready, setReady] = useState<boolean | null>(null)
   const router = useRouter()
 
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getUser()
       .then(({ data: { user } }) => {
-        if (!user) router.replace('/login')
-        else setReady(true)
+        if (!user) {
+          router.replace('/login')
+        } else {
+          setReady(true)
+        }
       })
       .catch(() => {
         router.replace('/login')
       })
   }, [router])
 
-  if (!ready) {
+  // Show nothing (no flash) until auth is confirmed
+  if (ready === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-700" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-700" />
+          <p className="text-sm text-slate-400">Carregando...</p>
+        </div>
       </div>
     )
   }
+
+  if (!ready) return null
 
   return (
     <div className="min-h-screen bg-gray-50">

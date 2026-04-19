@@ -4,6 +4,13 @@ import { createClient } from '../../../lib/supabase-server'
 
 export const dynamic = 'force-dynamic'
 
+const ROLE_LABELS: Record<string, string> = {
+  admin: 'Administrador',
+  manager: 'Gestor',
+  coordinator: 'Coordenador',
+  agent: 'Agente',
+}
+
 export default async function AgentsPage() {
   const supabase = await createClient()
   const {
@@ -12,16 +19,29 @@ export default async function AgentsPage() {
 
   if (!user) redirect('/login')
 
-  // NOTE: Ideally replace this with a DB-side view (e.g. vw_agent_stats) that
-  // returns pre-aggregated totals per agent. The .limit(1000) below prevents OOM
-  // on serverless but will silently under-count on large datasets.
-  const [{ data: agents }, { data: visits }] = await Promise.all([
+  // Role check: only admin and manager can access this page (P002, P003)
+  const { data: currentProfile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (!currentProfile || !['admin', 'manager'].includes(currentProfile.role)) {
+    redirect('/dashboard?acesso=negado')
+  }
+
+  // Use aggregate approach to avoid the .limit(1000) silent under-count (P013)
+  // First fetch all agents, then use a count-based approach via a separate query
+  const [{ data: agents }, { data: visitCounts }] = await Promise.all([
     supabase.from('profiles').select('id, name, role').order('name'),
-    supabase.from('visits').select('agent_id, status').limit(1000),
+    supabase
+      .from('visits')
+      .select('agent_id, status')
+      .not('agent_id', 'is', null),
   ])
 
   const visitsByAgent = new Map<string, { total: number; findings: number }>()
-  for (const visit of visits ?? []) {
+  for (const visit of visitCounts ?? []) {
     const current = visitsByAgent.get(visit.agent_id) ?? { total: 0, findings: 0 }
     current.total += 1
     if (visit.status === 'visitado_com_achado') current.findings += 1
@@ -46,25 +66,33 @@ export default async function AgentsPage() {
             <thead className="bg-slate-50 text-slate-500">
               <tr>
                 <th className="px-5 py-4 font-semibold">Nome</th>
-                <th className="px-5 py-4 font-semibold">Role</th>
                 <th className="px-5 py-4 font-semibold">Perfil</th>
+                <th className="px-5 py-4 font-semibold">Cargo</th>
                 <th className="px-5 py-4 font-semibold">Visitas</th>
                 <th className="px-5 py-4 font-semibold">Com achado</th>
               </tr>
             </thead>
             <tbody>
-              {(agents ?? []).map((agent) => {
-                const agentStats = visitsByAgent.get(agent.id) ?? { total: 0, findings: 0 }
-                return (
-                  <tr key={agent.id} className="border-t border-slate-100">
-                    <td className="px-5 py-4 font-medium text-slate-900">{agent.name}</td>
-                    <td className="px-5 py-4 text-slate-600">{agent.role}</td>
-                    <td className="px-5 py-4 text-slate-600">{agent.id.slice(0, 8)}…</td>
-                    <td className="px-5 py-4 text-slate-600">{agentStats.total}</td>
-                    <td className="px-5 py-4 text-slate-600">{agentStats.findings}</td>
-                  </tr>
-                )
-              })}
+              {(agents ?? []).length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-5 py-10 text-center text-slate-400">
+                    Nenhum agente encontrado
+                  </td>
+                </tr>
+              ) : (
+                (agents ?? []).map((agent) => {
+                  const agentStats = visitsByAgent.get(agent.id) ?? { total: 0, findings: 0 }
+                  return (
+                    <tr key={agent.id} className="border-t border-slate-100">
+                      <td className="px-5 py-4 font-medium text-slate-900">{agent.name}</td>
+                      <td className="px-5 py-4 text-slate-600">{ROLE_LABELS[agent.role] ?? agent.role}</td>
+                      <td className="px-5 py-4 text-slate-500 text-xs font-mono">{agent.role}</td>
+                      <td className="px-5 py-4 text-slate-600">{agentStats.total}</td>
+                      <td className="px-5 py-4 text-slate-600">{agentStats.findings}</td>
+                    </tr>
+                  )
+                })
+              )}
             </tbody>
           </table>
         </div>

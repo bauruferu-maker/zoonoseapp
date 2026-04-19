@@ -23,7 +23,17 @@ interface Sector {
   code: string | null
 }
 
-export default function DashboardClient({ stats, sectors }: { stats: SectorStat[]; sectors: Sector[] }) {
+export default function DashboardClient({
+  stats,
+  sectors,
+  statsError,
+  accessDenied,
+}: {
+  stats: SectorStat[]
+  sectors: Sector[]
+  statsError?: string | null
+  accessDenied?: boolean
+}) {
   const [selectedSector, setSelectedSector] = useState<string>('all')
 
   const filtered = selectedSector === 'all' ? stats : stats.filter((item) => item.sector_id === selectedSector)
@@ -46,7 +56,7 @@ export default function DashboardClient({ stats, sectors }: { stats: SectorStat[
     Recusado: item.refused,
   }))
 
-  if (stats.length === 0 && sectors.length === 0) {
+  if (stats.length === 0 && sectors.length === 0 && !statsError) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
         <p className="text-2xl font-bold text-slate-500">Sem dados disponíveis</p>
@@ -88,6 +98,18 @@ export default function DashboardClient({ stats, sectors }: { stats: SectorStat[
       </header>
 
       <main className="mx-auto max-w-6xl p-6">
+        {/* Access denied notice (P002) */}
+        {accessDenied && (
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-700">
+            Acesso negado: voce nao tem permissao para acessar essa pagina.
+          </div>
+        )}
+        {/* Stats error banner (P021) */}
+        {statsError && (
+          <div className="mb-6 rounded-xl border border-yellow-200 bg-yellow-50 px-5 py-4 text-sm font-medium text-yellow-800">
+            Aviso: nao foi possivel carregar os dados estatisticos ({statsError}). Verifique a configuracao do banco de dados.
+          </div>
+        )}
         <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           <StatCard label="Total de Visitas" value={totals.total} color="blue" />
           <StatCard label="Com Achado" value={totals.findings} color="orange" />
