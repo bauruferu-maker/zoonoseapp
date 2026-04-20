@@ -10,9 +10,18 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) {
         router.replace('/login')
+        return
+      }
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      if (!profile || profile.role !== 'agent') {
+        router.replace('/dashboard')
       } else {
         setReady(true)
       }

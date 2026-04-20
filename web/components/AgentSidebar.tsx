@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState, type ReactNode } from 'react'
 import { createClient } from '../lib/supabase-browser'
-import { IconClipboard, IconBuilding, IconDashboard } from './Icons'
+import { IconClipboard, IconBuilding, IconDashboard, IconMap } from './Icons'
 
 interface NavItem {
   href: string
@@ -13,7 +13,8 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { href: '/agent', label: 'Minha Fila', icon: <IconDashboard size={18} /> },
-  { href: '/agent/imoveis', label: 'Meus Imoveis', icon: <IconBuilding size={18} /> },
+  { href: '/agent/rota', label: 'Rota do Dia', icon: <IconMap size={18} /> },
+  { href: '/agent/imoveis', label: 'Meus Imóveis', icon: <IconBuilding size={18} /> },
   { href: '/agent/visitas', label: 'Minhas Visitas', icon: <IconClipboard size={18} /> },
 ]
 

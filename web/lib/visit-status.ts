@@ -4,6 +4,7 @@ export const STATUS_LABELS: Record<string, string> = {
   recusado:            'Recusado',
   fechado:             'Fechado',
   pendente:            'Pendente',
+  pendente_revisao:    'Pendente de revisão',
 }
 
 export const STATUS_COLORS: Record<string, string> = {
@@ -12,4 +13,5 @@ export const STATUS_COLORS: Record<string, string> = {
   recusado:            'bg-orange-50 text-orange-700',
   fechado:             'bg-slate-100 text-slate-600',
   pendente:            'bg-yellow-50 text-yellow-700',
+  pendente_revisao:    'bg-purple-50 text-purple-700',
 }

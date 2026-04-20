@@ -46,14 +46,23 @@ export default async function AgentHomePage() {
     .eq('agent_id', user.id)
     .gte('visited_at', todayStart.toISOString())
 
-  // Count properties in sector
+  // Count properties in sector not yet visited by this agent
   let pendingCount = 0
   if (profile.sector_id) {
-    const { count } = await supabase
+    const { data: allProps } = await supabase
       .from('properties')
-      .select('id', { count: 'exact', head: true })
+      .select('id')
       .eq('sector_id', profile.sector_id)
-    pendingCount = count ?? 0
+    const allPropIds = (allProps ?? []).map((p) => p.id)
+    if (allPropIds.length > 0) {
+      const { data: visitedProps } = await supabase
+        .from('visits')
+        .select('property_id')
+        .eq('agent_id', user.id)
+        .in('property_id', allPropIds)
+      const visitedSet = new Set((visitedProps ?? []).map((v) => v.property_id))
+      pendingCount = allPropIds.filter((id) => !visitedSet.has(id)).length
+    }
   }
 
   return (
@@ -87,7 +96,7 @@ export default async function AgentHomePage() {
             <p className="text-3xl font-black text-slate-900">{totalVisits ?? 0}</p>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Imoveis no Setor</p>
+            <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Imoveis a Visitar</p>
             <p className="text-3xl font-black text-slate-900">{pendingCount}</p>
           </div>
         </div>

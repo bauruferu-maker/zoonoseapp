@@ -50,6 +50,7 @@ export default async function AgentImoveisPage() {
         .in('property_id', propertyIds)
         .eq('agent_id', user.id)
         .order('visited_at', { ascending: false })
+        .limit(500)
     : { data: [] }
 
   // Map: property_id -> last visit (first occurrence per property since ordered desc)
