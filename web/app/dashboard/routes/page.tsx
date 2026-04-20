@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '../../../lib/supabase-server'
+import { STATUS_LABELS, STATUS_COLORS } from '../../../lib/visit-status'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,14 +22,6 @@ const PRIORITY_STYLE: Record<string, string> = {
   alta:   'bg-red-50 text-red-700',
   media:  'bg-yellow-50 text-yellow-700',
   baixa:  'bg-slate-100 text-slate-600',
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  visitado_sem_foco:   'Sem achado',
-  visitado_com_achado: 'Com achado',
-  recusado:            'Recusado',
-  fechado:             'Fechado',
-  pendente:            'Pendente',
 }
 
 export default async function RoutesPage() {

@@ -27,17 +27,42 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Refresh session if expired — required for Server Components
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protect all /dashboard/* routes — redirect to /login if no session
-  if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
+  const { pathname } = request.nextUrl
+  const isAuthPage   = pathname === '/login' || pathname === '/forgot-password'
+  const isDashboard  = pathname.startsWith('/dashboard')
+  const isAgentArea  = pathname.startsWith('/agent')
+
+  // Block unauthenticated access to protected areas
+  if (!user && (isDashboard || isAgentArea)) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Redirect authenticated users away from auth pages
-  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/forgot-password')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  // Role-based routing — fetch profile once for any path that needs it
+  if (user && (isAuthPage || isDashboard || isAgentArea)) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const isAgent = profile?.role === 'agent'
+
+    if (isAuthPage) {
+      // After login: route by role
+      return NextResponse.redirect(new URL(isAgent ? '/agent' : '/dashboard', request.url))
+    }
+
+    if (isDashboard && isAgent) {
+      // Agents don't belong in /dashboard
+      return NextResponse.redirect(new URL('/agent', request.url))
+    }
+
+    if (isAgentArea && !isAgent) {
+      // Non-agents don't belong in /agent
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return response

@@ -1,24 +1,9 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '../../../lib/supabase-server'
+import { STATUS_LABELS, STATUS_COLORS } from '../../../lib/visit-status'
 
 export const dynamic = 'force-dynamic'
-
-const STATUS_LABELS: Record<string, string> = {
-  visitado_sem_foco: 'Visitado sem achado',
-  visitado_com_achado: 'Visitado com achado',
-  recusado: 'Recusado',
-  fechado: 'Fechado',
-  pendente: 'Pendente',
-}
-
-const STATUS_COLORS: Record<string, string> = {
-  visitado_sem_foco: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  visitado_com_achado: 'bg-orange-50 text-orange-700 border-orange-200',
-  recusado: 'bg-red-50 text-red-700 border-red-200',
-  fechado: 'bg-slate-100 text-slate-600 border-slate-200',
-  pendente: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-}
 
 interface SummaryRow {
   status: string

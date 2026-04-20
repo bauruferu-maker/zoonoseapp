@@ -46,7 +46,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="rounded-3xl border border-white/10 bg-white p-8 text-slate-900 shadow-2xl shadow-emerald-950/30">
             <div className="mb-6">
               <h2 className="text-2xl font-bold">Acessar dashboard</h2>
-              <p className="mt-2 text-sm text-slate-500">Use sua conta Supabase com permissao de coordenacao, gestao ou administracao.</p>
+              <p className="mt-2 text-sm text-slate-500">Entre com sua conta para acessar o sistema.</p>
             </div>
 
             <label className="mb-4 block">

@@ -17,7 +17,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     .single()
 
   if (profile?.role === 'agent') {
-    redirect('/login?msg=sem-acesso')
+    redirect('/agent')  // middleware should catch this, but just in case
   }
 
   const [{ data: stats, error: statsError }, { data: sectors }] = await Promise.all([
