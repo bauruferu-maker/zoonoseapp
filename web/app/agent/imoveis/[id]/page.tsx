@@ -166,6 +166,7 @@ export default async function AgentPropertyDetailPage({ params }: { params: Prom
                   <th className="px-5 py-4 font-semibold">Data</th>
                   <th className="px-5 py-4 font-semibold">Agente</th>
                   <th className="px-5 py-4 font-semibold">Observações</th>
+                  <th className="px-5 py-4 font-semibold">Ação</th>
                 </tr>
               </thead>
               <tbody>
@@ -183,6 +184,13 @@ export default async function AgentPropertyDetailPage({ params }: { params: Prom
                     </td>
                     <td className="px-5 py-4 text-slate-600">{visit.profiles?.name ?? '—'}</td>
                     <td className="px-5 py-4 text-slate-500 text-xs max-w-[200px] truncate">{visit.notes ?? '—'}</td>
+                    <td className="px-5 py-4">
+                      {visit.agent_id === user.id && (
+                        <Link href={`/agent/visitas/${visit.id}/edit`} className="text-sm font-semibold text-emerald-700 hover:underline">
+                          Editar
+                        </Link>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

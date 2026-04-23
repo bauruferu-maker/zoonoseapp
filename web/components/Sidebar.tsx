@@ -5,7 +5,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { createClient } from '../lib/supabase-browser'
 import {
   IconDashboard, IconMap, IconClipboard, IconBuilding,
-  IconUsers, IconListTodo, IconTrendingUp, IconSearch,
+  IconUsers, IconListTodo, IconTrendingUp, IconSearch, IconLock,
 } from './Icons'
 
 interface NavItem {
@@ -23,6 +23,7 @@ const NAV: NavItem[] = [
   { href: '/dashboard/agentes', label: 'Agentes', icon: <IconUsers size={18} />, roles: ['manager', 'admin'] },
   { href: '/dashboard/routes', label: 'Fila de Trabalho', icon: <IconListTodo size={18} />, roles: ['manager', 'coordinator', 'admin'] },
   { href: '/dashboard/reports', label: 'Relatorios', icon: <IconTrendingUp size={18} />, roles: ['manager', 'admin'] },
+  { href: '/dashboard/admin', label: 'Administração', icon: <IconLock size={18} />, roles: ['manager', 'admin'] },
   { href: '/dashboard/quality', label: 'Qualidade', icon: <IconSearch size={18} />, roles: ['manager', 'admin'] },
 ]
 

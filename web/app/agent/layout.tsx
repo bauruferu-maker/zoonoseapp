@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase-browser'
 import AgentSidebar from '../../components/AgentSidebar'
+import { ToastProvider } from '../../lib/toast-context'
 
 export default function AgentLayout({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState<boolean | null>(null)
@@ -37,9 +38,11 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AgentSidebar />
-      <div className="flex-1 overflow-auto">{children}</div>
-    </div>
+    <ToastProvider>
+      <div className="flex min-h-screen bg-gray-50">
+        <AgentSidebar />
+        <div className="flex-1 overflow-auto">{children}</div>
+      </div>
+    </ToastProvider>
   )
 }

@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 import { createClient } from '../../lib/supabase-server'
 import { STATUS_LABELS, STATUS_COLORS } from '../../lib/visit-status'
+import AutoToast from '../../components/AutoToast'
 
 export const dynamic = 'force-dynamic'
 
@@ -67,6 +69,7 @@ export default async function AgentHomePage() {
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-8">
+      <Suspense fallback={null}><AutoToast /></Suspense>
       <div className="mx-auto max-w-4xl">
 
         {/* Header */}

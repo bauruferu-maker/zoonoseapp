@@ -1,108 +1,113 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '../../../../lib/supabase-server'
-import PhotoUpload from '../../../../components/PhotoUpload'
+import { createClient } from '../../../../../lib/supabase-server'
+import PhotoUpload from '../../../../../components/PhotoUpload'
 
 export const dynamic = 'force-dynamic'
 
 const STATUS_OPTIONS = [
-  { value: 'visitado_sem_foco', label: 'Sem achado' },
+  { value: 'visitado_sem_foco',   label: 'Sem achado' },
   { value: 'visitado_com_achado', label: 'Com achado' },
-  { value: 'recusado', label: 'Recusado' },
-  { value: 'fechado', label: 'Fechado' },
-  { value: 'pendente', label: 'Pendente' },
-  { value: 'pendente_revisao', label: 'Pendente de revisão' },
+  { value: 'recusado',            label: 'Recusado' },
+  { value: 'fechado',             label: 'Fechado' },
+  { value: 'pendente',            label: 'Pendente' },
+  { value: 'pendente_revisao',    label: 'Pendente de revisão' },
 ]
 
-export default async function NovaVisitaPage({
+export default async function EditarVisitaPage({
+  params,
   searchParams,
 }: {
-  searchParams: Promise<{ property_id?: string; error?: string }>
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ error?: string }>
 }) {
-  const { property_id, error } = await searchParams
+  const { id } = await params
+  const { error } = await searchParams
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, sector_id')
+    .select('role')
     .eq('id', user.id)
     .single()
 
   if (!profile || profile.role !== 'agent') redirect('/dashboard')
 
-  if (!profile.sector_id) {
+  // Fetch visit — only if owned by this agent
+  const { data: visit } = await supabase
+    .from('visits')
+    .select('id, status, visited_at, notes, photo_url, property_id, properties(address)')
+    .eq('id', id)
+    .eq('agent_id', user.id)
+    .single()
+
+  if (!visit) {
     return (
       <main className="min-h-screen bg-gray-50 px-6 py-8">
         <div className="mx-auto max-w-2xl">
-          <div className="rounded-2xl border border-orange-200 bg-orange-50 px-6 py-8 text-center">
-            <p className="text-orange-800 font-semibold">Nenhum setor atribuído</p>
-            <p className="text-orange-600 text-sm mt-1">Fale com seu coordenador para ser atribuído a um setor.</p>
+          <div className="rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center">
+            <p className="text-slate-500">Visita não encontrada ou sem permissão de edição.</p>
+            <Link href="/agent/visitas" className="mt-4 inline-block text-sm font-semibold text-emerald-700 hover:underline">
+              Voltar às visitas
+            </Link>
           </div>
         </div>
       </main>
     )
   }
 
-  const { data: properties } = await supabase
-    .from('properties')
-    .select('id, address')
-    .eq('sector_id', profile.sector_id)
-    .order('address')
+  const address = (visit as any).properties?.address ?? '—' // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  const nowLocal = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    .toISOString()
-    .slice(0, 16)
+  const visitedAtLocal = visit.visited_at
+    ? new Date(new Date(visit.visited_at).getTime() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16)
+    : ''
 
-  async function registerVisit(formData: FormData) {
+  async function updateVisit(formData: FormData) {
     'use server'
     const supabaseServer = await createClient()
     const { data: { user: serverUser } } = await supabaseServer.auth.getUser()
     if (!serverUser) redirect('/login')
 
-    const property_id_val = formData.get('property_id') as string
     const status = formData.get('status') as string
     const visited_at = formData.get('visited_at') as string
     const notes = (formData.get('notes') as string) || null
     const photo_url = (formData.get('photo_url') as string) || null
 
-    if (!property_id_val || !status || !visited_at) {
-      redirect('/agent/visitas/nova?error=campos_obrigatorios')
+    if (!status || !visited_at) {
+      redirect(`/agent/visitas/${id}/edit?error=campos_obrigatorios`)
     }
 
-    const { error: insertError } = await supabaseServer.from('visits').insert({
-      property_id: property_id_val,
-      agent_id: serverUser.id,
-      status,
-      visited_at: new Date(visited_at).toISOString(),
-      notes,
-      photo_url,
-    })
+    const { error: updateError } = await supabaseServer
+      .from('visits')
+      .update({ status, visited_at: new Date(visited_at).toISOString(), notes, photo_url })
+      .eq('id', id)
+      .eq('agent_id', serverUser.id) // guard: só o dono pode editar
 
-    if (insertError) {
-      redirect(`/agent/visitas/nova?error=falha_ao_salvar`)
+    if (updateError) {
+      redirect(`/agent/visitas/${id}/edit?error=falha_ao_salvar`)
     }
 
-    redirect('/agent?sucesso=visita_registrada')
+    redirect('/agent/visitas?sucesso=visita_atualizada')
   }
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-8">
       <div className="mx-auto max-w-2xl">
 
-        {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">Registrar Visita</p>
-            <h1 className="text-3xl font-black text-slate-900">Nova Visita</h1>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">Minhas Visitas</p>
+            <h1 className="text-3xl font-black text-slate-900">Editar Visita</h1>
+            <p className="text-slate-500 text-sm mt-1">{address}</p>
           </div>
-          <a
-            href={property_id ? `/agent/imoveis/${property_id}` : '/agent/imoveis'}
-            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
-          >
-            ← Voltar
-          </a>
+          <Link href="/agent/visitas" className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+            ← Cancelar
+          </Link>
         </div>
 
         {error && (
@@ -113,28 +118,17 @@ export default async function NovaVisitaPage({
         )}
 
         <div className="rounded-3xl border border-slate-200 bg-white p-6">
-          <form action={registerVisit} className="space-y-5">
+          <form action={updateVisit} className="space-y-5">
 
-            {/* Property */}
             <div>
-              <label htmlFor="property_id" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
-                Imóvel <span className="text-red-500">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
+                Imóvel
               </label>
-              <select
-                id="property_id"
-                name="property_id"
-                required
-                defaultValue={property_id ?? ''}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              >
-                <option value="" disabled>Selecione um imóvel</option>
-                {(properties ?? []).map((p) => (
-                  <option key={p.id} value={p.id}>{p.address}</option>
-                ))}
-              </select>
+              <p className="text-sm font-medium text-slate-900 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                {address}
+              </p>
             </div>
 
-            {/* Status */}
             <div>
               <label htmlFor="status" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
                 Status <span className="text-red-500">*</span>
@@ -143,17 +137,15 @@ export default async function NovaVisitaPage({
                 id="status"
                 name="status"
                 required
-                defaultValue=""
+                defaultValue={visit.status}
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
-                <option value="" disabled>Selecione o resultado</option>
                 {STATUS_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
             </div>
 
-            {/* Date/time */}
             <div>
               <label htmlFor="visited_at" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
                 Data e Hora <span className="text-red-500">*</span>
@@ -163,12 +155,11 @@ export default async function NovaVisitaPage({
                 name="visited_at"
                 type="datetime-local"
                 required
-                defaultValue={nowLocal}
+                defaultValue={visitedAtLocal}
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
 
-            {/* Notes */}
             <div>
               <label htmlFor="notes" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
                 Observações
@@ -177,6 +168,7 @@ export default async function NovaVisitaPage({
                 id="notes"
                 name="notes"
                 rows={3}
+                defaultValue={visit.notes ?? ''}
                 placeholder="Descreva o que foi encontrado, condições do imóvel, etc."
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
               />
@@ -187,14 +179,14 @@ export default async function NovaVisitaPage({
               <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
                 Foto / Evidência
               </label>
-              <PhotoUpload name="photo_url" agentId={user.id} />
+              <PhotoUpload name="photo_url" agentId={user.id} initialUrl={(visit as any).photo_url ?? undefined} />
             </div>
 
             <button
               type="submit"
               className="w-full rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800 transition"
             >
-              Registrar Visita
+              Salvar Alterações
             </button>
           </form>
         </div>
