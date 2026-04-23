@@ -60,31 +60,14 @@ export default async function AgentRotaPage() {
     )
   }
 
-  const { data: queueRaw, error: queueError } = await supabase
+  const { data: queueRaw, error: finalError } = await supabase
     .from('vw_work_queue')
     .select('property_id, address, sector_name, owner_name, last_visited_at, last_status, priority, priority_reason, total_visits, focus_count')
-    .eq('sector_name', profile.sector_id) // will filter by sector below
+    .eq('sector_id', profile.sector_id)
     .order('priority_order', { ascending: true })
-    .limit(100)
+    .limit(200)
 
-  // vw_work_queue doesn't expose sector_id directly — fetch sector name first then filter
-  const { data: sector } = await supabase
-    .from('sectors')
-    .select('name')
-    .eq('id', profile.sector_id)
-    .single()
-
-  const { data: allQueue, error: allQueueError } = await supabase
-    .from('vw_work_queue')
-    .select('property_id, address, sector_name, owner_name, last_visited_at, last_status, priority, priority_reason, total_visits, focus_count')
-    .order('priority_order', { ascending: true })
-    .limit(500)
-
-  const rows: WorkQueueRow[] = ((allQueue ?? []) as WorkQueueRow[]).filter(
-    (r) => r.sector_name === sector?.name
-  )
-
-  const finalError = queueError ?? allQueueError
+  const rows: WorkQueueRow[] = (queueRaw ?? []) as WorkQueueRow[]
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-8">

@@ -4,7 +4,6 @@ import { Suspense } from 'react'
 import { createClient } from '../../../lib/supabase-server'
 import { STATUS_LABELS, STATUS_COLORS } from '../../../lib/visit-status'
 import AutoToast from '../../../components/AutoToast'
-import TableSearch from '../../../components/TableSearch'
 import Pagination from '../../../components/Pagination'
 
 export const dynamic = 'force-dynamic'
@@ -88,7 +87,7 @@ export default async function AgentVisitasPage({
             <tbody>
               {(visits ?? []).length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-10 text-center text-slate-400">
+                  <td colSpan={6} className="px-5 py-10 text-center text-slate-400">
                     Nenhuma visita registrada ainda
                   </td>
                 </tr>

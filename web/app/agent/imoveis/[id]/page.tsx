@@ -65,6 +65,11 @@ export default async function AgentPropertyDetailPage({ params }: { params: Prom
     )
   }
 
+  // Guard: imóvel deve pertencer ao setor do agente
+  if (profile.sector_id && property.sectors?.id !== profile.sector_id) {
+    redirect('/agent/imoveis')
+  }
+
   const { data: visitsRaw } = await supabase
     .from('visits')
     .select('id, status, visited_at, notes, agent_id, profiles(name)')
